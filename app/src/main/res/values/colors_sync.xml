@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sync Status Bar Color Resources
+
+    Defines colors for the three sync states:
+    - Offline: Amber (warning state - changes pending sync)
+    - Syncing: Blue (active sync in progress)
+    - Online: Green (success state - all synced)
+-->
+<resources>
+    <!-- Offline state: Amber/Orange to indicate warning/pending operations -->
+    <color name="sync_offline_amber">#FF9800</color>
+
+    <!-- Syncing state: Blue to indicate active progress -->
+    <color name="sync_syncing_blue">#2196F3</color>
+
+    <!-- Online/Synced state: Green to indicate success/healthy state -->
+    <color name="sync_online_green">#4CAF50</color>
+</resources>
