@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Main Activity Layout
+
+    Displays the persistent sync status bar at the top of the screen with
+    placeholder content below for the main app functionality.
+
+    Structure:
+    - Root LinearLayout with vertical orientation
+    - SyncStatusBar component at top (handles its own expand/collapse)
+    - Placeholder ScrollView for main content area
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.MainActivity">
+
+    <!-- Persistent sync status indicator -->
+    <com.inventory.app.ui.components.SyncStatusBar
+        android:id="@+id/syncStatusBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Main content area (placeholder) -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:gravity="center">
+
+            <!-- Placeholder content -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Inventory App"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sync status bar appears above"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
