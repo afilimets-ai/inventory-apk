@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Sync Status Bar Component Layout
+
+    A persistent status indicator showing network connectivity and sync queue depth.
+
+    Three visual states:
+    - Offline: Amber bar with text "Offline — N changes pending sync"
+    - Syncing: Blue bar with progress animation
+    - Online: Collapsed to small green dot (8dp)
+
+    Components:
+    - expandedContainer: LinearLayout shown for Offline/Syncing states
+    - statusText: TextView displaying status message
+    - progressBar: ProgressBar shown during sync
+    - collapsedDot: View shown as green dot when online and synced
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Expanded bar for Offline/Syncing states -->
+    <LinearLayout
+        android:id="@+id/expandedContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical"
+        android:visibility="visible"
+        tools:background="@color/sync_offline_amber">
+
+        <!-- Status text (e.g., "Offline — 5 changes pending sync") -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Offline — 5 changes pending sync" />
+
+        <!-- Progress indicator for syncing state -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="100dp"
+            android:layout_height="4dp"
+            android:layout_marginStart="12dp"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+    <!-- Collapsed dot for Online state -->
+    <View
+        android:id="@+id/collapsedDot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:background="@color/sync_online_green"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</merge>
