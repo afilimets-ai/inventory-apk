@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "inventory-apk"
+rootProject.name = "InventoryApp"
 include(":app")

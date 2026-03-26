@@ -8,3 +8,12 @@
 .worktrees/
 .security-key
 logs/security/
+
+# Android / Gradle
+.gradle/
+build/
+*.iml
+.idea/
+local.properties
+*.apk
+*.aab
