@@ -44,6 +44,9 @@ class NewlandScannerManager @Inject constructor(
         // Intent extra keys for scan data (based on Newland MT90 SDK)
         private const val EXTRA_BARCODE_DATA = "SCAN_BARCODE1"
         private const val EXTRA_BARCODE_TYPE = "SCAN_BARCODE_TYPE"
+
+        // Debounce protection: ignore scans within 300ms of the previous scan
+        private const val DEBOUNCE_DELAY_MS = 300L
     }
 
     /**
@@ -51,6 +54,12 @@ class NewlandScannerManager @Inject constructor(
      * Prevents double registration/unregistration.
      */
     private var isRegistered = false
+
+    /**
+     * Timestamp of the last processed scan in milliseconds (System.currentTimeMillis()).
+     * Used for debounce protection to prevent duplicate scans within 300ms.
+     */
+    private var lastScanTimestamp = 0L
 
     /**
      * CoroutineScope for emitting scan events to SharedFlow.
@@ -112,8 +121,19 @@ class NewlandScannerManager @Inject constructor(
 
             Log.d(TAG, "Scan received: ${scanResult.barcode} (${scanResult.barcodeType})")
 
+            // Debounce protection: ignore scans within 300ms of the previous scan
+            val currentTime = System.currentTimeMillis()
+            val timeSinceLastScan = currentTime - lastScanTimestamp
+
+            if (timeSinceLastScan < DEBOUNCE_DELAY_MS) {
+                Log.d(TAG, "Scan ignored (debounce): ${timeSinceLastScan}ms since last scan")
+                return
+            }
+
+            // Update timestamp before emitting to prevent race conditions
+            lastScanTimestamp = currentTime
+
             // Emit scan result to SharedFlow for reactive consumption
-            // Note: Debouncing will be added in the next subtask
             scannerScope.launch {
                 _scanEvents.emit(scanResult)
                 Log.d(TAG, "Scan event emitted to SharedFlow")
