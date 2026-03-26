@@ -5,6 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,6 +53,39 @@ class NewlandScannerManager @Inject constructor(
     private var isRegistered = false
 
     /**
+     * CoroutineScope for emitting scan events to SharedFlow.
+     * Uses SupervisorJob to isolate failures and Dispatchers.Main for UI thread safety.
+     */
+    private val scannerScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+    /**
+     * Internal MutableSharedFlow for emitting scan results.
+     * Configured with replay = 0 (no replay) and extraBufferCapacity = 1 to buffer
+     * one event if no collectors are actively listening.
+     */
+    private val _scanEvents = MutableSharedFlow<ScanResult>(
+        replay = 0,
+        extraBufferCapacity = 1
+    )
+
+    /**
+     * Public SharedFlow for consuming scan results in ViewModels and UI layers.
+     *
+     * Collectors will receive ScanResult events emitted when the scanner captures
+     * a barcode. Use this in ViewModels with viewModelScope.launch { scanEvents.collect {...} }
+     *
+     * Example usage:
+     * ```
+     * viewModelScope.launch {
+     *     scannerManager.scanEvents.collect { scanResult ->
+     *         Log.d("MyViewModel", "Scanned: ${scanResult.barcode}")
+     *     }
+     * }
+     * ```
+     */
+    val scanEvents: SharedFlow<ScanResult> = _scanEvents.asSharedFlow()
+
+    /**
      * BroadcastReceiver for handling scan results from the Newland MT90 scanner.
      *
      * Listens for nlscan.action.SCANNER_RESULT broadcasts and extracts barcode data
@@ -72,7 +112,12 @@ class NewlandScannerManager @Inject constructor(
 
             Log.d(TAG, "Scan received: ${scanResult.barcode} (${scanResult.barcodeType})")
 
-            // Debouncing and SharedFlow emission will be added in subsequent subtasks
+            // Emit scan result to SharedFlow for reactive consumption
+            // Note: Debouncing will be added in the next subtask
+            scannerScope.launch {
+                _scanEvents.emit(scanResult)
+                Log.d(TAG, "Scan event emitted to SharedFlow")
+            }
         }
     }
 
