@@ -49,7 +49,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.4"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
 
     packaging {
@@ -99,4 +99,22 @@ dependencies {
 // Allow references to generated code
 kapt {
     correctErrorTypes = true
+}
+
+// Fix KAPT Java 17 module access issues
+afterEvaluate {
+    tasks.withType<JavaCompile>().configureEach {
+        options.forkOptions.jvmArgs?.addAll(listOf(
+            "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+        ))
+    }
 }
