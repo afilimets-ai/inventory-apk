@@ -213,13 +213,25 @@ class NewlandScannerManager @Inject constructor(
     }
 
     /**
-     * Internal method to trigger a scan by sending the nlscan.action.SCANNER_TRIG broadcast.
+     * Programmatically triggers a barcode scan by sending the nlscan.action.SCANNER_TRIG broadcast.
      *
      * This sends an intent to the Newland scanner service to initiate a barcode scan.
      * The scan result will be received via the registered BroadcastReceiver listening
-     * for nlscan.action.SCANNER_RESULT.
+     * for nlscan.action.SCANNER_RESULT and emitted through the scanEvents SharedFlow.
+     *
+     * This method can be called from ViewModels, UI components, or any other part of
+     * the application that needs to trigger a scan programmatically (e.g., via a button click).
+     *
+     * Example usage:
+     * ```
+     * // In a ViewModel or Activity
+     * scannerManager.triggerScan()
+     * ```
+     *
+     * Note: The BroadcastReceiver must be registered (via register()) before calling
+     * this method, otherwise scan results will not be received.
      */
-    private fun triggerScan() {
+    fun triggerScan() {
         val intent = Intent(ACTION_SCANNER_TRIG)
         context.sendBroadcast(intent)
         Log.d(TAG, "Scan trigger broadcast sent")
