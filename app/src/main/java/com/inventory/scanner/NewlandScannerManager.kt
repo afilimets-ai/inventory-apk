@@ -40,6 +40,12 @@ class NewlandScannerManager @Inject constructor(
     }
 
     /**
+     * Tracks whether the BroadcastReceiver is currently registered.
+     * Prevents double registration/unregistration.
+     */
+    private var isRegistered = false
+
+    /**
      * BroadcastReceiver for handling scan results from the Newland MT90 scanner.
      *
      * Listens for nlscan.action.SCANNER_RESULT broadcasts and extracts barcode data
@@ -68,5 +74,44 @@ class NewlandScannerManager @Inject constructor(
 
             // Debouncing and SharedFlow emission will be added in subsequent subtasks
         }
+    }
+
+    /**
+     * Registers the BroadcastReceiver to listen for scanner broadcasts.
+     *
+     * This should be called when the Activity/Fragment enters the foreground
+     * (typically in onResume or onStart) to begin receiving scan events.
+     *
+     * Safe to call multiple times - will not double-register.
+     */
+    fun register() {
+        if (isRegistered) {
+            Log.d(TAG, "Scanner receiver already registered, skipping")
+            return
+        }
+
+        val filter = android.content.IntentFilter(ACTION_SCANNER_RESULT)
+        context.registerReceiver(scanReceiver, filter)
+        isRegistered = true
+        Log.d(TAG, "Scanner receiver registered")
+    }
+
+    /**
+     * Unregisters the BroadcastReceiver to stop listening for scanner broadcasts.
+     *
+     * This MUST be called when the Activity/Fragment is destroyed (typically in
+     * onPause or onStop) to prevent memory leaks.
+     *
+     * Safe to call multiple times - will not crash if already unregistered.
+     */
+    fun unregister() {
+        if (!isRegistered) {
+            Log.d(TAG, "Scanner receiver not registered, skipping unregister")
+            return
+        }
+
+        context.unregisterReceiver(scanReceiver)
+        isRegistered = false
+        Log.d(TAG, "Scanner receiver unregistered")
     }
 }
