@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.view.KeyEvent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class NewlandScannerManager @Inject constructor(
 
         // Newland MT90 scanner broadcast actions
         private const val ACTION_SCANNER_RESULT = "nlscan.action.SCANNER_RESULT"
+        private const val ACTION_SCANNER_TRIG = "nlscan.action.SCANNER_TRIG"
 
         // Intent extra keys for scan data (based on Newland MT90 SDK)
         private const val EXTRA_BARCODE_DATA = "SCAN_BARCODE1"
@@ -178,5 +180,48 @@ class NewlandScannerManager @Inject constructor(
         context.unregisterReceiver(scanReceiver)
         isRegistered = false
         Log.d(TAG, "Scanner receiver unregistered")
+    }
+
+    /**
+     * Handles hardware key events from the Newland MT90 scanner.
+     *
+     * The MT90's hardware scan button generates a KeyEvent.KEYCODE_F6 event.
+     * When detected, this method triggers a scan by sending the nlscan.action.SCANNER_TRIG
+     * broadcast intent.
+     *
+     * This method should be called from your Activity's onKeyDown override:
+     * ```
+     * override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+     *     if (scannerManager.onKeyDown(keyCode, event)) {
+     *         return true
+     *     }
+     *     return super.onKeyDown(keyCode, event)
+     * }
+     * ```
+     *
+     * @param keyCode The key code from the KeyEvent
+     * @param event The KeyEvent object
+     * @return true if the key event was handled (F6 key pressed), false otherwise
+     */
+    fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_F6 && event.action == KeyEvent.ACTION_DOWN) {
+            Log.d(TAG, "Hardware scan button (F6) pressed")
+            triggerScan()
+            return true
+        }
+        return false
+    }
+
+    /**
+     * Internal method to trigger a scan by sending the nlscan.action.SCANNER_TRIG broadcast.
+     *
+     * This sends an intent to the Newland scanner service to initiate a barcode scan.
+     * The scan result will be received via the registered BroadcastReceiver listening
+     * for nlscan.action.SCANNER_RESULT.
+     */
+    private fun triggerScan() {
+        val intent = Intent(ACTION_SCANNER_TRIG)
+        context.sendBroadcast(intent)
+        Log.d(TAG, "Scan trigger broadcast sent")
     }
 }
