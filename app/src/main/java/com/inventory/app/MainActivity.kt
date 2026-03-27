@@ -2,6 +2,8 @@ package com.inventory.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
+import com.inventory.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -12,6 +14,13 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    /**
+     * Main ViewModel injected by Hilt using viewModels() delegate.
+     * The viewModels() delegate automatically creates and retains the ViewModel
+     * across configuration changes, and Hilt provides the necessary dependencies.
+     */
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
