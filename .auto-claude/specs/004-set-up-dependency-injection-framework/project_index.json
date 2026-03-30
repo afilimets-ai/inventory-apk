@@ -1,0 +1,36 @@
+{
+  "project_type": "single",
+  "services": {
+    "android": {
+      "path": ".",
+      "tech_stack": ["kotlin", "android", "hilt", "gradle"],
+      "port": null,
+      "dev_command": "./gradlew assembleDebug",
+      "test_command": "./gradlew test",
+      "build_tool": "gradle",
+      "min_sdk": 24,
+      "target_sdk": 34,
+      "compile_sdk": 34
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "room-sqlite",
+    "di_framework": "hilt"
+  },
+  "conventions": {
+    "language": "kotlin",
+    "architecture": "mvvm",
+    "ui_framework": "jetpack_compose",
+    "package_structure": "feature_based",
+    "code_style": "kotlin_official"
+  },
+  "project_structure": {
+    "app_module": "app",
+    "source_root": "app/src/main",
+    "kotlin_root": "app/src/main/java",
+    "resources_root": "app/src/main/res",
+    "test_root": "app/src/test",
+    "android_test_root": "app/src/androidTest"
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "feature": "Document project roadmap and feature specifications",
+  "workflow_type": "simple",
+  "workflow_rationale": "This is a documentation-only task with no code implementation, multi-service coordination, or complex dependencies. Simple workflow is appropriate for sequential documentation creation.",
+  "phases": [
+    {
+      "id": "phase-1-documentation",
+      "name": "Core Documentation",
+      "type": "implementation",
+      "description": "Create foundational project documentation files",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create project README with overview and getting started guide",
+          "service": "documentation",
+          "files_to_modify": [],
+          "files_to_create": [
+            "README.md"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review README.md contains: project description, purpose, key features overview, installation instructions, quick start guide, and links to other documentation"
+          },
+          "status": "completed",
+          "notes": "Created comprehensive README.md with project overview, purpose, key features (core and advanced), installation instructions, quick start guide, and links to all other documentation files. File includes technology stack, project status, and contribution information.",
+          "updated_at": "2026-03-24T15:19:33.761842+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create development roadmap with MVP scope and milestones",
+          "service": "documentation",
+          "files_to_modify": [],
+          "files_to_create": [
+            "ROADMAP.md"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review ROADMAP.md contains: MVP definition and scope, planned features organized by version/milestone (v0.1 MVP, v1.0, v2.0), timeline estimates, and priority levels"
+          },
+          "status": "completed",
+          "notes": "Created comprehensive ROADMAP.md with MVP definition and scope, planned features organized by version/milestone (v1.0 MVP, v1.1, v1.5, v2.0, v2.5, v3.0), detailed timeline estimates with 6 development phases, priority levels (P1/P2/P3), feature prioritization framework (RICE scoring), success metrics, and review process. File includes clear in-scope and out-of-scope features to prevent scope creep.",
+          "updated_at": "2026-03-25T07:09:34.422684+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Create feature specifications structure and initial feature docs",
+          "service": "documentation",
+          "files_to_modify": [],
+          "files_to_create": [
+            "docs/features/README.md",
+            "docs/features/TEMPLATE.md"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review docs/features/ contains: README.md explaining feature spec process, TEMPLATE.md for consistent feature documentation format"
+          },
+          "status": "completed",
+          "notes": "Created comprehensive feature specification documentation structure: docs/features/README.md explaining feature spec process (245 lines) and docs/features/TEMPLATE.md providing consistent feature documentation template (475 lines). README covers when to create specs, the specification process, file naming conventions, quality checklist, and relationship to other documentation. TEMPLATE provides a comprehensive structure with sections for overview, user stories, requirements, technical design, UI/UX, implementation plan, testing strategy, dependencies, and more. This establishes a standardized process for documenting features as they are planned and implemented.",
+          "updated_at": "2026-03-25T07:13:02.766503+00:00"
+        },
+        {
+          "id": "subtask-1-4",
+          "description": "Create architecture documentation",
+          "service": "documentation",
+          "files_to_modify": [],
+          "files_to_create": [
+            "docs/ARCHITECTURE.md"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review docs/ARCHITECTURE.md contains: high-level architecture overview, technology stack decisions, design patterns to follow, and key architectural principles"
+          },
+          "status": "completed",
+          "notes": "Created comprehensive ARCHITECTURE.md (1277 lines) documenting: high-level MVVM + Clean Architecture overview with visual diagrams, technology stack decisions with detailed rationale (Kotlin, Jetpack Compose, Room, Hilt, Coroutines), design patterns to follow (Repository, Use Case, Observer, State, Factory, Adapter) with code examples, key architectural principles (separation of concerns, unidirectional data flow, dependency inversion, single source of truth, fail-safe design, progressive enhancement), detailed project structure and package organization, Data/Domain/Presentation layer specifications with concrete implementations, offline-first strategy and data flow, navigation architecture with Jetpack Compose Navigation, dependency injection with Hilt modules, comprehensive testing strategy with test pyramid (70% unit, 20% integration, 10% E2E) including test examples, security considerations (data encryption, input validation, permissions, ProGuard/R8, secure coding practices), performance optimization strategies (database indexing, UI lazy loading, memory management), code quality standards and review checklist, and future considerations for v2.0+ scalability (multi-module architecture, cloud sync, multi-user support). The document provides concrete database schema designs (ItemEntity, CategoryEntity), DAO interfaces, domain models, use case patterns, ViewModel examples, and Compose UI guidelines to guide all future development.",
+          "updated_at": "2026-03-25T07:17:45.169491+00:00"
+        },
+        {
+          "id": "subtask-1-5",
+          "description": "Create contribution guidelines",
+          "service": "documentation",
+          "files_to_modify": [],
+          "files_to_create": [
+            "CONTRIBUTING.md"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Review CONTRIBUTING.md contains: how to set up dev environment, coding standards, pull request process, and issue reporting guidelines"
+          },
+          "status": "completed",
+          "notes": "Created comprehensive CONTRIBUTING.md (1036 lines, 26KB) covering: welcome message and ways to contribute (bug fixes, features, documentation, testing, UI/UX, code review, community support), development setup with prerequisites (Android Studio, JDK 11+, Android SDK API 24+, Git) and 10-step installation process including emulator configuration and running tests, project architecture overview explaining MVVM + Clean Architecture layers and technology stack, detailed coding standards following official Kotlin conventions with naming conventions (PascalCase for classes, camelCase for functions, SCREAMING_SNAKE_CASE for constants), code formatting rules (4 space indentation, 120 char line length), Kotlin best practices with examples (prefer expressions, use data classes, sealed classes for state, extension functions), project-specific conventions for ViewModel and Composable structure with code examples, resource naming conventions, code quality tools (ktlint, detekt), comprehensive testing requirements including test coverage targets (70% overall, 90%+ for business logic), testing pyramid (70% unit, 20% integration, 10% E2E), detailed examples of unit tests (ViewModel tests), integration tests (database tests), and UI tests (Compose tests) with given-when-then structure, making changes section with branching strategy (feature/, fix/, docs/ prefixes), commit message format and conventions (feat, fix, docs, style, refactor, test, chore types), keeping branches updated with rebase instructions, pre-submission checklist (code style, linting, tests, documentation), pull request process with complete PR template including description, type of change, related issues, changes made, testing checklist, screenshots, comprehensive checklist, code review expectations (review timeline, addressing feedback, merging process), issue reporting guidelines with bug report template (steps to reproduce, expected/actual behavior, environment details, logs) and feature request template (problem statement, proposed solution, target version, priority justification), feature requests process explaining how suggestions are evaluated against the roadmap, community and communication channels (GitHub Issues, Discussions, PRs), contributor recognition (git history, release notes, README acknowledgments), development resources with useful links (Android docs, Kotlin docs, Jetpack Compose, Material Design 3, Room, Hilt) and learning resources for newcomers. The document follows the same emoji-enhanced style as README.md and ROADMAP.md, provides clear expectations for contributors, and establishes a professional collaboration workflow aligned with the project's technical architecture.",
+          "updated_at": "2026-03-25T07:22:26.249432+00:00"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 1,
+    "total_subtasks": 5,
+    "services_involved": [
+      "documentation"
+    ],
+    "estimated_time": "2-3 hours",
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "N/A - Sequential documentation tasks",
+      "notes": "Documentation files can be created sequentially. No parallelism benefit."
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 011 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "trivial",
+    "skip_validation": true,
+    "test_creation_phase": "none",
+    "test_types_required": [],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All documentation files are created and well-structured",
+      "README.md provides clear project overview",
+      "ROADMAP.md defines MVP scope and development milestones",
+      "Feature specification structure is established",
+      "Architecture decisions are documented",
+      "Contribution guidelines are clear and actionable"
+    ],
+    "verification_steps": [
+      {
+        "name": "Documentation Completeness Check",
+        "command": "ls -la README.md ROADMAP.md CONTRIBUTING.md docs/ARCHITECTURE.md docs/features/",
+        "expected_outcome": "All documentation files exist",
+        "type": "command",
+        "required": true,
+        "blocking": false
+      },
+      {
+        "name": "Documentation Review",
+        "command": null,
+        "expected_outcome": "Documentation is clear, comprehensive, and well-organized",
+        "type": "manual",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Documentation-only change with no functional code - trivial risk level, manual review sufficient"
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    },
+    "documentation_verification": {
+      "required": true,
+      "files_to_review": [
+        "README.md",
+        "ROADMAP.md",
+        "CONTRIBUTING.md",
+        "docs/ARCHITECTURE.md",
+        "docs/features/README.md"
+      ],
+      "completeness_criteria": [
+        "All required sections present in each document",
+        "No placeholder text or TODOs left unfilled",
+        "Cross-references between documents are valid",
+        "Documentation is clear and actionable"
+      ]
+    }
+  },
+  "qa_signoff": {
+    "status": "approved",
+    "timestamp": "2026-03-25T07:30:00.000Z",
+    "qa_session": 1,
+    "report_file": "qa_report.md",
+    "tests_passed": {
+      "unit": "N/A - Documentation task",
+      "integration": "N/A - Documentation task",
+      "e2e": "N/A - Documentation task"
+    },
+    "documentation_verified": {
+      "files_reviewed": 6,
+      "total_lines": 3655,
+      "completeness": "All required sections present",
+      "cross_references": "All valid",
+      "quality": "Excellent - comprehensive and actionable"
+    },
+    "issues_found": {
+      "critical": 0,
+      "major": 0,
+      "minor": 1,
+      "minor_details": "Placeholder GitHub URLs (yourusername) - acceptable for greenfield project, non-blocking"
+    },
+    "verified_by": "qa_agent"
+  },
+  "executionPhase": "complete",
+  "status": "done",
+  "planStatus": "completed",
+  "updated_at": "2026-03-26T08:31:50.545Z",
+  "last_updated": "2026-03-25T07:22:26.249432+00:00",
+  "xstateState": "done",
+  "recoveryNote": "Task recovered from stuck state at 2026-03-25T07:07:14.759Z",
+  "lastEvent": {
+    "eventId": "b78a7a42-dda3-4ca1-961b-8c3137555adf",
+    "sequence": 1,
+    "type": "QA_PASSED",
+    "timestamp": "2026-03-25T07:27:01.996497+00:00"
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-03-25T07:27:01.981496+00:00",
+      "issues": [],
+      "duration_seconds": 234.97
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  }
+}

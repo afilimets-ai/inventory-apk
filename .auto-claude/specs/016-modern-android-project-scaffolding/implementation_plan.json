@@ -1,0 +1,490 @@
+{
+  "feature": "Modern Android Project Scaffolding",
+  "workflow_type": "feature",
+  "workflow_rationale": "This is a foundational scaffolding task that creates a complete modern Android project structure from scratch. It follows a feature workflow with sequential phases where each phase builds upon the previous one: Gradle foundation → App module → MVVM architecture → Build configuration → Final verification. Each phase represents a distinct layer of the project setup.",
+  "description": "Complete rewrite from legacy Java/Android Support Library POC to production-grade Kotlin project. AGP 8.x, compileSdk 34+, AndroidX, MVVM architecture with ViewModel + StateFlow, proper package structure (data/domain/presentation layers), ProGuard/R8 configuration, and .editorconfig for code standards.",
+  "phases": [
+    {
+      "id": "phase-1-gradle-foundation",
+      "name": "Gradle Foundation Setup",
+      "type": "setup",
+      "description": "Create Gradle build system with Kotlin DSL, version catalogs, and wrapper configuration for AGP 8.x",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create root build.gradle.kts with AGP 8.x plugin",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "build.gradle.kts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew tasks --dry-run",
+            "expected": "Build succeeds without errors"
+          },
+          "status": "pending",
+          "notes": "Root-level Gradle file with AGP plugin configuration"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create settings.gradle.kts with pluginManagement",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "settings.gradle.kts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cat settings.gradle.kts",
+            "expected": "File contains pluginManagement and includes app module"
+          },
+          "status": "pending",
+          "notes": "Configure plugin repositories and include app module"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Create gradle.properties with build optimization flags",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "gradle.properties"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep 'org.gradle.jvmargs' gradle.properties",
+            "expected": "Contains JVM memory settings"
+          },
+          "status": "pending",
+          "notes": "Configure Gradle daemon memory, parallel execution, and caching"
+        },
+        {
+          "id": "subtask-1-4",
+          "description": "Create gradle/libs.versions.toml for version catalog",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "gradle/libs.versions.toml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cat gradle/libs.versions.toml",
+            "expected": "Contains version definitions for AGP, Kotlin, AndroidX"
+          },
+          "status": "pending",
+          "notes": "Centralized dependency version management with version catalogs"
+        },
+        {
+          "id": "subtask-1-5",
+          "description": "Set up Gradle wrapper for Gradle 8.2+",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "gradle/wrapper/gradle-wrapper.properties",
+            "gradlew",
+            "gradlew.bat"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew --version",
+            "expected": "Gradle 8.2 or higher"
+          },
+          "status": "pending",
+          "notes": "Gradle wrapper ensures consistent build environment across machines"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-app-module",
+      "name": "App Module Structure",
+      "type": "implementation",
+      "description": "Create app module with AndroidManifest, basic configuration, and AndroidX dependencies",
+      "depends_on": [
+        "phase-1-gradle-foundation"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Create app/build.gradle.kts with Kotlin and Android plugins",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/build.gradle.kts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:dependencies --configuration debugRuntimeClasspath",
+            "expected": "Dependencies resolve successfully"
+          },
+          "status": "pending",
+          "notes": "Configure compileSdk 34, minSdk 29, targetSdk 34, Kotlin, AndroidX dependencies"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Create AndroidManifest.xml with app declaration",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/AndroidManifest.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:processDebugManifest",
+            "expected": "Manifest processing succeeds"
+          },
+          "status": "pending",
+          "notes": "Define application node with InventoryApp as android:name"
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Create app/proguard-rules.pro for R8 configuration",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/proguard-rules.pro"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cat app/proguard-rules.pro",
+            "expected": "Contains ProGuard rules for common libraries"
+          },
+          "status": "pending",
+          "notes": "Add rules for Kotlin, AndroidX, and serialization if needed"
+        },
+        {
+          "id": "subtask-2-4",
+          "description": "Create basic Android resource files",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/values/strings.xml",
+            "app/src/main/res/values/themes.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:processDebugResources",
+            "expected": "Resource processing succeeds"
+          },
+          "status": "pending",
+          "notes": "Minimal strings.xml and Material3 theme configuration"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-mvvm-architecture",
+      "name": "MVVM Architecture & Package Structure",
+      "type": "implementation",
+      "description": "Create clean architecture package structure with data/domain/presentation layers and MVVM example",
+      "depends_on": [
+        "phase-2-app-module"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Create package structure with data/domain/presentation layers",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/kotlin/com/inventory/app/data/.gitkeep",
+            "app/src/main/kotlin/com/inventory/app/domain/.gitkeep",
+            "app/src/main/kotlin/com/inventory/app/presentation/.gitkeep"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "find app/src/main/kotlin/com/inventory/app -type d",
+            "expected": "Shows data, domain, and presentation directories"
+          },
+          "status": "pending",
+          "notes": "Clean architecture layers for separation of concerns"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Create InventoryApp.kt (Application class)",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/kotlin/com/inventory/app/InventoryApp.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:compileDebugKotlin",
+            "expected": "Kotlin compilation succeeds"
+          },
+          "status": "pending",
+          "notes": "Application class for initialization, future Hilt setup"
+        },
+        {
+          "id": "subtask-3-3",
+          "description": "Create MainActivity.kt with basic setup",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/kotlin/com/inventory/app/presentation/MainActivity.kt",
+            "app/src/main/res/layout/activity_main.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:compileDebugKotlin",
+            "expected": "Kotlin compilation succeeds"
+          },
+          "status": "pending",
+          "notes": "Main activity as entry point with basic layout"
+        },
+        {
+          "id": "subtask-3-4",
+          "description": "Create MainViewModel.kt with StateFlow example",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/kotlin/com/inventory/app/presentation/MainViewModel.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:compileDebugKotlin",
+            "expected": "Kotlin compilation succeeds"
+          },
+          "status": "pending",
+          "notes": "ViewModel with StateFlow demonstrating MVVM pattern"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-build-config",
+      "name": "Build Configuration & Standards",
+      "type": "implementation",
+      "description": "Configure .editorconfig for code standards and update .gitignore for Android",
+      "depends_on": [
+        "phase-3-mvvm-architecture"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Create .editorconfig for Kotlin code formatting",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [
+            ".editorconfig"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "cat .editorconfig",
+            "expected": "Contains Kotlin formatting rules"
+          },
+          "status": "pending",
+          "notes": "Define indent size, charset, line endings, and Kotlin-specific rules"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Update .gitignore for Android project artifacts",
+          "service": "android",
+          "files_to_modify": [
+            ".gitignore"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep 'build/' .gitignore",
+            "expected": "Contains Android build artifacts"
+          },
+          "status": "pending",
+          "notes": "Add Android-specific ignores: build/, .gradle/, local.properties, etc."
+        }
+      ]
+    },
+    {
+      "id": "phase-5-verification",
+      "name": "Build & Verification",
+      "type": "integration",
+      "description": "Verify project compiles, builds APK, and can be installed on target device",
+      "depends_on": [
+        "phase-3-mvvm-architecture",
+        "phase-4-build-config"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Verify project builds successfully",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew assembleDebug",
+            "expected": "Build succeeds, APK created in app/build/outputs/apk/debug/"
+          },
+          "status": "pending",
+          "notes": "Full debug build verification"
+        },
+        {
+          "id": "subtask-5-2",
+          "description": "Verify release build with R8 shrinking",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew assembleRelease",
+            "expected": "Release build succeeds with R8 code shrinking"
+          },
+          "status": "pending",
+          "notes": "Verify ProGuard/R8 configuration is correct"
+        },
+        {
+          "id": "subtask-5-3",
+          "description": "Manual device installation test",
+          "service": "android",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "instructions": "Install app on Newland MT90 (or Android 10/11 emulator) via './gradlew installDebug', launch app, verify it opens without crashes"
+          },
+          "status": "pending",
+          "notes": "Target device: Newland MT90 with Android 10/11"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 5,
+    "total_subtasks": 14,
+    "services_involved": [
+      "android"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 2,
+      "parallel_groups": [
+        {
+          "phases": [
+            "phase-3-mvvm-architecture",
+            "phase-4-build-config"
+          ],
+          "reason": "Phase 4 only modifies config files (.editorconfig, .gitignore), doesn't conflict with phase 3 Kotlin code files"
+        }
+      ],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential recommended - dependency chain is critical for Android builds"
+    },
+    "startup_command": "cd .auto-claude/worktrees/tasks/016-modern-android-project-scaffolding && ./gradlew assembleDebug"
+  },
+  "verification_strategy": {
+    "risk_level": "high",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "build",
+      "manual"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "Project compiles with Kotlin 1.9+, AGP 8.x, compileSdk 34+",
+      "Package structure follows data/domain/presentation layer separation",
+      "MVVM architecture with ViewModel and StateFlow in place",
+      "ProGuard/R8 configured for release builds",
+      ".editorconfig defines formatting standards",
+      "App installs and launches on Android 10/11 device",
+      "No legacy Java code or Support Library dependencies"
+    ],
+    "verification_steps": [
+      {
+        "name": "Debug Build",
+        "command": "./gradlew assembleDebug",
+        "expected_outcome": "APK builds successfully",
+        "type": "command",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Release Build with R8",
+        "command": "./gradlew assembleRelease",
+        "expected_outcome": "Release APK builds with code shrinking",
+        "type": "command",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Kotlin Compilation",
+        "command": "./gradlew compileDebugKotlin",
+        "expected_outcome": "All Kotlin files compile without errors",
+        "type": "command",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Device Installation",
+        "command": "./gradlew installDebug",
+        "expected_outcome": "App installs on connected device/emulator",
+        "type": "manual",
+        "required": true,
+        "blocking": true
+      }
+    ],
+    "reasoning": "High risk because this is foundational scaffolding - all future development depends on this. Must verify builds succeed and app launches on target device."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    },
+    "build_verification": {
+      "required": true,
+      "checks": [
+        "Debug build succeeds",
+        "Release build succeeds with R8",
+        "App installs on Android 10/11",
+        "App launches without crashes",
+        "No Java/Support Library dependencies"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "status": "done",
+  "planStatus": "completed",
+  "xstateState": "done",
+  "executionPhase": "complete",
+  "updated_at": "2026-03-27T12:43:25.561Z"
+}

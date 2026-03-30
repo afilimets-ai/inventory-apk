@@ -1,0 +1,48 @@
+{
+  "file_path": "app/src/main/AndroidManifest.xml",
+  "main_branch_history": [],
+  "task_views": {
+    "001-initialize-project-scaffolding-with-standard-andro": {
+      "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T16:24:50.477846"
+      },
+      "worktree_state": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    package=\"com.inventory.app\">\n\n    <uses-permission android:name=\"android.permission.INTERNET\" />\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n\n    <application\n        android:name=\".InventoryApplication\"\n        android:allowBackup=\"true\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.InventoryApp\">\n\n        <activity\n            android:name=\".MainActivity\"\n            android:exported=\"true\"\n            android:label=\"@string/app_name\"\n            android:theme=\"@style/Theme.InventoryApp\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n    </application>\n\n</manifest>\n",
+        "last_modified": "2026-03-26T11:52:51.459548"
+      },
+      "task_intent": {
+        "title": "001-initialize-project-scaffolding-with-standard-andro",
+        "description": "Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon.",
+        "from_plan": true
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    },
+    "004-set-up-dependency-injection-framework": {
+      "task_id": "004-set-up-dependency-injection-framework",
+      "branch_point": {
+        "commit_hash": "fb72c5b08fe09b2797d2f11a50ed2153870f77f2",
+        "content": "",
+        "timestamp": "2026-03-26T10:33:15.356050"
+      },
+      "worktree_state": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    package=\"com.inventory.app\">\n\n    <application\n        android:allowBackup=\"true\"\n        android:icon=\"@android:drawable/ic_dialog_info\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@android:drawable/ic_dialog_info\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@android:style/Theme.Material.Light.DarkActionBar\">\n\n        <activity\n            android:name=\".MainActivity\"\n            android:exported=\"true\"\n            android:theme=\"@android:style/Theme.Material.Light.NoActionBar\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n    </application>\n\n</manifest>\n",
+        "last_modified": "2026-03-26T10:33:16.103658"
+      },
+      "task_intent": {
+        "title": "004-set-up-dependency-injection-framework",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 0,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T11:30:43.248752",
+  "last_updated": "2026-03-26T10:33:15.522294"
+}

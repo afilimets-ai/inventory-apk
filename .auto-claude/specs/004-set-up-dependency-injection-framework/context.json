@@ -1,0 +1,38 @@
+{
+  "files_to_create": {
+    "android": [
+      "settings.gradle.kts",
+      "build.gradle.kts",
+      "gradle.properties",
+      "app/build.gradle.kts",
+      "app/src/main/AndroidManifest.xml",
+      "app/src/main/java/com/inventory/app/InventoryApplication.kt",
+      "app/src/main/java/com/inventory/app/di/AppModule.kt",
+      "app/src/main/java/com/inventory/app/di/DatabaseModule.kt"
+    ]
+  },
+  "files_to_modify": {},
+  "files_to_reference": [],
+  "patterns": {
+    "application_setup": "Use @HiltAndroidApp annotation on Application class to enable Hilt",
+    "module_pattern": "Create separate modules for different concerns (app-level, database, network, etc.)",
+    "scope_pattern": "Use @Singleton for app-level dependencies, @ViewModelScoped for ViewModels",
+    "injection_pattern": "Use @Inject constructor for dependency injection, @Module and @InstallIn for providing dependencies"
+  },
+  "existing_implementations": {
+    "description": "This is a greenfield project with no existing code. Following standard Android + Hilt patterns from official documentation.",
+    "relevant_files": []
+  },
+  "hilt_setup_requirements": {
+    "gradle_plugin": "com.google.dagger:hilt-android-gradle-plugin",
+    "dependencies": [
+      "com.google.dagger:hilt-android",
+      "com.google.dagger:hilt-android-compiler",
+      "androidx.hilt:hilt-navigation-compose"
+    ],
+    "kapt_required": true,
+    "application_annotation": "@HiltAndroidApp",
+    "activity_annotation": "@AndroidEntryPoint"
+  },
+  "package_name": "com.inventory.app"
+}

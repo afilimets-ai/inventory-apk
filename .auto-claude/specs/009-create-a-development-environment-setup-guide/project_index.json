@@ -1,0 +1,29 @@
+{
+  "project_type": "single",
+  "project_name": "inventory-apk",
+  "project_description": "Android inventory management application",
+  "services": {
+    "android": {
+      "path": ".",
+      "tech_stack": ["android", "java", "kotlin", "gradle"],
+      "port": null,
+      "dev_command": "Not yet configured - project needs initial setup",
+      "test_command": "Not yet configured",
+      "build_command": "./gradlew build",
+      "run_command": "./gradlew installDebug"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "sqlite",
+    "ci_cd": "Not configured"
+  },
+  "conventions": {
+    "linter": "Not configured",
+    "formatter": "Not configured",
+    "testing": "Not configured",
+    "documentation": "markdown"
+  },
+  "project_status": "early_stage",
+  "notes": "Project is in initial setup phase. No source code, build files, or documentation exists yet. This spec focuses on creating the development environment setup guide."
+}

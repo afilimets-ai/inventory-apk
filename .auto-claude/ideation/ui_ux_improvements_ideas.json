@@ -1,0 +1,137 @@
+{
+  "ui_ux_improvements": [
+    {
+      "id": "uiux-001",
+      "type": "ui_ux_improvements",
+      "title": "Industrial-grade touch targets and spacing for glove-friendly operation",
+      "description": "Enforce minimum 60dp touch targets (80dp near screen edges) across all interactive Jetpack Compose components, with generous padding (16–24dp) between tap zones. The POC reference app uses wrap_content buttons and only 10dp padding — completely unsuitable for warehouse workers in gloves on the MT90 terminal's 5-inch display.",
+      "rationale": "CLAUDE.md explicitly mandates 60dp minimum / 80dp near-edge touch targets for glove operation. The existing POC's 10dp padding and wrap_content button creates a 48dp-height Button that violates this requirement. Industrial terminals are operated one-handed while the other hand holds product — mis-taps waste time and cause frustration. This is the single most impactful UX requirement for the target hardware.",
+      "category": "usability",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/res/layout/activity_main.xml",
+        "app/src/main/java/ui/theme/Dimensions.kt (to be created)",
+        "app/src/main/java/ui/components/IndustrialButton.kt (to be created)",
+        "app/src/main/java/ui/components/ScanResultCard.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "POC activity_main.xml uses LinearLayout with 10dp padding, a Button with wrap_content (default ~48dp height), and no minimum size constraints on any touch target. Text labels use default font sizes. The layout has no consideration for one-handed glove operation on a 5-inch industrial terminal.",
+      "proposed_change": "In the new Jetpack Compose UI: (1) Create a Dimensions.kt design tokens file defining IndustrialMinTouchTarget = 60.dp, EdgeMinTouchTarget = 80.dp, ContentPadding = 16.dp, SectionSpacing = 24.dp; (2) Build an IndustrialButton composable that enforces Modifier.defaultMinSize(minWidth = 60.dp, minHeight = 60.dp) with increased padding (horizontal = 24.dp, vertical = 16.dp); (3) Apply Modifier.padding(horizontal = 16.dp) to all screen content; (4) Use Modifier.defaultMinSize(80.dp) for any interactive elements within 48dp of screen edges (back buttons, nav items); (5) Set minimum text size to 16sp for body, 20sp for scan results, 14sp for labels. All values should be defined as Compose dimension tokens for white-label override per product flavor.",
+      "user_benefit": "Warehouse workers wearing work gloves can reliably tap buttons and interact with the app on the first try, without needing to remove gloves. Reduces mis-taps by an estimated 70-80% compared to standard 48dp Android touch targets.",
+      "status": "draft",
+      "created_at": "2026-03-24T11:45:00.000Z"
+    },
+    {
+      "id": "uiux-002",
+      "type": "ui_ux_improvements",
+      "title": "Multimodal scan feedback system: sound + vibration + visual confirmation",
+      "description": "Implement a three-channel feedback system for every scan event (success, failure, duplicate) using simultaneous sound, haptic vibration, and visual animation. The POC only updates text on success and shows a Toast on failure — entirely insufficient for noisy warehouse environments.",
+      "rationale": "CLAUDE.md explicitly requires 'звук + вібрація + візуал (шумне середовище)' — sound + vibration + visual for noisy environments. The current POC provides zero haptic feedback, zero audio feedback, and only a text change on success (no color change, no animation). In a warehouse with forklifts, conveyor belts, and radio chatter, a silent text change is effectively invisible. Workers need to know instantly — without looking at the screen — whether a scan succeeded.",
+      "category": "interaction",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+        "app/src/main/java/scanner/ScanFeedbackManager.kt (to be created)",
+        "app/src/main/java/ui/components/ScanResultBanner.kt (to be created)",
+        "app/src/main/res/raw/scan_success.ogg (to be added)",
+        "app/src/main/res/raw/scan_error.ogg (to be added)"
+      ],
+      "screenshots": [],
+      "current_state": "POC MainActivity.java line 51-58: on successful scan, only calls txtbarcode.setText(barcode) and txtbarcodeType.setText(barcodeType). On failure, shows Toast.makeText('Barcode Not getting.'). No vibration (no Vibrator service used). No sound (no MediaPlayer/SoundPool). No visual animation or color change. Toast messages disappear quickly and are easily missed.",
+      "proposed_change": "Create ScanFeedbackManager as a Hilt @Singleton that coordinates all three channels: (1) HAPTIC: Use VibrationEffect.createOneShot(150ms, EFFECT_HEAVY_CLICK) for success, two short pulses (100ms-pause-100ms) for error, three rapid pulses for duplicate detection; (2) AUDIO: Use SoundPool for low-latency playback — distinct tones for success (ascending two-note chime), error (descending buzz), and duplicate (single warning beep). Volume at 80% to cut through warehouse noise; (3) VISUAL: Animate a full-width ScanResultBanner composable that slides down from top — green background with checkmark + barcode value for success (auto-dismiss after 2s), red background with X icon + error message for failure (persists until next scan), amber background for duplicate. Use Compose animateColorAsState and AnimatedVisibility for smooth transitions. Banner must be readable at arm's length (24sp text, high contrast white-on-green/red).",
+      "user_benefit": "Workers instantly know scan outcome through the channel most available to them — hearing the sound over machinery noise, feeling the vibration through gloves, or glancing at the color banner. Eliminates the need to stop work and read small text to confirm a scan registered.",
+      "status": "draft",
+      "created_at": "2026-03-24T11:45:00.000Z"
+    },
+    {
+      "id": "uiux-003",
+      "type": "ui_ux_improvements",
+      "title": "Scan-in-progress state indicator with visual scanner-active animation",
+      "description": "Show a clear visual indicator when the barcode scanner is active and awaiting a scan, including a pulsing animation, countdown timer (matching SCAN_TIMEOUT), and instruction text. The POC fires the scan intent but provides zero feedback that the scanner is active.",
+      "rationale": "The POC sends the nlscan.action.SCANNER_TRIG broadcast (with SCAN_TIMEOUT=4 seconds) but provides no visual feedback that the scanner laser is active. Users press the hardware button or tap 'Scan' and see nothing change — they don't know if the scanner activated, if it's still waiting, or if the timeout expired. This creates a pattern of repeated button-pressing and frustration, especially for new users unfamiliar with the MT90 hardware.",
+      "category": "usability",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+        "app/src/main/java/ui/components/ScannerActiveOverlay.kt (to be created)",
+        "app/src/main/java/scanner/NewlandScannerManager.kt (to be created)",
+        "app/src/main/java/ui/screens/ScanScreen.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "POC MainActivity.java lines 33-38 and 74-78: sendBroadcast(nlscan.action.SCANNER_TRIG) is fired on button click and F6 key press, but no UI state change occurs. The isScanFromButton boolean is set but never read or used to update UI. There is no scanning state, no timeout countdown, and no visual difference between 'idle' and 'scanning' modes. When the 4-second timeout expires silently, the user has no way to know.",
+      "proposed_change": "In NewlandScannerManager (the planned singleton from CLAUDE.md): (1) Expose a scannerState: StateFlow<ScannerState> with states IDLE, SCANNING, RESULT_SUCCESS, RESULT_ERROR; (2) Transition to SCANNING when trigger() is called, start an internal countdown coroutine matching the timeout; (3) In the Compose UI, create ScannerActiveOverlay composable: when state==SCANNING, show a pulsing crosshair animation (or scanner-line animation) in the center of the scan area, with a circular countdown indicator around the scan button showing remaining seconds (animated arc decreasing from 360° to 0°), plus text 'Scanning... point at barcode' in 18sp; (4) When timeout expires without result, transition to IDLE and trigger error feedback; (5) When scan succeeds, briefly show RESULT_SUCCESS (green flash) before auto-advancing. Use Compose InfiniteTransition for the pulse animation and animateFloatAsState for the countdown arc.",
+      "user_benefit": "Workers always know whether the scanner is active or idle — no more wondering 'did it fire?' or pressing the button multiple times. The countdown shows exactly how long they have to aim at the barcode, reducing failed scans from timeout uncertainty.",
+      "status": "draft",
+      "created_at": "2026-03-24T11:45:00.000Z"
+    },
+    {
+      "id": "uiux-004",
+      "type": "ui_ux_improvements",
+      "title": "High-contrast industrial Material 3 theme with sunlight and low-light modes",
+      "description": "Design a Material 3 color scheme optimized for industrial environments — high contrast ratios (minimum 7:1 for body text, 4.5:1 for large text), distinct semantic colors for scan states, and automatic or manual switching between 'warehouse daylight' (high brightness, reduced color saturation) and 'standard' modes. Replace the POC's generic green/pink AppCompat theme.",
+      "rationale": "The POC uses default AppCompat theme with colorPrimary=#008577 (teal green) and colorAccent=#D81B60 (pink) — colors chosen for aesthetics, not readability. Industrial terminals operate under fluorescent warehouse lighting, direct sunlight through loading dock doors, and dim storage areas. MT90's 5-inch screen at default brightness may be hard to read in bright sunlight. A purpose-built industrial theme ensures readability in all conditions and makes status colors (green=success, red=error, amber=warning) instantly recognizable. This also establishes the theming foundation for white-label product flavors.",
+      "category": "visual",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/colors.xml",
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/styles.xml",
+        "app/src/main/java/ui/theme/Color.kt (to be created)",
+        "app/src/main/java/ui/theme/Theme.kt (to be created)",
+        "app/src/main/java/ui/theme/Type.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "POC colors.xml defines only 3 colors: colorPrimary=#008577, colorPrimaryDark=#00574B, colorAccent=#D81B60. These are the Android Studio default template colors with no semantic meaning for inventory operations. The AppCompat theme provides no dark mode, no high-contrast mode, and no scan-state colors. Text sizes are all Android defaults (14sp body) which may be small on a 5-inch terminal at arm's length.",
+      "proposed_change": "Create a complete Material 3 theme in Jetpack Compose: (1) COLOR TOKENS: Define semantic inventory colors — ScanSuccess=#1B8A2F (forest green, high contrast on white), ScanError=#CC2936 (strong red), ScanWarning=#E6A817 (amber), SyncPending=#2563EB (blue), OfflineIndicator=#DC2626. Primary brand color configurable per flavor. All colors must pass WCAG AAA contrast (7:1) against their background; (2) TYPOGRAPHY: IndustrialType scale — bodyLarge=18sp, titleMedium=22sp, scanResult=28sp bold, labelSmall=14sp. Use system default sans-serif for maximum readability; (3) HIGH-CONTRAST MODE: A 'Sunlight Mode' toggle that switches to pure black text on white background, removes gradients/shadows, and increases text weight to Medium. Stored in DataStore preference; (4) DARK THEME: True dark theme for dimly lit storage areas with OLED-friendly pure black background (#000000) to save battery. Auto-switch via system setting or manual toggle; (5) White-label theming: All tokens exposed via CompositionLocal providers so product flavors can override colors without touching component code.",
+      "user_benefit": "The app is readable in any warehouse lighting condition — from bright loading docks to dim storage rooms. Workers never squint to read scan results or mistake an error color for a success. The white-label theming foundation enables client branding without UX degradation.",
+      "status": "draft",
+      "created_at": "2026-03-24T11:45:00.000Z"
+    },
+    {
+      "id": "uiux-005",
+      "type": "ui_ux_improvements",
+      "title": "Persistent offline/sync status bar with pending-operations counter",
+      "description": "Display a persistent, non-intrusive status indicator showing network connectivity state and sync queue depth. When offline, show an amber bar with 'Offline — N changes pending sync'. When syncing, show a blue bar with progress animation. When online and synced, collapse to a small green dot. The POC has zero connectivity awareness.",
+      "rationale": "CLAUDE.md defines an offline-first architecture with outbox pattern and WorkManager sync. Users working in warehouses frequently move between areas with good WiFi, spotty coverage, and dead zones (metal shelving, cold rooms). Without visible sync status, workers don't know if their scans are being saved only locally, if they need to move to a better coverage area before shift end, or if a sync error is silently losing data. This is a trust and data-integrity issue — workers must trust that their scans are captured even without network.",
+      "category": "usability",
+      "affected_components": [
+        "app/src/main/java/ui/components/SyncStatusBar.kt (to be created)",
+        "app/src/main/java/sync/SyncStatusRepository.kt (to be created)",
+        "app/src/main/java/data/outbox/OutboxDao.kt (to be created)",
+        "app/src/main/java/ui/screens/MainScreen.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "The POC has no network awareness, no sync mechanism, and no connectivity UI. The planned architecture (CLAUDE.md) describes outbox pattern with WorkManager drain, but no UI component is specified for making sync state visible to the user. Without this, the app's offline-first promise is invisible and untrusted.",
+      "proposed_change": "Create a SyncStatusBar composable anchored at the top of every screen (below the app bar): (1) OFFLINE STATE: 12dp-height amber bar showing 'Offline' icon + 'N changes pending' count (from Room outbox table COUNT query via Flow). Expanded to 32dp on first transition to offline with a slide-down animation, then collapses to 12dp after 3 seconds. Tapping expands to show list of pending operations; (2) SYNCING STATE: 12dp blue bar with indeterminate linear progress indicator + 'Syncing N items...' text. Progress becomes determinate when individual items complete; (3) ONLINE/SYNCED STATE: Collapse to invisible (or tiny 4dp green dot in the app bar) to avoid visual noise during normal operation; (4) SYNC ERROR STATE: Red bar persists until user taps 'Retry' or error resolves. Shows error count + last error time; (5) Implementation: Observe ConnectivityManager.NetworkCallback via a NetworkMonitor @Singleton, combine with outbox DAO count via Flow.combine(), expose as SyncState sealed class to the composable. Use Compose AnimatedVisibility with expandVertically/shrinkVertically transitions. The bar must never overlap or push down the scan result area — use a fixed-height slot at the top of the screen scaffold.",
+      "user_benefit": "Workers always know their data is safe — they can see at a glance that scans are being synced, or that they have pending changes that need connectivity. Shift supervisors can confirm all terminal data synced before end-of-day reporting. Eliminates anxiety about 'did my scans save?' in dead zones.",
+      "status": "draft",
+      "created_at": "2026-03-24T11:45:00.000Z"
+    }
+  ],
+  "metadata": {
+    "generated_at": "2026-03-24T11:45:00.000Z",
+    "generator": "ui_ux_improvements_ideation_agent",
+    "project_state": "early_stage_with_reference_poc",
+    "analysis_method": "static_code_analysis_of_poc_and_architecture_docs",
+    "note": "This is a native Android app (Kotlin + Jetpack Compose) for Newland MT90 Orca industrial terminals. Ideas are based on analysis of the reference POC Java app and CLAUDE.md UX guidelines. Previous ideation incorrectly referenced React/TSX web components. All affected_components reference actual POC files and planned Kotlin/Compose files matching the project architecture.",
+    "analyzed_files": [
+      "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+      "NewLand-Scanner-DeviceMT90-master/app/src/main/res/layout/activity_main.xml",
+      "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/colors.xml",
+      "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/styles.xml",
+      "NewLand-Scanner-DeviceMT90-master/app/src/main/AndroidManifest.xml",
+      "CLAUDE.md"
+    ],
+    "key_constraints": {
+      "target_device": "Newland MT90 Orca / Orca Pro (5-inch, Android 10/11)",
+      "min_touch_target": "60dp standard, 80dp near edges",
+      "primary_input": "Barcode scanner hardware button",
+      "environment": "Noisy warehouse, variable lighting, glove operation",
+      "feedback_requirement": "Sound + Vibration + Visual (multimodal)",
+      "architecture": "Offline-first with outbox pattern"
+    },
+    "total_ideas": 5,
+    "categories": {
+      "usability": 3,
+      "accessibility": 0,
+      "performance": 0,
+      "visual": 1,
+      "interaction": 1
+    }
+  }
+}

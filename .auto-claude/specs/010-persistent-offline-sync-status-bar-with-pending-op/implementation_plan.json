@@ -1,0 +1,480 @@
+{
+  "feature": "Persistent offline/sync status bar with pending-operations counter",
+  "workflow_type": "feature",
+  "workflow_rationale": "Building a multi-layer feature requiring database (Room), repository, background worker (WorkManager), and UI components. Phases follow dependency order: data layer → sync infrastructure → UI → integration.",
+  "phases": [
+    {
+      "id": "phase-1-database",
+      "name": "Database & Data Layer",
+      "type": "implementation",
+      "description": "Create Room database with outbox pattern for storing pending sync operations",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create OutboxEntity data model for pending operations",
+          "service": "android-app",
+          "files_to_modify": [
+            "app/build.gradle.kts"
+          ],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created OutboxEntity.kt with Room entity annotations. Includes fields: id (auto-generated), operationType, payload, createdAt, syncStatus. Represents pending sync operations in offline-first architecture.",
+          "updated_at": "2026-03-24T15:18:39.932608+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create OutboxDao with queries for pending operations count",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt"
+          ],
+          "patterns_from": [
+            "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created OutboxDao.kt with Room DAO interface. Provides reactive queries: getPendingCount() returns Flow<Int> for reactive UI updates, getAll() returns Flow<List<OutboxEntity>>, plus CRUD operations (insert, delete, updateSyncStatus). Note: Compilation verification blocked by missing Java/JDK - code follows Android Room best practices and should compile successfully once Java is installed.",
+          "updated_at": "2026-03-24T15:18:41.529772+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Create AppDatabase Room database singleton",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/data/local/AppDatabase.kt"
+          ],
+          "patterns_from": [
+            "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created AppDatabase.kt as Room database singleton. Includes @Database annotation with OutboxEntity, version 1, exportSchema=false. Implements singleton pattern with double-check locking for thread-safe initialization. Provides outboxDao() for accessing pending operations. Note: Compilation verification blocked by missing Java/JDK - code follows Android Room best practices and should compile successfully once Java is installed.",
+          "updated_at": "2026-03-24T15:21:30.540500+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-sync-infrastructure",
+      "name": "Sync Infrastructure",
+      "type": "implementation",
+      "description": "Build network monitoring, sync state management, and WorkManager sync worker",
+      "depends_on": [
+        "phase-1-database"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Create SyncState sealed class for status representation",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/sync/SyncState.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created SyncState.kt sealed class with three states: Offline(pendingCount), Syncing(progress), and Online. Follows Android/Kotlin best practices with KDoc comments. Code is correct but compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:04:19.875328+00:00"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Create NetworkMonitor for connectivity observation",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created NetworkMonitor.kt for real-time network connectivity observation. Uses ConnectivityManager.NetworkCallback to monitor network state changes and exposes Flow<Boolean> for reactive state observation. Implements proper lifecycle management with callbackFlow to automatically register/unregister callbacks. Includes initial state detection and internet capability verification. Code follows Android/Kotlin best practices with comprehensive KDoc comments. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Code is correct and should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:06:10.882480+00:00"
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Create SyncStatusRepository combining network + outbox state",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt"
+          ],
+          "patterns_from": [
+            "app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt",
+            "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created SyncStatusRepository.kt that combines NetworkMonitor and OutboxDao state into a reactive Flow<SyncState>. Uses Flow.combine() to merge network connectivity (Flow<Boolean>) and pending operations count (Flow<Int>) into unified sync status. State logic: offline → SyncState.Offline(pendingCount), online with pending → SyncState.Syncing(), online without pending → SyncState.Online. Code follows Android/Kotlin best practices with comprehensive KDoc comments. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Code is correct and should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:07:38.882479+00:00"
+        },
+        {
+          "id": "subtask-2-4",
+          "description": "Create SyncWorker for background sync with WorkManager",
+          "service": "android-app",
+          "files_to_modify": [
+            "app/build.gradle.kts"
+          ],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/sync/SyncWorker.kt"
+          ],
+          "patterns_from": [
+            "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created SyncWorker.kt as a CoroutineWorker for background sync with WorkManager. Worker drains the outbox by fetching pending operations, processing them sequentially, and removing successfully synced operations. Includes proper error handling, status updates (PENDING→SYNCING→deleted or FAILED), and partial success handling. Uses Dispatchers.IO for database operations. Includes TODO comments for actual server sync implementation. WorkManager dependency (androidx.work:work-runtime-ktx:2.9.0) already exists in build.gradle.kts. Code follows Android/Kotlin best practices with comprehensive KDoc comments. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Code is correct and should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:09:45.304681+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-ui-components",
+      "name": "UI Components",
+      "type": "implementation",
+      "description": "Build SyncStatusBar UI component with three visual states",
+      "depends_on": [
+        "phase-2-sync-infrastructure"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Create sync status color resources",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/values/colors_sync.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew processDebugResources",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created colors_sync.xml with three color resources for sync states: sync_offline_amber (#FF9800 - Material Orange), sync_syncing_blue (#2196F3 - Material Blue), and sync_online_green (#4CAF50 - Material Green). File follows Android XML resource conventions with proper documentation comments. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Code is correct and should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:11:39.544052+00:00"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Create component_sync_status_bar.xml layout",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/layout/component_sync_status_bar.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew processDebugResources",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created component_sync_status_bar.xml layout with three visual states: expanded bar (LinearLayout with TextView for status text and ProgressBar for syncing animation) and collapsed dot (View for online state). Uses <merge> root tag for optimal view hierarchy. References color resources from colors_sync.xml (@color/sync_offline_amber, @color/sync_syncing_blue, @color/sync_online_green). Includes proper Android attributes (padding, gravity, visibility controls) and comprehensive documentation comments. Components: expandedContainer (LinearLayout for Offline/Syncing states), statusText (TextView for messages like \"Offline — N changes pending sync\"), progressBar (indeterminate ProgressBar shown during sync), collapsedDot (8dp green View for online/synced state). Uses tools attributes for Android Studio preview. Follows Android best practices with paddingStart/End for RTL support and layout_weight for flexible sizing. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). XML structure is syntactically correct and follows Android layout conventions. Code should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:13:36.197160+00:00"
+        },
+        {
+          "id": "subtask-3-3",
+          "description": "Create SyncStatusBar.kt custom view component",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt"
+          ],
+          "patterns_from": [
+            "app/src/main/java/com/inventory/app/sync/SyncState.kt"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created SyncStatusBar.kt custom view extending FrameLayout. Implements updateState(SyncState) method for visual transitions between three states: Offline (amber bar with \"Offline — N changes pending sync\"), Syncing (blue bar with progress animation), and Online (collapsed green dot). Properly inflates component_sync_status_bar.xml layout, gets references to UI components (expandedContainer, statusText, progressBar, collapsedDot), and handles state-specific styling with color resources from colors_sync.xml. Includes comprehensive KDoc documentation and follows Android/Kotlin best practices with @JvmOverloads constructor for XML inflation support. Code is syntactically correct and follows Android custom view patterns. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Code should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:15:29.936916+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-integration",
+      "name": "Integration & MainActivity",
+      "type": "integration",
+      "description": "Wire all components together in MainActivity and configure AndroidManifest",
+      "depends_on": [
+        "phase-3-ui-components"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Create activity_main.xml layout with SyncStatusBar",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/layout/activity_main.xml"
+          ],
+          "patterns_from": [
+            "app/src/main/res/layout/component_sync_status_bar.xml"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew processDebugResources",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created activity_main.xml with LinearLayout root containing SyncStatusBar component at top and ScrollView placeholder content below. Uses proper Android XML structure with xmlns declarations, vertical orientation, and layout_weight for flexible content area. Includes comprehensive documentation comments explaining the layout structure and components. References custom SyncStatusBar component (com.inventory.app.ui.components.SyncStatusBar) which handles its own expand/collapse states. Layout is syntactically correct and follows Android best practices with proper padding, gravity, and tools:context attributes. Note: Verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). XML structure is correct and should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:17:41.953713+00:00"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Create MainActivity with SyncStatusRepository observation",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/ui/MainActivity.kt"
+          ],
+          "patterns_from": [
+            "app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt"
+          ],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew compileDebugKotlin",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created MainActivity.kt that wires together the offline-first architecture. Activity observes SyncStatusRepository.syncState Flow in lifecycleScope and updates SyncStatusBar UI reactively. Initializes dependencies (AppDatabase, NetworkMonitor, SyncStatusRepository) and schedules periodic SyncWorker (15min interval) with network constraints via WorkManager. Code follows Android/Kotlin best practices with comprehensive KDoc comments. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Code is syntactically correct and should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:19:40.412455+00:00"
+        },
+        {
+          "id": "subtask-4-3",
+          "description": "Create AndroidManifest.xml with MainActivity and permissions",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/AndroidManifest.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew processDebugManifest",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Created AndroidManifest.xml with proper structure: declares MainActivity as launcher activity with intent-filter (MAIN/LAUNCHER), adds ACCESS_NETWORK_STATE permission for NetworkMonitor connectivity observation, includes comprehensive documentation comments, sets android:exported=\"true\" for Android 12+ compatibility, follows package structure com.inventory.app. Manifest is syntactically correct and follows Android best practices. Note: Compilation verification blocked by Java version mismatch (Java 8 installed, Java 11+ required for Android Gradle Plugin 8.2.0). Manifest should compile successfully once Java is upgraded. Consistent with previous subtasks that had same environment limitation.",
+          "updated_at": "2026-03-25T09:21:08.033887+00:00"
+        },
+        {
+          "id": "subtask-4-4",
+          "description": "End-to-end build and verify app compiles",
+          "service": "android-app",
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew assembleDebug",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "completed",
+          "notes": "Build configuration completed successfully. Resolved Java version compatibility by configuring Gradle to use Android Studio's JDK 21. Added necessary Android resources (launcher icons, strings). Verified with ./gradlew assembleDebug - BUILD SUCCESSFUL.",
+          "updated_at": "2026-03-25T09:35:43.846041+00:00"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 4,
+    "total_subtasks": 14,
+    "services_involved": [
+      "android-app"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 1,
+      "parallel_groups": [],
+      "recommended_workers": 1,
+      "speedup_estimate": "Sequential execution required due to strict layer dependencies"
+    },
+    "startup_command": "cd .auto-claude/worktrees/tasks/010-persistent-offline-sync-status-bar-with-pending-op && ./gradlew assembleDebug"
+  },
+  "verification_strategy": {
+    "risk_level": "medium",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "unit"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "All Kotlin files compile without errors",
+      "App builds successfully (assembleDebug)",
+      "SyncStatusBar renders in all three states",
+      "NetworkMonitor detects connectivity changes",
+      "OutboxDao provides reactive pending count"
+    ],
+    "verification_steps": [
+      {
+        "name": "Kotlin Compilation",
+        "command": "./gradlew compileDebugKotlin",
+        "expected_outcome": "BUILD SUCCESSFUL",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Full Debug Build",
+        "command": "./gradlew assembleDebug",
+        "expected_outcome": "BUILD SUCCESSFUL and APK generated",
+        "type": "test",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Manual UI Verification",
+        "command": "./gradlew installDebug",
+        "expected_outcome": "App installs and SyncStatusBar visible in MainActivity",
+        "type": "manual",
+        "required": true,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Medium risk UI feature with new database schema and background workers. Requires compilation verification and manual UI testing."
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [
+        "./gradlew test"
+      ],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": true,
+      "checks": [
+        "room-database-created",
+        "outbox-table-exists",
+        "dao-queries-compile"
+      ]
+    },
+    "manual_verification": {
+      "required": true,
+      "steps": [
+        "Install app on device/emulator via ./gradlew installDebug",
+        "Launch app and verify SyncStatusBar renders",
+        "Toggle airplane mode to verify Offline state (amber bar with 'Offline — N changes pending')",
+        "Disable airplane mode to verify transition to Online/Syncing states",
+        "Verify collapsed green dot appears when online and synced"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "status": "done",
+  "planStatus": "completed",
+  "xstateState": "human_review",
+  "executionPhase": "complete",
+  "updated_at": "2026-03-27T12:46:52.073Z",
+  "recoveryNote": "Task recovered from stuck state at 2026-03-25T09:00:27.149Z",
+  "last_updated": "2026-03-25T09:35:43.846041+00:00",
+  "lastEvent": {
+    "eventId": "30c4e378-a25f-420a-bbea-bfa4f2801e7d",
+    "sequence": 1,
+    "type": "QA_AGENT_ERROR",
+    "timestamp": "2026-03-25T09:37:22.806382+00:00"
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "error",
+      "timestamp": "2026-03-25T09:37:10.656561+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json"
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "status": "error",
+      "timestamp": "2026-03-25T09:37:16.225631+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json (No tools were used by agent)"
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "status": "error",
+      "timestamp": "2026-03-25T09:37:22.804381+00:00",
+      "issues": [
+        {
+          "title": "QA error",
+          "description": "QA agent did not update implementation_plan.json (No tools were used by agent)"
+        }
+      ]
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 3,
+    "last_iteration": 3,
+    "last_status": "error",
+    "issues_by_type": {
+      "unknown": 3
+    }
+  },
+  "reviewReason": "errors",
+  "description": "Display a persistent, non-intrusive status indicator showing network connectivity state and sync queue depth. When offline, show an amber bar with 'Offline — N changes pending sync'. When syncing, show a blue bar with progress animation. When online and synced, collapse to a small green dot. The POC has zero connectivity awareness."
+}

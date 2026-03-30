@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-004",
+  "rationale": "Developer onboarding friction is the biggest early-project risk. Without setup documentation, each new contributor wastes time figuring out prerequisites independently. For an Android/APK project, setup is particularly important due to Android SDK versioning, emulator configuration, and build tool requirements. This documentation should be created alongside or immediately after tech stack decisions.",
+  "category": "documentation",
+  "priority": "medium"
+}

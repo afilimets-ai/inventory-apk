@@ -1,0 +1,51 @@
+{
+  "files_to_modify": {},
+  "files_to_create": {
+    "gradle_setup": [
+      "build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties",
+      "gradle/wrapper/gradle-wrapper.properties",
+      "gradle/libs.versions.toml"
+    ],
+    "app_module": [
+      "app/build.gradle.kts",
+      "app/proguard-rules.pro",
+      "app/src/main/AndroidManifest.xml"
+    ],
+    "package_structure": [
+      "app/src/main/kotlin/com/inventory/app/InventoryApp.kt",
+      "app/src/main/kotlin/com/inventory/app/data/.gitkeep",
+      "app/src/main/kotlin/com/inventory/app/domain/.gitkeep",
+      "app/src/main/kotlin/com/inventory/app/presentation/.gitkeep",
+      "app/src/main/kotlin/com/inventory/app/presentation/MainActivity.kt"
+    ],
+    "mvvm_examples": [
+      "app/src/main/kotlin/com/inventory/app/presentation/MainViewModel.kt"
+    ],
+    "resources": [
+      "app/src/main/res/values/strings.xml",
+      "app/src/main/res/values/themes.xml",
+      "app/src/main/res/layout/activity_main.xml"
+    ],
+    "config": [
+      ".editorconfig",
+      ".gitignore"
+    ]
+  },
+  "patterns": {
+    "gradle_pattern": "Modern AGP 8.x with Kotlin DSL and version catalogs",
+    "package_pattern": "Clean architecture with data/domain/presentation separation",
+    "mvvm_pattern": "ViewModel + StateFlow for reactive state management",
+    "build_pattern": "ProGuard/R8 for code shrinking and obfuscation"
+  },
+  "existing_implementations": {
+    "description": "This is a greenfield scaffolding task - no existing Android code",
+    "relevant_files": []
+  },
+  "target_device": {
+    "name": "Newland MT90",
+    "android_version": "10/11",
+    "api_level": "29-30"
+  }
+}

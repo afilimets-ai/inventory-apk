@@ -1,0 +1,16 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-002",
+  "rationale": "CLAUDE.md explicitly requires 'звук + вібрація + візуал (шумне середовище)' — sound + vibration + visual for noisy environments. The current POC provides zero haptic feedback, zero audio feedback, and only a text change on success (no color change, no animation). In a warehouse with forklifts, conveyor belts, and radio chatter, a silent text change is effectively invisible. Workers need to know instantly — without looking at the screen — whether a scan succeeded.",
+  "category": "ui_ux",
+  "uiuxCategory": "interaction",
+  "affectedFiles": [
+    "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+    "app/src/main/java/scanner/ScanFeedbackManager.kt (to be created)",
+    "app/src/main/java/ui/components/ScanResultBanner.kt (to be created)",
+    "app/src/main/res/raw/scan_success.ogg (to be added)",
+    "app/src/main/res/raw/scan_error.ogg (to be added)"
+  ],
+  "problemSolved": "POC MainActivity.java line 51-58: on successful scan, only calls txtbarcode.setText(barcode) and txtbarcodeType.setText(barcodeType). On failure, shows Toast.makeText('Barcode Not getting.'). No vibration (no Vibrator service used). No sound (no MediaPlayer/SoundPool). No visual animation or color change. Toast messages disappear quickly and are easily missed."
+}

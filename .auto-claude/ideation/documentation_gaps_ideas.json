@@ -1,0 +1,85 @@
+{
+  "documentation_gaps": [
+    {
+      "id": "doc-001",
+      "type": "documentation_gaps",
+      "title": "Create README.md with project overview, goals, and quick start",
+      "description": "The project has no README.md file — the standard entry point for any repository. Currently the only documentation is CLAUDE.md, which is an AI-assistant guidance file and not a human-facing project overview. A README.md should introduce the inventory-apk project, explain its purpose (APK inventory/management), outline the target platform (Android), and provide a quick start for developers cloning the repo.",
+      "rationale": "README.md is the first file any developer, contributor, or stakeholder sees. Without it, there is zero discoverability of what the project does, how to run it, or how to contribute. This is the single highest-impact documentation gap for any repository, especially a greenfield project where onboarding clarity sets the trajectory for all future development.",
+      "category": "readme",
+      "targetAudience": "developers",
+      "affectedAreas": ["README.md (to be created at project root)"],
+      "currentDocumentation": "Only CLAUDE.md exists, which serves as AI-agent guidance and mentions the project is in early initialization with no source code.",
+      "proposedContent": "Create a README.md containing: project name and badge placeholders, one-paragraph project description and goals, target platform and tech stack (once decided), prerequisites and installation instructions (placeholder sections), usage/build instructions, project structure overview, contributing link, and license information.",
+      "priority": "high",
+      "estimatedEffort": "low"
+    },
+    {
+      "id": "doc-002",
+      "type": "documentation_gaps",
+      "title": "Create ARCHITECTURE.md documenting system design and tech stack decisions",
+      "description": "There is no architecture or design documentation anywhere in the project. The project name 'inventory-apk' implies an Android application for inventory management, but there is no document explaining the target platform (native Android/Kotlin, React Native, Flutter, etc.), high-level component architecture, data storage approach, or key design decisions. The .auto-claude/specs/ directory exists but is completely empty.",
+      "rationale": "Architecture documentation is critical at the start of a greenfield project — it captures foundational decisions that shape all future development. Without it, multiple developers (or AI agents) may make conflicting assumptions about the tech stack, patterns, and module boundaries. Documenting these decisions early prevents costly rework and ensures alignment across all contributors.",
+      "category": "architecture",
+      "targetAudience": "developers",
+      "affectedAreas": ["ARCHITECTURE.md (to be created at project root)", ".auto-claude/specs/ (currently empty)"],
+      "currentDocumentation": "No architecture documentation exists. CLAUDE.md only states 'named inventory-apk, suggesting an Android APK inventory/management application' without confirming tech choices.",
+      "proposedContent": "Create ARCHITECTURE.md covering: chosen tech stack and rationale, high-level system architecture diagram (text-based), core modules/components and their responsibilities, data model overview (inventory items, categories, storage), navigation/screen flow, state management approach, API/backend integration strategy (if any), and key design patterns to follow.",
+      "priority": "high",
+      "estimatedEffort": "medium"
+    },
+    {
+      "id": "doc-003",
+      "type": "documentation_gaps",
+      "title": "Create CONTRIBUTING.md with development workflow and code standards",
+      "description": "There are no contributing guidelines, code style standards, or development workflow documentation. The project uses Git (with 2 commits on master branch) but has no branch strategy, commit convention, PR process, or code review guidelines documented. The .gitignore covers Auto Claude files but there is no guidance for human or AI contributors on how to participate in development.",
+      "rationale": "As an AI-assisted development project using the Auto Claude framework, clear contributing guidelines are especially important — both human developers and AI agents need to understand the expected workflow, naming conventions, and quality gates. Establishing these norms early prevents inconsistent patterns from being set during the critical first implementations.",
+      "category": "readme",
+      "targetAudience": "contributors",
+      "affectedAreas": ["CONTRIBUTING.md (to be created at project root)"],
+      "currentDocumentation": "No contributing documentation exists. .claude_settings.json configures tool permissions but does not define development standards.",
+      "proposedContent": "Create CONTRIBUTING.md covering: development environment setup prerequisites, Git branching strategy (e.g., feature branches off main), commit message conventions, PR process and review expectations, code style and linting standards, testing requirements before merge, directory/file naming conventions, and how Auto Claude agents interact with the development workflow.",
+      "priority": "medium",
+      "estimatedEffort": "low"
+    },
+    {
+      "id": "doc-004",
+      "type": "documentation_gaps",
+      "title": "Create a development environment setup guide",
+      "description": "There are no instructions for setting up a development environment. The project has no package.json, build.gradle, or any dependency manifest file, and no documentation explaining what tools, SDKs, or runtimes are needed. A new developer cloning this repo would find an empty project with no guidance on how to bootstrap development — what IDE to use, what SDK versions are required, or how to create the initial project scaffold.",
+      "rationale": "Developer onboarding friction is the biggest early-project risk. Without setup documentation, each new contributor wastes time figuring out prerequisites independently. For an Android/APK project, setup is particularly important due to Android SDK versioning, emulator configuration, and build tool requirements. This documentation should be created alongside or immediately after tech stack decisions.",
+      "category": "examples",
+      "targetAudience": "developers",
+      "affectedAreas": ["docs/setup.md (to be created)", "README.md (setup section)"],
+      "currentDocumentation": "No setup documentation exists. The .auto-claude/.env references Ollama and MCP tools but these are for the AI framework, not the application itself.",
+      "proposedContent": "Create docs/setup.md (or a dedicated section in README.md) covering: required software and versions (e.g., Android Studio, JDK, Node.js depending on tech stack), step-by-step environment setup instructions, how to clone and initialize the project, how to run the app locally (emulator or device), how to run tests, common setup issues and their solutions, and IDE-specific configuration recommendations.",
+      "priority": "medium",
+      "estimatedEffort": "medium"
+    },
+    {
+      "id": "doc-005",
+      "type": "documentation_gaps",
+      "title": "Document project roadmap and feature specifications in version-controlled files",
+      "description": "The project's planning artifacts are entirely within the gitignored .auto-claude/ directory — meaning the roadmap (.auto-claude/roadmap/), specifications (.auto-claude/specs/), and insights (.auto-claude/insights/) are not version-controlled and invisible to collaborators. Furthermore, all these directories are currently empty. There is no version-controlled document describing what features the inventory-apk application will include, what the MVP scope is, or what the development milestones are.",
+      "rationale": "Planning artifacts stored only in gitignored directories are invisible to collaborators and at risk of being lost. A version-controlled roadmap ensures all contributors understand project direction and priorities. For a greenfield project, clearly defining the MVP feature set prevents scope creep and gives developers concrete targets. The ideation_context.json confirms planned_features is an empty array, meaning no features have been formally planned yet.",
+      "category": "architecture",
+      "targetAudience": "maintainers",
+      "affectedAreas": ["ROADMAP.md (to be created at project root)", "docs/features/ (to be created)"],
+      "currentDocumentation": "ideation_context.json has empty arrays for existing_features, tech_stack, and planned_features. The .auto-claude/roadmap/ and .auto-claude/specs/ directories exist but contain only .gitkeep files.",
+      "proposedContent": "Create ROADMAP.md with: project vision statement, MVP feature list (e.g., inventory CRUD, search/filter, barcode scanning, export), development phases with milestones, current status and next steps. Optionally create docs/features/ with individual feature specification files describing user stories, acceptance criteria, and technical notes for each major feature.",
+      "priority": "high",
+      "estimatedEffort": "medium"
+    }
+  ],
+  "metadata": {
+    "filesAnalyzed": 6,
+    "documentedFunctions": 0,
+    "undocumentedFunctions": 0,
+    "readmeLastUpdated": null,
+    "docFiles": ["CLAUDE.md"],
+    "sourceFiles": 0,
+    "projectPhase": "early_initialization",
+    "notes": "Project is in greenfield state with no application source code. All documentation gaps are foundational — establishing the project identity, technical direction, and contributor onboarding materials needed before development begins.",
+    "generatedAt": "2026-03-24T10:42:00.000Z"
+  }
+}

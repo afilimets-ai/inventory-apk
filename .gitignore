@@ -1,19 +1,21 @@
-# Auto Claude data directory
-.auto-claude/
-
-# Auto Claude generated files
-.auto-claude-security.json
-.auto-claude-status
-.claude_settings.json
-.worktrees/
-.security-key
-logs/security/
+# Auto Claude
+.auto-claude/.env
+.auto-claude/.gitignore_checked
+.auto-claude/worktrees/
 
 # Android / Gradle
 .gradle/
 build/
-*.iml
-.idea/
 local.properties
-*.apk
-*.aab
+*.iml
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials / secrets
+*.env
+.env.*

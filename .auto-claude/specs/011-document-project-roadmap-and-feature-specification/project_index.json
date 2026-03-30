@@ -1,0 +1,32 @@
+{
+  "project_type": "single",
+  "project_name": "inventory-apk",
+  "project_description": "Inventory management Android application",
+  "services": {
+    "android-app": {
+      "path": ".",
+      "tech_stack": ["java", "android"],
+      "port": null,
+      "dev_command": "./gradlew run",
+      "test_command": "./gradlew test",
+      "build_command": "./gradlew build"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "sqlite",
+    "ci_cd": "github-actions"
+  },
+  "conventions": {
+    "documentation": "markdown",
+    "versioning": "semver",
+    "branching": "git-flow"
+  },
+  "documentation_structure": {
+    "root_readme": "README.md",
+    "roadmap": "ROADMAP.md",
+    "features": "docs/features/",
+    "architecture": "docs/ARCHITECTURE.md",
+    "contributing": "CONTRIBUTING.md"
+  }
+}

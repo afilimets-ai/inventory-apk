@@ -1,0 +1,16 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-004",
+  "rationale": "The POC uses default AppCompat theme with colorPrimary=#008577 (teal green) and colorAccent=#D81B60 (pink) — colors chosen for aesthetics, not readability. Industrial terminals operate under fluorescent warehouse lighting, direct sunlight through loading dock doors, and dim storage areas. MT90's 5-inch screen at default brightness may be hard to read in bright sunlight. A purpose-built industrial theme ensures readability in all conditions and makes status colors (green=success, red=error, amber=warning) instantly recognizable. This also establishes the theming foundation for white-label product flavors.",
+  "category": "ui_ux",
+  "uiuxCategory": "visual",
+  "affectedFiles": [
+    "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/colors.xml",
+    "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/styles.xml",
+    "app/src/main/java/ui/theme/Color.kt (to be created)",
+    "app/src/main/java/ui/theme/Theme.kt (to be created)",
+    "app/src/main/java/ui/theme/Type.kt (to be created)"
+  ],
+  "problemSolved": "POC colors.xml defines only 3 colors: colorPrimary=#008577, colorPrimaryDark=#00574B, colorAccent=#D81B60. These are the Android Studio default template colors with no semantic meaning for inventory operations. The AppCompat theme provides no dark mode, no high-contrast mode, and no scan-state colors. Text sizes are all Android defaults (14sp body) which may be small on a 5-inch terminal at arm's length."
+}

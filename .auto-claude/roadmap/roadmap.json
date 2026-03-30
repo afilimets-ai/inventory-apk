@@ -1,0 +1,1186 @@
+{
+  "id": "roadmap-2026-03-24T12-00-00Z",
+  "project_name": "Inventory APK — Newland MT90 Industrial Inventory Manager",
+  "version": "1.0",
+  "vision": "Offline-first inventory management app for Newland MT90 industrial terminals, white-labeled for Ukrainian B2B clients",
+  "target_audience": {
+    "primary": "Warehouse operators and logistics workers on the floor of Ukrainian industrial facilities using Newland MT90 handheld terminals — typically wearing gloves, working in noisy environments with intermittent connectivity",
+    "secondary": [
+      "Warehouse supervisors/managers who monitor inventory operations and review sync status",
+      "IT administrators deploying and managing device fleets via Ndevor MDM",
+      "Artem (project owner) as Newland AIDC importer deploying branded app variants to B2B clients",
+      "B2B client companies receiving white-labeled APK builds branded to their organization"
+    ]
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Foundation / MVP",
+      "description": "Complete rewrite from legacy Java POC to production Kotlin/Compose stack. Establish offline-first architecture, core scan workflow, and first two inventory operations. Deploy to 5-10 pilot MT90 devices under the Newland importer brand.",
+      "order": 1,
+      "status": "planned",
+      "features": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4",
+        "feature-5",
+        "feature-6",
+        "feature-7",
+        "feature-8",
+        "feature-9",
+        "feature-10",
+        "feature-11",
+        "feature-12",
+        "feature-13",
+        "feature-14"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-1-1",
+          "title": "Modern Stack Compiles & Runs on MT90",
+          "description": "Project scaffolding complete: Kotlin, Jetpack Compose, Hilt DI, Room database — app compiles, installs and launches on a physical Newland MT90 device",
+          "features": [
+            "feature-1",
+            "feature-2",
+            "feature-3"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-1-2",
+          "title": "Scanner Reads Barcodes with Industrial Feedback",
+          "description": "NewlandScannerManager singleton operational: hardware button trigger, broadcast receive, debounce, multimodal feedback (sound + vibration + visual) — validated on physical MT90",
+          "features": [
+            "feature-4",
+            "feature-6"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-1-3",
+          "title": "End-to-End Scan-to-Record Workflow",
+          "description": "Worker can scan a barcode and complete an inventory receive or audit operation entirely via the industrial Compose UI with auto-advance — data persists locally in Room",
+          "features": [
+            "feature-5",
+            "feature-7",
+            "feature-11",
+            "feature-12"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-1-4",
+          "title": "Offline Sync Engine Operational",
+          "description": "Outbox pattern captures all operations offline. WorkManager drains the queue when connectivity restores. Delta sync and idempotency keys ensure zero data loss and no duplicates. Sync status visible to user.",
+          "features": [
+            "feature-8",
+            "feature-9",
+            "feature-10",
+            "feature-14"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-1-5",
+          "title": "MVP Deployed to Pilot Devices",
+          "description": "CI/CD pipeline produces signed APK. App deployed to 5-10 pilot MT90 devices via Ndevor MDM under the Newland importer brand. Workers performing real inventory operations.",
+          "features": [
+            "feature-13"
+          ],
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "White-Label & Operations Expansion",
+      "description": "Product Flavors architecture for multi-client white-label delivery. Expand inventory operations to cover transfers and shipments. Ndevor zero-touch provisioning per client. Ukrainian localization and branded onboarding.",
+      "order": 2,
+      "status": "planned",
+      "features": [
+        "feature-15",
+        "feature-16",
+        "feature-17",
+        "feature-18",
+        "feature-19",
+        "feature-20",
+        "feature-21",
+        "feature-22"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-2-1",
+          "title": "Two Client Flavors Build from Single Codebase",
+          "description": "Product Flavors architecture operational: at least two distinct APKs (Newland importer brand + first client brand) build from the same codebase with different applicationId, branding, API endpoints, and feature flags",
+          "features": [
+            "feature-15",
+            "feature-16"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-2-2",
+          "title": "Full Inventory Operations Suite",
+          "description": "All four core inventory operations functional: receiving, audit/count, transfers between locations, and outbound shipments — all scan-driven with auto-advance",
+          "features": [
+            "feature-17",
+            "feature-18"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-2-3",
+          "title": "Zero-Touch Client Deployment",
+          "description": "New MT90 device goes from unboxing to fully operational in ~5 minutes: Ndevor QR code auto-provisions with correct client flavor, branded onboarding flow completes setup, Ukrainian language supported",
+          "features": [
+            "feature-19",
+            "feature-20",
+            "feature-21",
+            "feature-22"
+          ],
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Scale & Monitoring",
+      "description": "Operational analytics for data-driven warehouse management. Device health monitoring for fleet reliability. Supervisor dashboards for remote oversight. Comprehensive test suite for confidence at scale. Multi-device hardware support.",
+      "order": 3,
+      "status": "planned",
+      "features": [
+        "feature-23",
+        "feature-24",
+        "feature-25",
+        "feature-26",
+        "feature-27"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-3-1",
+          "title": "Analytics Dashboard Live for Supervisors",
+          "description": "Warehouse supervisors can view operational metrics (scans/shift, worker throughput, sync uptime) and device health (battery, storage, connectivity) from a dedicated dashboard",
+          "features": [
+            "feature-23",
+            "feature-24",
+            "feature-25"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-3-2",
+          "title": "Quality & Multi-Device Validation",
+          "description": "Automated test suite provides confidence for releases. App validated on NFT10 Pilot Pro and N7 Cachalot Pro in addition to MT90.",
+          "features": [
+            "feature-26",
+            "feature-27"
+          ],
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "Future Vision",
+      "description": "Long-term expansion into ERP integrations, advanced AI-powered workflows, voice guidance for hands-free operation, and Ndevor MDM as a resalable product. These features extend the platform beyond inventory into a comprehensive warehouse operations suite.",
+      "order": 4,
+      "status": "planned",
+      "features": [
+        "feature-28",
+        "feature-29",
+        "feature-30"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-4-1",
+          "title": "ERP Integration Marketplace",
+          "description": "Clients can connect to SAP, 1C-replacement ERPs, and other systems via documented REST APIs, enabling the app to serve as a mobile frontend for existing warehouse infrastructure",
+          "features": [
+            "feature-28"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-4-2",
+          "title": "AI-Powered & Hands-Free Operations",
+          "description": "Voice-guided workflows enable hands-free operation. AI predicts reorder points and flags anomalies. The app becomes an intelligent warehouse assistant.",
+          "features": [
+            "feature-29",
+            "feature-30"
+          ],
+          "status": "planned"
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "feature-1",
+      "title": "Modern Android Project Scaffolding",
+      "description": "Complete rewrite from legacy Java/Android Support Library POC to production-grade Kotlin project. AGP 8.x, compileSdk 34+, AndroidX, MVVM architecture with ViewModel + StateFlow, proper package structure (data/domain/presentation layers), ProGuard/R8 configuration, and .editorconfig for code standards.",
+      "rationale": "The existing POC is a non-production Java prototype with AGP 3.2.1 and compileSdk 28. No other feature can be built without this foundational rewrite. Every known gap in the current state depends on this modernization.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "done",
+      "acceptance_criteria": [
+        "Project compiles with Kotlin 1.9+, AGP 8.x, compileSdk 34+",
+        "Package structure follows data/domain/presentation layer separation",
+        "MVVM architecture with ViewModel and StateFlow in place",
+        "ProGuard/R8 configured for release builds",
+        ".editorconfig defines formatting standards",
+        "App installs and launches on Newland MT90 (Android 10/11)",
+        "Legacy Java code and Support Library dependencies removed"
+      ],
+      "user_stories": [
+        "As a developer, I want a modern Kotlin/AndroidX project structure so that I can build features efficiently using current best practices",
+        "As the project owner, I want the codebase to be maintainable and scalable so that I can onboard contributors and scale to multiple clients"
+      ],
+      "linked_spec_id": "016-modern-android-project-scaffolding",
+      "task_outcome": "completed",
+      "previous_status": "planned",
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-2",
+      "title": "Dependency Injection with Hilt",
+      "description": "Set up Hilt as the DI framework across the application. Configure Application-scoped, Activity-scoped, and ViewModel-scoped components. Provide singleton instances for database, networking, scanner manager, and repository classes.",
+      "rationale": "Hilt is specified in the tech stack (CLAUDE.md) and is essential for testability, modular architecture, and proper singleton lifecycle management. The NewlandScannerManager must be Application-scoped, and repositories need proper scoping for data layer isolation.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-1"
+      ],
+      "status": "done",
+      "acceptance_criteria": [
+        "Hilt configured with @HiltAndroidApp Application class",
+        "At least one @Module providing Application-scoped dependencies",
+        "ViewModels use @HiltViewModel annotation",
+        "Activities annotated with @AndroidEntryPoint",
+        "Dependency graph compiles without errors"
+      ],
+      "user_stories": [
+        "As a developer, I want dependency injection so that components are loosely coupled and easily testable"
+      ],
+      "linked_spec_id": "017-dependency-injection-with-hilt",
+      "task_outcome": "completed",
+      "previous_status": "planned",
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-3",
+      "title": "Room Database with Core Inventory Schema",
+      "description": "Design and implement the Room database with core entity models: InventoryItem (barcode, name, quantity, location, category), Location (warehouse zones/bins), InventoryOperation (type, item, quantity, timestamp, operator), and OutboxEntry (pending sync queue). Include DAOs with Flow-based queries, database migrations strategy, and pre-populated test data for development.",
+      "rationale": "Room is the local source of truth in the offline-first architecture. Every inventory operation, sync operation, and UI display depends on a well-designed local database. Without Room, no data persistence is possible.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-1",
+        "feature-2"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Room database with InventoryItem, Location, InventoryOperation, and OutboxEntry entities",
+        "DAOs expose Flow-based queries for reactive UI updates",
+        "Foreign key relationships enforced between entities",
+        "Database migration strategy defined (version tracking)",
+        "Indexes on frequently queried columns (barcode, sync_status)",
+        "Unit tests pass for all DAO operations",
+        "Data survives app restart and process death"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want my scanned inventory data to persist locally so that nothing is lost even if the app crashes or the device restarts",
+        "As a developer, I want a well-structured database schema so that inventory operations can be built on a solid data foundation"
+      ],
+      "linked_spec_id": "018-room-database-with-core-inventory-schema",
+      "competitor_insight_ids": [
+        "pain-4-4",
+        "pain-5-3"
+      ]
+    },
+    {
+      "id": "feature-4",
+      "title": "NewlandScannerManager with Lifecycle Management",
+      "description": "Implement the NewlandScannerManager as an Application-scoped singleton: register/unregister BroadcastReceiver for nlscan.action.SCANNER_RESULT, handle hardware button (KeyEvent.KEYCODE_F6), programmatic trigger via nlscan.action.SCANNER_TRIG, debounce(300ms) protection against double-scans, and scanEvents: SharedFlow<ScanResult> for reactive consumption by ViewModels.",
+      "rationale": "The MT90's built-in barcode scanner is the primary input device — not the touchscreen. The existing POC registers a BroadcastReceiver but never unregisters it (memory leak). Competitors like Honeywell suffer from scanner software conflicts (pain-2-1) and Zebra's DataWedge requires complex middleware configuration (pain-1-2). Our direct broadcast integration is simpler and more reliable.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-1",
+        "feature-2"
+      ],
+      "status": "done",
+      "acceptance_criteria": [
+        "NewlandScannerManager is singleton in Application scope (Hilt @Singleton)",
+        "BroadcastReceiver registers in register() and unregisters in unregister()",
+        "Hardware scan button (F6) triggers barcode scan",
+        "Programmatic trigger via trigger(timeoutSec) method works",
+        "scanEvents SharedFlow emits ScanResult(barcode, barcodeType) to collectors",
+        "300ms debounce prevents duplicate scan events",
+        "No memory leak — receiver properly cleaned up on destroy",
+        "Validated on physical MT90 device (not emulator)"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want to press the hardware scan button and have the barcode instantly captured so that I can scan items without touching the screen",
+        "As a developer, I want a reactive scanner API (SharedFlow) so that any screen can observe scan results without tight coupling to the scanner lifecycle"
+      ],
+      "linked_spec_id": "019-newlandscannermanager-with-lifecycle-management",
+      "task_outcome": "completed",
+      "previous_status": "planned",
+      "competitor_insight_ids": [
+        "pain-1-2",
+        "pain-2-1"
+      ]
+    },
+    {
+      "id": "feature-5",
+      "title": "Industrial-Grade Compose UI Design System",
+      "description": "Build a Jetpack Compose design system optimized for industrial handheld use: minimum 60dp touch targets (80dp near screen edges) for gloved operation, high-contrast Material 3 theme with sunlight-readable colors, large typography scale, scan-centric layout templates (status bar + main content + action area), and consistent component library (buttons, cards, input fields, lists).",
+      "rationale": "Every competitor fails at industrial mobile UX — SAP requires pinch-zoom on handhelds (pain-3-1), RFgen has outdated interfaces (pain-6-1), and generic apps use standard 48dp touch targets unusable with gloves. This is our highest-impact differentiator (market gap-2). Workers wearing gloves in cold storage need oversized, high-contrast UI elements.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-1"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "All interactive elements meet minimum 60dp touch target size",
+        "Elements near screen edges (< 40dp from edge) are at least 80dp",
+        "High-contrast color palette readable in direct sunlight and dim warehouse lighting",
+        "Typography scale uses minimum 16sp body text, 20sp+ for scan results",
+        "Consistent component library: IndustrialButton, ScanResultCard, StatusBar, OperationList",
+        "Layout templates follow scan-centric pattern: status → content → action",
+        "Usability validated with gloves on physical MT90 device",
+        "Supports both light and dark themes for varied warehouse lighting"
+      ],
+      "user_stories": [
+        "As a warehouse worker wearing gloves, I want large tap targets so that I can accurately press buttons without removing my gloves",
+        "As a warehouse worker, I want high-contrast text and colors so that I can read the screen in bright sunlight or dim warehouse conditions"
+      ],
+      "linked_spec_id": "020-industrial-grade-compose-ui-design-system",
+      "competitor_insight_ids": [
+        "pain-3-1",
+        "pain-3-2",
+        "pain-6-1"
+      ]
+    },
+    {
+      "id": "feature-6",
+      "title": "Multimodal Scan Feedback System",
+      "description": "Provide immediate, multimodal confirmation on every barcode scan: audible beep (success/failure differentiated), haptic vibration pattern (short pulse for success, double-pulse for error), and visual flash/animation on the scan result area. Configurable volume and vibration intensity. Designed for noisy industrial environments where any single feedback channel may be missed.",
+      "rationale": "Warehouse environments are loud — machinery, forklifts, conveyors. Workers can't always look at the screen (hands busy, items in the way) or hear a beep (hearing protection). Multimodal feedback ensures every scan is confirmed regardless of environmental conditions. No competitor provides this level of feedback design for industrial use.",
+      "priority": "must",
+      "complexity": "low",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-4"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Successful scan triggers: audible beep + short vibration + green visual flash",
+        "Failed/unrecognized scan triggers: error tone + double vibration + red visual flash",
+        "Audio plays through device speaker at configurable volume",
+        "Vibration pattern is distinct for success vs. error",
+        "Visual feedback is visible at arm's length (not subtle animation)",
+        "Feedback latency < 100ms from scan event",
+        "Feedback works when screen is partially obscured or tilted"
+      ],
+      "user_stories": [
+        "As a warehouse worker in a noisy environment, I want to feel a vibration when I scan so that I know the scan was captured even if I can't hear or see the screen",
+        "As a warehouse worker, I want distinct success/error feedback so that I immediately know if I need to re-scan an item"
+      ],
+      "linked_spec_id": "021-multimodal-scan-feedback-system",
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-7",
+      "title": "Core Scan-to-Record Inventory Workflow",
+      "description": "Implement the primary scan-driven workflow engine: scan barcode → look up item in Room → auto-advance to operation screen → confirm/adjust quantity → record operation → advance to next item. Each scan automatically progresses the workflow (auto-advance pattern). Manual touchscreen input only for exception handling (unknown barcode, quantity override). Workflow state persists across process death.",
+      "rationale": "This is the core value proposition — the thing warehouse workers will do hundreds of times per shift. SAP requires excessive button clicks (pain-3-3), generic apps need manual navigation after each scan (pain-5-2). Scan-driven auto-advance with minimal touch interaction is the key differentiator that makes workers faster and happier. Directly addresses market gap-2.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-3",
+        "feature-4",
+        "feature-5",
+        "feature-6"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Scanning a known barcode auto-navigates to the operation detail screen",
+        "Item details (name, current quantity, location) displayed immediately after scan",
+        "Quantity defaults to +1 for receiving, editable via large +/- buttons or keyboard",
+        "Confirming an operation returns to scan-ready state within 1 second",
+        "Unknown barcode triggers a 'new item' registration flow",
+        "< 2 second total feedback loop: scan → display → ready for next scan",
+        "Workflow state survives process death (SavedStateHandle)",
+        "Manual barcode entry available as fallback for damaged barcodes",
+        "Operation history visible with recent scans list"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want each barcode scan to automatically show me the item details so that I can confirm and move to the next item without navigating menus",
+        "As a warehouse worker, I want to complete an inventory operation in under 2 seconds per item so that I can process hundreds of items per shift efficiently",
+        "As a warehouse worker, I want to manually enter a barcode when the physical label is damaged so that I can still record the item"
+      ],
+      "linked_spec_id": "022-core-scan-to-record-inventory-workflow",
+      "competitor_insight_ids": [
+        "pain-3-3",
+        "pain-5-2"
+      ]
+    },
+    {
+      "id": "feature-8",
+      "title": "Offline-First Data Persistence with Outbox Pattern",
+      "description": "Implement the outbox pattern for guaranteed offline data capture: every inventory operation writes both the business record AND an outbox entry in a single Room ACID transaction. The outbox table tracks sync status (pending/syncing/synced/failed), retry count, and created timestamp. Operations are never lost — they exist locally until confirmed synced by the server.",
+      "rationale": "This is the architectural foundation of offline-first. Competitors like Sortly require full app restart to resolve sync issues (pain-5-3), 1C has no offline mobile capability at all (pain-4-4), and even RFgen shows inconsistent sync performance (pain-6-3). True ACID outbox pattern — not 'cloud-first with offline fallback' — is what fills market gap-3.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-3"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Business record + outbox entry written in single Room @Transaction",
+        "Transaction is ACID — partial write is impossible",
+        "OutboxEntry tracks: id, operation_type, payload, status, retry_count, created_at, idempotency_key",
+        "Each outbox entry has a UUID idempotency key generated at creation time",
+        "Operations recorded offline are visible in operation history immediately",
+        "Outbox queue depth is queryable (for sync status indicator)",
+        "Failed sync entries remain in outbox for retry (not deleted)",
+        "App functions fully with airplane mode enabled — no crashes, no missing features"
+      ],
+      "user_stories": [
+        "As a warehouse worker in a dead zone, I want my scans to be saved locally so that no data is lost when I'm offline",
+        "As a warehouse supervisor, I want to know how many operations are pending sync so that I can assess data freshness"
+      ],
+      "linked_spec_id": "023-offline-first-data-persistence-with-outbox-pattern",
+      "competitor_insight_ids": [
+        "pain-4-4",
+        "pain-5-3",
+        "pain-6-3"
+      ]
+    },
+    {
+      "id": "feature-9",
+      "title": "API Client & Networking Layer",
+      "description": "Set up Retrofit + OkHttp as the HTTP client layer for backend communication. Implement base URL configuration (per-flavor), authentication interceptor (token-based auth), request/response logging (debug only), timeout configuration, connectivity detection, and a generic API response wrapper with error handling. This is the transport layer that the sync engine uses to push outbox entries and pull catalog updates.",
+      "rationale": "Retrofit + OkHttp is specified in the tech stack. The networking layer must support per-flavor base URLs (critical for white-label Phase 2), idempotency key headers, and resilient error handling. It bridges the local Room database with the remote backend.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-1",
+        "feature-2"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Retrofit client configured with OkHttp, JSON converter, and coroutine call adapter",
+        "Base URL configurable per build flavor (BuildConfig field)",
+        "Auth interceptor attaches bearer token to requests",
+        "Request logging enabled in debug builds only",
+        "Connectivity check utility (NetworkMonitor) using ConnectivityManager",
+        "Generic ApiResult<T> wrapper for success/error/network-error states",
+        "Timeouts configured: connect 10s, read 30s, write 30s",
+        "Idempotency-Key header included in all POST/PUT requests"
+      ],
+      "user_stories": [
+        "As a developer, I want a configured networking layer so that I can build API integrations without boilerplate setup each time",
+        "As the app, I need to detect connectivity status so that sync operations are only attempted when a network is available"
+      ],
+      "linked_spec_id": "024-api-client-networking-layer",
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-10",
+      "title": "Reliable Background Sync Engine",
+      "description": "Build the sync engine using WorkManager: periodic connectivity-aware drain of the outbox queue, delta sync with sync_token for efficient catalog downloads (only changes since last sync), exponential backoff with jitter on failures, and idempotency key headers for duplicate-safe retries. The sync engine is the bridge between offline operations and server state.",
+      "rationale": "WorkManager guarantees sync execution even after app restart or device reboot. Delta sync with sync_token prevents re-downloading the entire catalog on every sync (bandwidth matters in warehouses with poor connectivity). Exponential backoff with jitter prevents thundering herd when 50-200 devices reconnect simultaneously. Idempotency keys ensure no duplicate operations on retry. This addresses the core reliability gap that competitors like Sortly (pain-5-3) and RFgen (pain-6-3) struggle with.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-8",
+        "feature-9"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "WorkManager worker drains outbox entries in FIFO order when connectivity available",
+        "Each outbox entry sends idempotency_key header to prevent server-side duplicates",
+        "Successful sync updates outbox entry status to 'synced'",
+        "Failed sync increments retry_count, applies exponential backoff (base 2s, max 5min) with jitter",
+        "Delta sync downloads catalog changes using sync_token (server returns only records modified since token)",
+        "sync_token persisted in SharedPreferences/DataStore between sessions",
+        "Sync works after app restart and device reboot (WorkManager persistence)",
+        "Sync respects battery constraints (no sync below 15% battery)",
+        "Sync progress observable via Flow for UI status indicator",
+        "95%+ success rate for sync operations under normal connectivity"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want my pending operations to sync automatically when I walk back into WiFi range so that I don't have to remember to sync manually",
+        "As an IT administrator, I want the sync to handle network failures gracefully so that devices don't create duplicate entries or lose data"
+      ],
+      "linked_spec_id": "025-reliable-background-sync-engine",
+      "competitor_insight_ids": [
+        "pain-5-3",
+        "pain-6-3"
+      ]
+    },
+    {
+      "id": "feature-11",
+      "title": "Inventory Receiving Operation",
+      "description": "Implement the receiving workflow: select 'Receive' mode → scan item barcodes → auto-lookup in catalog → confirm/adjust quantity → record receipt with timestamp, operator, and location. Supports batch receiving (scan multiple items sequentially). Each receipt creates both an InventoryOperation record and an OutboxEntry in a single transaction. Running totals visible during the session.",
+      "rationale": "Receiving goods is the most frequent inventory operation — every item entering the warehouse goes through receiving. This is the first real business operation that delivers user value on top of the technical foundation. Workers need to process deliveries quickly: scan, confirm, next.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-7",
+        "feature-8"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Receiving mode accessible from main menu with a single tap",
+        "Scanning a barcode auto-populates item details from Room catalog",
+        "Quantity defaults to 1, adjustable via +/- buttons or numeric input",
+        "Each receive creates InventoryOperation + OutboxEntry in one @Transaction",
+        "Running total shows items scanned in current session",
+        "Session summary displayed when user ends the receiving session",
+        "Unknown barcodes prompt 'Add new item' flow",
+        "Location/zone can be set once per session (batch default)"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want to scan incoming items to record their receipt so that inventory counts are updated in real-time",
+        "As a warehouse worker, I want to see a running total of items I've received so that I can verify against the delivery manifest"
+      ],
+      "linked_spec_id": "026-inventory-receiving-operation",
+      "competitor_insight_ids": [
+        "pain-5-4"
+      ]
+    },
+    {
+      "id": "feature-12",
+      "title": "Physical Inventory Count & Audit",
+      "description": "Implement the audit/count workflow: select 'Count' mode → set location/zone → scan items sequentially → system records counted quantities → at session end, generate variance report (expected vs. counted). Supports full count (all items in a zone) and cycle count (subset of items). Each count operation persists via the outbox pattern.",
+      "rationale": "Physical inventory counts are mandatory for most warehouse operations (regulatory, insurance, accuracy). This is the second most common operation after receiving. Accurate counts are the core value that warehouse managers expect from an inventory system.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-7",
+        "feature-8"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Count mode accessible from main menu",
+        "Location/zone selection at session start",
+        "Each scan increments the counted quantity for that item in that zone",
+        "Expected vs. counted quantity visible per item during count",
+        "Variance report generated at session end (items with discrepancies highlighted)",
+        "Supports scanning the same item multiple times (quantity accumulates)",
+        "Count session can be paused and resumed (state persists)",
+        "Count operations sync via outbox pattern",
+        "Items not scanned in a full count are flagged as potential missing items"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want to scan items during a physical count so that I can quickly verify inventory accuracy",
+        "As a warehouse supervisor, I want to see variances between expected and counted quantities so that I can investigate discrepancies"
+      ],
+      "linked_spec_id": "027-physical-inventory-count-audit",
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-13",
+      "title": "CI/CD Pipeline with GitHub Actions & Fastlane",
+      "description": "Configure automated CI/CD: GitHub Actions workflow for build, lint (ktlint/detekt), and test on every PR. Fastlane lanes for debug and release APK generation. Automated signing configuration for release builds. Artifact upload for generated APKs. Foundation for per-flavor builds in Phase 2.",
+      "rationale": "CI/CD is specified in the tech stack and is critical for maintaining code quality as the codebase grows. With white-label Product Flavors coming in Phase 2, the pipeline needs to support building multiple APK variants. Automated quality gates prevent regressions.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-1"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "GitHub Actions workflow triggers on push to main and on PR creation",
+        "Workflow runs: compile, lint (ktlint or detekt), unit tests",
+        "Fastlane configured with at least 'debug' and 'release' lanes",
+        "Release APK signed with proper keystore (secrets in GitHub)",
+        "Build artifacts (APK) uploaded and downloadable from workflow",
+        "Build status badge available for README",
+        "Pipeline completes in < 10 minutes"
+      ],
+      "user_stories": [
+        "As a developer, I want automated builds and lint checks on every PR so that code quality issues are caught before merge",
+        "As the project owner, I want release APKs generated automatically so that deployment to Ndevor is streamlined"
+      ],
+      "linked_spec_id": "028-ci-cd-pipeline-with-github-actions-fastlane",
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-14",
+      "title": "Offline Sync Status Indicator",
+      "description": "Display a persistent, non-intrusive status bar showing: connectivity state (online/offline), pending outbox operations count, last successful sync timestamp, and active sync progress. Color-coded: amber when offline with pending changes, blue when actively syncing, green when fully synced, red on sync error. Collapsible to minimal indicator when synced.",
+      "rationale": "Workers moving between areas with WiFi and dead zones need to trust that their scans are being captured. Without visible sync status, they can't tell if data is local-only, syncing, or fully backed up. This is a trust and data-integrity signal. Sortly users complain about having to restart the app to resolve sync issues (pain-5-3) — proactive status prevents this anxiety.",
+      "priority": "should",
+      "complexity": "low",
+      "impact": "medium",
+      "phase_id": "phase-1",
+      "dependencies": [
+        "feature-10"
+      ],
+      "status": "planned",
+      "acceptance_criteria": [
+        "Status bar visible at top of every screen",
+        "Shows 'Offline — N changes pending' in amber when offline with queued operations",
+        "Shows 'Syncing...' with progress animation in blue during active sync",
+        "Shows green indicator when online and fully synced",
+        "Shows red indicator with error message on persistent sync failures",
+        "Last sync timestamp displayed (e.g., 'Last sync: 2 min ago')",
+        "Bar is non-intrusive — doesn't block content interaction",
+        "Tapping the bar shows detailed sync status (expandable)"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want to see at a glance whether my scans have been synced so that I know my data is backed up before ending my shift",
+        "As a warehouse supervisor, I want to see sync status on worker devices so that I can identify connectivity problems in specific warehouse zones"
+      ],
+      "linked_spec_id": "029-offline-sync-status-indicator",
+      "competitor_insight_ids": [
+        "pain-5-3"
+      ]
+    },
+    {
+      "id": "feature-15",
+      "title": "Product Flavors White-Label Architecture",
+      "description": "Implement Android Product Flavors for multi-client white-label delivery from a single codebase. Each flavor defines: unique applicationId, app name, launcher icon, color theme, API base URL, and resource overrides. Shared business logic in main source set. Client-specific resources in flavor source sets (app/src/clientA/, app/src/clientB/). Build matrix produces separate signed APKs per client.",
+      "rationale": "Managing multiple codebases is unsustainable (user pain point #7). No white-label multi-client solution exists in the Ukrainian warehouse market (market gap-4). Product Flavors enable serving 2-3+ B2B clients from a single codebase with distinct branding — each client gets 'their own' app. RFgen offers limited customization (pain-6-2) and 1C requires code modification for each client (pain-4-3). This is the architectural enabler for Artem's B2B scaling strategy.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-1",
+        "feature-13"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "At least 3 Product Flavors defined: 'newland' (importer brand), 'clientA', 'clientB'",
+        "Each flavor has unique applicationId (e.g., com.newland.inventory, com.clienta.warehouse)",
+        "Each flavor overrides: app_name, launcher icon, primary/secondary colors",
+        "Each flavor specifies its own API base URL via BuildConfig",
+        "Shared business logic (scan, sync, Room) in app/src/main/",
+        "Client-specific resources in app/src/{flavor}/ directories",
+        "CI/CD pipeline builds all flavors (from feature-13)",
+        "Two distinct APKs can install side-by-side on the same device"
+      ],
+      "user_stories": [
+        "As the project owner, I want to deliver branded app variants to multiple clients from a single codebase so that I can scale my business without maintaining separate codebases",
+        "As a B2B client, I want the app branded with my company logo and colors so that it feels like our own internal tool"
+      ],
+      "competitor_insight_ids": [
+        "pain-4-3",
+        "pain-6-2"
+      ]
+    },
+    {
+      "id": "feature-16",
+      "title": "Per-Client Feature Flags System",
+      "description": "Implement a feature flags system that enables/disables functionality per Product Flavor. Feature flags defined in flavor-specific configuration files or remote config. Supports: boolean toggles (enable/disable features), value flags (numeric limits, string configs), and build-time vs. runtime flags. Allows each client to have a tailored feature set without code changes.",
+      "rationale": "Different B2B clients have different needs — one may need transfers but not audits, another may need shipments but not transfers. Feature flags decouple feature availability from code presence, enabling flexible per-client configuration. This enhances the white-label value proposition beyond just branding to actual functional customization.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Feature flags defined per flavor in a configuration resource (JSON or XML)",
+        "Flag types supported: boolean (on/off), string, integer",
+        "FeatureFlagProvider injectable via Hilt, queryable from ViewModels",
+        "UI conditionally shows/hides operations based on flags",
+        "At least 5 flags defined: enable_transfers, enable_shipments, enable_audits, max_offline_days, enable_analytics",
+        "Flags can be overridden at runtime (for testing/demo)",
+        "Default flag values defined in main source set, overrideable per flavor"
+      ],
+      "user_stories": [
+        "As the project owner, I want to enable/disable features per client so that each client gets exactly the functionality they've paid for",
+        "As an IT administrator, I want to control which operations are available on devices so that workers only see relevant workflows"
+      ],
+      "competitor_insight_ids": [
+        "pain-6-2"
+      ]
+    },
+    {
+      "id": "feature-17",
+      "title": "Inventory Transfer Between Locations",
+      "description": "Implement the transfer workflow: select 'Transfer' mode → set source location → set destination location → scan items to transfer → confirm quantities → record transfer operations. Each transfer decrements the source location quantity and increments the destination. Supports batch transfers. Full outbox pattern integration.",
+      "rationale": "Warehouse operations frequently involve moving items between zones (receiving → storage, storage → picking, storage → storage). This is the third most common inventory operation and essential for multi-zone warehouse management. Expands the operation suite beyond receiving and counting.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-7",
+        "feature-8",
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Transfer mode accessible from main menu",
+        "Source and destination locations selectable from location list (or scan location barcode)",
+        "Scanning an item in transfer mode shows current quantity at source location",
+        "Transfer quantity defaults to 1, adjustable",
+        "Transfer creates paired operations (decrement source + increment destination) in one transaction",
+        "Running transfer summary shows items moved in current session",
+        "Transfer history viewable with source/destination details",
+        "Cannot transfer more than available quantity at source location"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want to scan items to transfer them between locations so that inventory locations stay accurate as goods move through the warehouse",
+        "As a warehouse supervisor, I want transfer records so that I can track how goods flow between warehouse zones"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-18",
+      "title": "Inventory Shipment Operation",
+      "description": "Implement the outbound shipment workflow: select 'Ship' mode → link to shipment/order reference → scan items to fulfill → validate scanned items against expected shipment list → confirm shipment → record shipment operations. Supports order verification (scanned items match the expected list) with discrepancy alerts.",
+      "rationale": "Outbound shipments complete the inventory lifecycle: goods are received, stored, transferred, and eventually shipped out. Order verification during shipment prevents wrong-item errors and short-ships — a major source of customer complaints in warehouse operations. This is the fourth core inventory operation.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-7",
+        "feature-8",
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Shipment mode accessible from main menu",
+        "Shipment can be linked to an order/reference number",
+        "Scanning items checks against expected shipment list if available",
+        "Visual indicator for: expected item (green), unexpected item (amber warning), already scanned (blue)",
+        "Shipment summary shows: expected vs. scanned, missing items, extra items",
+        "Confirming shipment decrements inventory and creates outbox entries",
+        "Incomplete shipments can be saved and resumed",
+        "Alerts when scanning an item not in the expected shipment"
+      ],
+      "user_stories": [
+        "As a warehouse worker, I want to scan items for a shipment against the expected order so that I can verify I'm shipping the right items",
+        "As a warehouse supervisor, I want to see shipment discrepancies so that I can resolve issues before goods leave the warehouse"
+      ],
+      "competitor_insight_ids": [
+        "pain-5-4"
+      ]
+    },
+    {
+      "id": "feature-19",
+      "title": "Ndevor Zero-Touch Provisioning Integration",
+      "description": "Integrate with Ndevor MDM for zero-touch device provisioning: create Ndevor device groups per B2B client, generate QR codes that auto-enroll devices into the correct group, auto-install the correct client-flavored APK, configure WiFi/security policies, and lock down non-essential device functions (kiosk mode). Target: ~5 minutes from unboxing to operational.",
+      "rationale": "Manual device setup doesn't scale to 50-200 devices across multiple clients. Zebra requires separate expensive MDM (pain-1-4), Honeywell needs similar investment, and generic apps have no fleet deployment capability (pain-5-5). Ndevor is free and built into every MT90 — this is a massive competitive advantage (market gap-6). Zero-touch provisioning is what makes the B2B scaling strategy practical.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Ndevor device group created per client flavor",
+        "QR code generated per group for device enrollment",
+        "Scanning QR code on fresh MT90 auto-enrolls into correct client group",
+        "Correct client-flavored APK auto-installs after enrollment",
+        "WiFi profile auto-configured from Ndevor policy",
+        "Device setup completes in ≤ 5 minutes from unboxing",
+        "Ndevor policies restrict unnecessary device functions (status bar lock, app whitelist)",
+        "Documentation provided for IT administrators on QR code generation"
+      ],
+      "user_stories": [
+        "As an IT administrator, I want to set up a new device by scanning a QR code so that I can deploy 50+ devices in a day without manual configuration",
+        "As the project owner, I want each client to have their own device group so that I can manage device fleets per client independently"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-4",
+        "pain-5-5"
+      ]
+    },
+    {
+      "id": "feature-20",
+      "title": "Full Ukrainian Localization",
+      "description": "Provide complete Ukrainian language support: all UI strings, error messages, help text, date/time formats (Ukrainian locale), number formats, and currency formatting. Localization infrastructure supports easy addition of future languages (English, Russian). Strings extracted to resource files with no hardcoded text.",
+      "rationale": "The target market is Ukrainian warehouses and logistics companies. Workers are Ukrainian-speaking and expect a Ukrainian interface. The post-1C vacuum (market gap-5) specifically creates opportunity for a Ukrainian-first solution. Competing with global products (Zebra, SAP) in Ukrainian means speaking the user's language — literally.",
+      "priority": "should",
+      "complexity": "low",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-5"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "All UI strings available in Ukrainian (strings-uk.xml)",
+        "Default locale is Ukrainian for the app",
+        "Date/time displayed in Ukrainian format (DD.MM.YYYY, 24h)",
+        "Number formatting uses Ukrainian conventions (space as thousands separator, comma as decimal)",
+        "Error messages and help text in Ukrainian",
+        "No hardcoded strings in Composables or ViewModels",
+        "English strings available as fallback (strings.xml)",
+        "Localization framework supports adding new languages easily"
+      ],
+      "user_stories": [
+        "As a Ukrainian warehouse worker, I want the app in my native language so that I can understand all instructions and labels without language barriers",
+        "As the project owner, I want Ukrainian-first localization so that the product feels native to the Ukrainian market"
+      ],
+      "competitor_insight_ids": [
+        "pain-4-1"
+      ]
+    },
+    {
+      "id": "feature-21",
+      "title": "Branded Client Onboarding Flow",
+      "description": "Create a first-launch onboarding experience that is branded per Product Flavor: client logo splash screen, 2-3 onboarding slides explaining the app (with client branding), QR-code device registration (links device ID to client account), initial sync of item catalog, and operator login. The onboarding establishes trust ('this is OUR app') and gets the device operational.",
+      "rationale": "First impressions matter for B2B clients. When a warehouse manager unboxes a new MT90 and sees their company logo and branding, it reinforces the value of the white-label solution. The onboarding flow also handles the critical first sync of the item catalog and operator authentication — without which the device isn't operational.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-15",
+        "feature-20"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Splash screen shows client logo and app name (from flavor resources)",
+        "2-3 onboarding slides with client branding explain key features",
+        "QR-code scan option for device registration with client backend",
+        "Initial catalog sync triggered after registration",
+        "Operator login screen (simple PIN or username/password)",
+        "Onboarding only shows on first launch (flag persisted)",
+        "Skip option available for pre-configured devices (Ndevor provisioned)",
+        "Onboarding completes in < 2 minutes with good connectivity"
+      ],
+      "user_stories": [
+        "As a B2B client, I want the app to show my company branding from the first screen so that it feels like our proprietary tool",
+        "As a warehouse worker, I want a simple setup process so that I can start scanning items within minutes of receiving my device",
+        "As an IT administrator, I want device registration via QR code so that each device is linked to our account automatically"
+      ],
+      "competitor_insight_ids": [
+        "pain-3-5",
+        "pain-5-5"
+      ]
+    },
+    {
+      "id": "feature-22",
+      "title": "Stable Per-Device Licensing Model",
+      "description": "Implement a per-device licensing and activation system: license keys tied to device hardware ID, activation via QR code or manual entry, license validation on first launch and periodic re-validation, grace period for offline validation, and license tier support (basic/professional/enterprise). Transparent pricing model with no surprise increases.",
+      "rationale": "Sortly users report dramatic subscription price increases without warning — jumping from $468 to $1,467/year (pain-5-1). A stable, transparent per-device licensing model tied to hardware purchase creates predictable costs for B2B clients. This directly addresses the pricing stability gap and builds trust with clients burned by SaaS price hikes.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-9",
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "License key activates per device (tied to Android device ID or IMEI)",
+        "Activation via QR code scan or manual key entry",
+        "License validated on first launch and periodically (weekly) when online",
+        "30-day grace period allows continued operation without connectivity for validation",
+        "License tiers supported: basic (receive + count), professional (+ transfer + shipment), enterprise (+ analytics)",
+        "Clear licensing documentation for client sales process",
+        "License expiration shows warning 30 days before expiry, not sudden lockout"
+      ],
+      "user_stories": [
+        "As a B2B client, I want predictable per-device pricing so that I can budget for my device fleet without surprise cost increases",
+        "As the project owner, I want a licensing system so that I can monetize the software alongside hardware sales"
+      ],
+      "competitor_insight_ids": [
+        "pain-5-1"
+      ]
+    },
+    {
+      "id": "feature-23",
+      "title": "Operational Analytics & Reporting",
+      "description": "Build an analytics module that tracks and reports: scans per shift/day/week per operator, operation throughput (items/hour), sync uptime percentage, error rates, most scanned items, peak usage times, and warehouse zone activity heatmap. Data collected locally, aggregated on sync. Reports accessible on-device (supervisor mode) and exportable.",
+      "rationale": "Phase 3 of the CLAUDE.md roadmap explicitly calls for analytics (scans/shift, uptime). Data-driven warehouse management is the next value layer after basic operations. Supervisors need visibility into team performance and operational efficiency. This transitions the app from a simple scanning tool to a management platform.",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [
+        "feature-7",
+        "feature-10",
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Scans per operator per shift/day tracked and displayed",
+        "Operation throughput (items/hour) calculated and visualized",
+        "Sync uptime percentage tracked (time online vs. total time)",
+        "Error rate tracking (failed scans, sync failures)",
+        "Top 10 most scanned items report",
+        "Reports viewable on-device in supervisor mode",
+        "Data exportable as CSV for external analysis",
+        "Analytics data syncs to server for cross-device aggregation"
+      ],
+      "user_stories": [
+        "As a warehouse supervisor, I want to see how many items each worker scans per shift so that I can optimize staffing and identify training needs",
+        "As the project owner, I want usage analytics so that I can demonstrate ROI to B2B clients"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-24",
+      "title": "Device Health Monitoring",
+      "description": "Monitor and report device health metrics: battery level and charging status, available storage, memory usage, connectivity quality (WiFi signal strength, connection drops), app crash reports, scanner hardware health, and last sync timestamp. Health data syncs to backend for fleet-wide monitoring. Alerts when devices fall below health thresholds.",
+      "rationale": "Managing 50-200 devices requires proactive health monitoring. Dead batteries, full storage, or connectivity issues need to be caught before they impact warehouse operations. This enables IT administrators to maintain fleet reliability without physically checking each device.",
+      "priority": "could",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [
+        "feature-10",
+        "feature-19"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Battery level reported with low-battery warning (< 20%)",
+        "Storage usage reported with low-storage warning (< 500MB free)",
+        "WiFi signal strength tracked and reported",
+        "Connection drop count tracked per shift",
+        "App crash reports captured and synced",
+        "Scanner hardware responsiveness monitored (scan attempt vs. scan success)",
+        "Health data syncs to backend with device identifier",
+        "Dashboard view of fleet health (per-device cards with status indicators)"
+      ],
+      "user_stories": [
+        "As an IT administrator, I want to see which devices have low battery so that I can ensure charged replacements are available",
+        "As a warehouse supervisor, I want to know which warehouse zones have poor connectivity so that I can adjust workflows or WiFi coverage"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-25",
+      "title": "Supervisor Remote Monitoring Dashboard",
+      "description": "Build a dedicated supervisor/manager view accessible via role-based authentication: real-time overview of active operators and their current operations, fleet-wide sync status, aggregated analytics charts, device health summary, and alert inbox for issues (sync failures, low battery, scan errors). Designed for the supervisor who oversees a warehouse floor from a desk or tablet.",
+      "rationale": "Warehouse supervisors need oversight without walking the floor to check each device. This dashboard aggregates information from analytics (feature-23) and device health (feature-24) into an actionable management view. It's the value layer that sells to decision-makers (managers buy the solution, workers use it).",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [
+        "feature-23",
+        "feature-24"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Supervisor role with elevated access (distinct from worker role)",
+        "Dashboard shows active operators count and current operations",
+        "Fleet-wide sync status: devices online/offline/error",
+        "Aggregated daily metrics: total scans, operations completed, sync success rate",
+        "Device health summary cards (battery, storage, connectivity per device)",
+        "Alert inbox showing issues requiring attention",
+        "Dashboard refreshes in real-time when online",
+        "Accessible on MT90 but also usable on tablet-sized screens"
+      ],
+      "user_stories": [
+        "As a warehouse supervisor, I want a dashboard showing all active workers so that I can monitor warehouse operations from my desk",
+        "As a warehouse manager, I want to see fleet-wide health and performance metrics so that I can make data-driven operational decisions"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-26",
+      "title": "Comprehensive Automated Test Suite",
+      "description": "Build a layered test suite: unit tests for Room DAOs, ViewModels, and sync engine logic; integration tests for outbox pattern (write + read + sync cycle); instrumented tests for scanner integration on MT90; UI tests for critical workflows (receive, count). Target: 80%+ code coverage for business logic, 60%+ overall. Run as part of CI/CD pipeline.",
+      "rationale": "The project currently has zero tests (only placeholder stubs). With 50-200 devices in production across multiple clients, regression bugs are expensive — each one affects all clients simultaneously. Automated testing is the safety net that enables confident, frequent releases. This should be a Phase 3 focus when the codebase has stabilized.",
+      "priority": "should",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [
+        "feature-13"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Unit tests for all Room DAO operations with in-memory database",
+        "Unit tests for ViewModel state management (scan flow, sync status)",
+        "Unit tests for outbox pattern (write + status transitions)",
+        "Integration test for full outbox cycle: create → queue → sync → confirm",
+        "Instrumented test for NewlandScannerManager on physical MT90",
+        "UI test for receiving workflow (scan → confirm → next item)",
+        "80%+ code coverage for data and domain layers",
+        "All tests run in CI/CD pipeline (feature-13)",
+        "Test results reported in PR checks"
+      ],
+      "user_stories": [
+        "As a developer, I want automated tests so that I can make changes confidently without breaking existing functionality",
+        "As the project owner, I want high test coverage so that releases to 50-200 devices are reliable and regression-free"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-27",
+      "title": "Multi-Device Hardware Support",
+      "description": "Extend scanner integration and UI adaptation to additional Newland devices: NFT10 Pilot Pro and N7 Cachalot Pro. Implement a scanner abstraction layer that detects the device model and configures broadcast intents and key codes accordingly. Adapt UI layouts for different screen sizes and resolutions. Validate all core workflows on each device.",
+      "rationale": "CLAUDE.md Phase 3 calls for expansion to NFT10 and N7 devices. As the Newland importer, Artem needs to offer the app across the product line — not just MT90. A scanner abstraction layer also future-proofs against new Newland models. Zebra's DataWedge is proprietary to their hardware (pain-1-3) — our abstraction layer could theoretically support multiple vendors.",
+      "priority": "could",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [
+        "feature-4",
+        "feature-5"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Scanner abstraction layer detects device model at runtime",
+        "NFT10 Pilot Pro: broadcast intents configured and scan workflow validated",
+        "N7 Cachalot Pro: broadcast intents configured and scan workflow validated",
+        "Hardware key codes mapped per device model (may differ from MT90's F6)",
+        "UI layouts adapt to different screen sizes (MT90 4.0\", NFT10 5.x\", N7 varies)",
+        "Core workflows (receive, count, transfer, ship) validated on each device",
+        "Device-specific issues documented with workarounds"
+      ],
+      "user_stories": [
+        "As the project owner, I want to offer the app on multiple Newland devices so that I can serve clients with different hardware needs",
+        "As a developer, I want a scanner abstraction layer so that adding new device support doesn't require rewriting scan integration"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-3"
+      ]
+    },
+    {
+      "id": "feature-28",
+      "title": "ERP Integration REST APIs",
+      "description": "Design and implement a documented REST API layer that enables integration with external ERP systems: bi-directional data exchange for inventory items, operations, locations, and operators. Support for webhook notifications on inventory changes. API documentation (OpenAPI/Swagger). Pre-built connectors for common Ukrainian ERP systems (BAS, Dilovod) and generic webhook integration.",
+      "rationale": "Warehouses don't exist in isolation — they're part of larger supply chain systems. As clients grow, they'll need the inventory app to integrate with their ERP, accounting, and logistics systems. Unlike RFgen which requires ERP (pain-6-4), we offer a standalone app that can optionally integrate. This enables upselling integration services as an additional revenue stream.",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-4",
+      "dependencies": [
+        "feature-9",
+        "feature-10"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "REST API endpoints for CRUD operations on inventory items, locations, operators",
+        "Webhook support for real-time inventory change notifications",
+        "API authentication (API key or OAuth 2.0)",
+        "OpenAPI/Swagger documentation auto-generated",
+        "Pre-built connector for at least one Ukrainian ERP (BAS or Dilovod)",
+        "Generic webhook integration (POST to configurable URL on inventory events)",
+        "Rate limiting and request validation",
+        "API versioning strategy (v1/v2 path-based)"
+      ],
+      "user_stories": [
+        "As a B2B client with an existing ERP, I want the inventory app to sync data with my ERP so that inventory counts are consistent across systems",
+        "As a systems integrator, I want documented APIs so that I can build custom integrations for clients"
+      ],
+      "competitor_insight_ids": [
+        "pain-6-4"
+      ]
+    },
+    {
+      "id": "feature-29",
+      "title": "AI-Powered Inventory Intelligence",
+      "description": "Leverage scan history and inventory data for intelligent features: anomaly detection (unusual quantities, unexpected items in zones), reorder point predictions (based on consumption patterns), optimal stock level suggestions, and scan pattern analysis (identifying workflow bottlenecks). ML models run locally on-device for offline capability, trained on aggregated fleet data.",
+      "rationale": "Market trends indicate AI and automation in warehouse operations is gaining traction. This differentiates the app from pure scanning tools and positions it as an intelligent warehouse assistant. However, this is speculative and requires significant data accumulation first — properly a Phase 4/future vision item.",
+      "priority": "wont",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-4",
+      "dependencies": [
+        "feature-23",
+        "feature-10"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Anomaly detection flags unusual inventory operations (quantity > 3 standard deviations)",
+        "Reorder point prediction based on 30-day consumption history",
+        "Optimal stock level suggestion per item per location",
+        "Scan pattern analysis identifying slow workflow steps",
+        "Predictions run locally on-device (no network dependency)",
+        "Supervisor dashboard shows AI-generated insights",
+        "False positive rate for anomaly detection < 5%"
+      ],
+      "user_stories": [
+        "As a warehouse supervisor, I want the system to alert me to unusual inventory changes so that I can investigate potential errors or theft",
+        "As a warehouse manager, I want reorder predictions so that I can proactively restock before items run out"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-30",
+      "title": "Voice-Guided Warehouse Workflows",
+      "description": "Add voice guidance for hands-free operation: text-to-speech for workflow instructions ('Scan next item', 'Item received: Widget A, quantity 5'), voice confirmation of operations, and optional voice command input for quantity adjustment. Optimized for noisy environments with clear, loud audio. Supports Ukrainian TTS.",
+      "rationale": "Some warehouse operations require both hands (carrying items, operating forklifts). Voice guidance enables workers to continue scanning workflows without looking at the screen. This is an accessibility and efficiency feature for advanced use cases. Market trends show voice interfaces gaining traction in warehouse operations.",
+      "priority": "could",
+      "complexity": "medium",
+      "impact": "low",
+      "phase_id": "phase-4",
+      "dependencies": [
+        "feature-7",
+        "feature-20"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Text-to-speech announces scan results (item name, quantity)",
+        "Voice instructions guide workflow steps ('Scan item', 'Confirm quantity')",
+        "Ukrainian TTS supported (Android TTS engine)",
+        "Volume adjustable independently from scan feedback audio",
+        "Voice guidance can be enabled/disabled per operator preference",
+        "Voice works in offline mode (local TTS engine, no cloud dependency)",
+        "Audio clear and intelligible through device speaker in warehouse noise levels"
+      ],
+      "user_stories": [
+        "As a warehouse worker carrying items, I want voice confirmation of scans so that I know what was captured without looking at the screen",
+        "As a forklift operator, I want voice-guided instructions so that I can complete inventory tasks hands-free"
+      ],
+      "competitor_insight_ids": []
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-03-24T12:00:00Z",
+    "updated_at": "2026-03-27T13:06:05.177Z",
+    "generated_by": "roadmap_features agent",
+    "prioritization_framework": "MoSCoW",
+    "competitor_analysis_used": true,
+    "competitor_count": 6,
+    "competitor_pain_points_addressed": 18,
+    "market_gaps_addressed": 6,
+    "source_documents": [
+      "roadmap_discovery.json",
+      "project_index.json",
+      "competitor_analysis.json",
+      "CLAUDE.md"
+    ]
+  }
+}

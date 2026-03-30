@@ -1,0 +1,7 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "code-imp-001",
+  "rationale": "Without a compilable project skeleton, no other code improvements or features can be developed or tested. This is the critical first step.",
+  "category": "feature"
+}

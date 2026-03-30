@@ -1,0 +1,48 @@
+{
+  "files_to_create": {
+    "root": [
+      "settings.gradle.kts",
+      "build.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat",
+      "gradle/wrapper/gradle-wrapper.properties",
+      "gradle/wrapper/gradle-wrapper.jar",
+      ".gitignore"
+    ],
+    "app": [
+      "app/build.gradle.kts",
+      "app/proguard-rules.pro",
+      "app/src/main/AndroidManifest.xml",
+      "app/src/main/java/com/inventory/app/InventoryApplication.kt",
+      "app/src/main/java/com/inventory/app/MainActivity.kt",
+      "app/src/main/res/values/strings.xml",
+      "app/src/main/res/values/colors.xml",
+      "app/src/main/res/values/themes.xml",
+      "app/src/main/res/layout/activity_main.xml",
+      "app/src/main/res/drawable/ic_launcher_background.xml",
+      "app/src/main/res/mipmap/ic_launcher.png"
+    ]
+  },
+  "files_to_modify": {},
+  "files_to_reference": [],
+  "patterns": {
+    "gradle_structure": "Use Kotlin DSL for Gradle files (*.gradle.kts)",
+    "package_structure": "Use com.inventory.app as base package",
+    "application_class": "Create custom Application class for app initialization",
+    "activity_pattern": "MainActivity extends AppCompatActivity with layout binding",
+    "manifest_pattern": "Standard Android manifest with application tag referencing Application class"
+  },
+  "existing_implementations": {
+    "description": "No existing code - fresh project initialization",
+    "relevant_files": []
+  },
+  "android_specifics": {
+    "min_sdk": 24,
+    "target_sdk": 34,
+    "compile_sdk": 34,
+    "kotlin_version": "1.9.20",
+    "gradle_version": "8.2.0",
+    "agp_version": "8.2.0"
+  }
+}

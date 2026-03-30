@@ -1,0 +1,13 @@
+{
+  "feature": "Create CONTRIBUTING.md with development workflow and code standards",
+  "description": "There are no contributing guidelines, code style standards, or development workflow documentation. The project uses Git (with 2 commits on master branch) but has no branch strategy, commit convention, PR process, or code review guidelines documented. The .gitignore covers Auto Claude files but there is no guidance for human or AI contributors on how to participate in development.",
+  "created_at": "2026-03-24T10:17:37.211Z",
+  "updated_at": "2026-03-24T10:17:37.211Z",
+  "status": "backlog",
+  "planStatus": "pending",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

@@ -1,0 +1,35 @@
+{
+  "project_type": "single",
+  "services": {
+    "android-app": {
+      "path": ".",
+      "tech_stack": ["kotlin", "android", "jetpack-compose", "room", "hilt"],
+      "framework": "Android Native",
+      "min_api": 24,
+      "target_api": 34,
+      "build_command": "./gradlew assembleDebug",
+      "test_command": "./gradlew test"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "room-sqlite",
+    "cloud_sync": "planned",
+    "barcode_scanning": "ml-kit-or-zxing"
+  },
+  "conventions": {
+    "language": "kotlin",
+    "architecture": "mvvm",
+    "ui_framework": "jetpack-compose",
+    "dependency_injection": "hilt",
+    "database_orm": "room",
+    "code_style": "kotlin-official"
+  },
+  "project_status": "greenfield",
+  "documentation": {
+    "readme": "README.md",
+    "architecture": "docs/ARCHITECTURE.md",
+    "roadmap": "ROADMAP.md",
+    "contributing": "CONTRIBUTING.md"
+  }
+}

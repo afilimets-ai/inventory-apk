@@ -1,0 +1,32 @@
+{
+  "files_to_modify": {},
+  "files_to_create": {
+    "documentation": [
+      "SETUP.md",
+      "docs/DEVELOPMENT_ENVIRONMENT.md"
+    ]
+  },
+  "files_to_reference": [],
+  "patterns": {
+    "documentation_pattern": "Clear, step-by-step instructions with prerequisite sections, installation steps, verification commands, and troubleshooting",
+    "android_conventions": "Follow standard Android project structure conventions",
+    "setup_guide_structure": "Prerequisites -> Installation -> IDE Setup -> Project Initialization -> Running the App -> Troubleshooting"
+  },
+  "existing_implementations": {
+    "description": "No existing documentation found. This is a greenfield documentation task.",
+    "relevant_files": []
+  },
+  "task_type": "documentation",
+  "target_audience": "New developers setting up Android development environment for the first time",
+  "key_topics": [
+    "Android SDK installation and configuration",
+    "Java/Kotlin setup",
+    "Android Studio IDE configuration",
+    "Gradle build tool setup",
+    "Android emulator configuration",
+    "Project scaffolding from scratch",
+    "Common troubleshooting scenarios"
+  ],
+  "complexity": "low",
+  "estimated_effort": "1-2 hours"
+}

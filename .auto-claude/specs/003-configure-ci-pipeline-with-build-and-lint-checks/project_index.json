@@ -1,0 +1,40 @@
+{
+  "project_type": "single",
+  "project_name": "inventory-apk",
+  "description": "Android inventory management application",
+  "services": {
+    "android-app": {
+      "path": ".",
+      "tech_stack": ["android", "gradle", "kotlin", "java"],
+      "build_system": "gradle",
+      "dev_command": "./gradlew assembleDebug",
+      "test_command": "./gradlew test",
+      "lint_command": "./gradlew lint",
+      "build_tools": {
+        "gradle_version": "8.x",
+        "android_gradle_plugin": "8.x"
+      }
+    }
+  },
+  "infrastructure": {
+    "ci_cd": {
+      "provider": "github_actions",
+      "status": "to_be_added",
+      "workflows_path": ".github/workflows"
+    },
+    "docker": false,
+    "database": "local_sqlite"
+  },
+  "conventions": {
+    "linter": "android_lint",
+    "formatter": "editorconfig",
+    "testing": "junit",
+    "build_checks": ["build", "lint", "test"]
+  },
+  "android_specific": {
+    "min_sdk": "21",
+    "target_sdk": "34",
+    "compile_sdk": "34",
+    "build_variants": ["debug", "release"]
+  }
+}

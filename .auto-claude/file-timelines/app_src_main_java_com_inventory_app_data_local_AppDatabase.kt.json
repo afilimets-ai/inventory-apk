@@ -1,0 +1,28 @@
+{
+  "file_path": "app/src/main/java/com/inventory/app/data/local/AppDatabase.kt",
+  "main_branch_history": [],
+  "task_views": {
+    "010-persistent-offline-sync-status-bar-with-pending-op": {
+      "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T11:01:04.889179"
+      },
+      "worktree_state": {
+        "content": "package com.inventory.app.data.local\n\nimport android.content.Context\nimport androidx.room.Database\nimport androidx.room.Room\nimport androidx.room.RoomDatabase\nimport com.inventory.app.data.local.outbox.OutboxDao\nimport com.inventory.app.data.local.outbox.OutboxEntity\n\n/**\n * Main Room database for the application.\n * Implements offline-first architecture with outbox pattern for sync operations.\n */\n@Database(\n    entities = [OutboxEntity::class],\n    version = 1,\n    exportSchema = false\n)\nabstract class AppDatabase : RoomDatabase() {\n    /**\n     * Access to outbox operations for pending sync management.\n     */\n    abstract fun outboxDao(): OutboxDao\n\n    companion object {\n        @Volatile\n        private var INSTANCE: AppDatabase? = null\n\n        /**\n         * Get singleton database instance.\n         * Uses double-check locking pattern for thread-safe initialization.\n         */\n        fun getDatabase(context: Context): AppDatabase {\n            return INSTANCE ?: synchronized(this) {\n                val instance = Room.databaseBuilder(\n                    context.applicationContext,\n                    AppDatabase::class.java,\n                    \"inventory_database\"\n                )\n                    .fallbackToDestructiveMigration()\n                    .build()\n                INSTANCE = instance\n                instance\n            }\n        }\n    }\n}\n",
+        "last_modified": "2026-03-26T15:51:31.173948"
+      },
+      "task_intent": {
+        "title": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T11:01:05.061061",
+  "last_updated": "2026-03-25T11:01:05.107939"
+}

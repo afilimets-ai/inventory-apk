@@ -1,0 +1,31 @@
+{
+  "project_type": "single",
+  "project_name": "inventory-apk",
+  "description": "Android application for efficient inventory management and tracking",
+  "status": "greenfield",
+  "services": {
+    "documentation": {
+      "path": ".",
+      "tech_stack": ["markdown"],
+      "files": ["README.md", "ROADMAP.md (planned)", "CONTRIBUTING.md (planned)", "docs/ARCHITECTURE.md (planned)"]
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "ci_cd": false,
+    "database": "none",
+    "version_control": "git"
+  },
+  "conventions": {
+    "documentation": "markdown",
+    "readme_style": "comprehensive with emojis for sections"
+  },
+  "target_platform": {
+    "type": "android",
+    "min_sdk": "API 24 (Android 7.0)",
+    "language": "kotlin (planned)",
+    "architecture": "MVVM (planned)"
+  },
+  "current_phase": "planning_and_documentation",
+  "notes": "This is a greenfield project with no code yet. Only documentation exists currently."
+}

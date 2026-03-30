@@ -1,0 +1,51 @@
+{
+  "files_to_modify": {
+    "android-app": []
+  },
+  "files_to_create": {
+    "android-app": [
+      ".github/workflows/android-ci.yml"
+    ]
+  },
+  "files_to_reference": [
+    "build.gradle",
+    "build.gradle.kts",
+    "settings.gradle",
+    "app/build.gradle"
+  ],
+  "patterns": {
+    "github_actions_structure": "Standard GitHub Actions workflow with jobs for build, lint, and test",
+    "gradle_commands": "Use ./gradlew for builds to ensure wrapper consistency",
+    "caching_strategy": "Cache Gradle dependencies and build outputs for faster CI runs",
+    "trigger_events": "Run on push to main and on all pull requests"
+  },
+  "existing_implementations": {
+    "description": "No existing CI/CD configuration found - this is a new setup",
+    "relevant_files": [],
+    "ci_cd_providers": "GitHub Actions (repository hosted on GitHub)"
+  },
+  "ci_cd_requirements": {
+    "build_job": {
+      "description": "Compile the Android app using Gradle",
+      "command": "./gradlew assembleDebug assembleRelease",
+      "artifacts": ["app/build/outputs/apk/"]
+    },
+    "lint_job": {
+      "description": "Run Android lint checks for code quality",
+      "command": "./gradlew lint",
+      "artifacts": ["app/build/reports/lint-results.html"]
+    },
+    "test_job": {
+      "description": "Run unit tests",
+      "command": "./gradlew test",
+      "artifacts": ["app/build/test-results/", "app/build/reports/tests/"]
+    }
+  },
+  "best_practices": {
+    "gradle_wrapper": "Always use ./gradlew, never install Gradle separately",
+    "java_version": "Use Java 17 or 11 for Android builds",
+    "caching": "Cache ~/.gradle/caches and ~/.gradle/wrapper",
+    "parallel_jobs": "Run lint and test in parallel after successful build",
+    "fail_fast": "Stop on first failure to save CI minutes"
+  }
+}

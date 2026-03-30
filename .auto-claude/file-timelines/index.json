@@ -1,0 +1,32 @@
+{
+  "files": [
+    ".auto-claude/specs/001-initialize-project-scaffolding-with-standard-andro/build-progress.txt",
+    ".claude/settings.local.json",
+    "app/build.gradle.kts",
+    "app/proguard-rules.pro",
+    "build.gradle.kts",
+    "gradle.properties",
+    "gradle/wrapper/gradle-wrapper.jar",
+    "gradle/wrapper/gradle-wrapper.properties",
+    "gradlew",
+    "gradlew.bat",
+    "settings.gradle.kts",
+    "app/src/main/java/com/inventory/app/data/local/AppDatabase.kt",
+    "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt",
+    "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt",
+    "app/src/main/AndroidManifest.xml",
+    "app/src/main/java/com/inventory/app/InventoryApplication.kt",
+    "app/src/main/java/com/inventory/app/MainActivity.kt",
+    "app/src/main/res/layout/activity_main.xml",
+    "app/src/main/res/values/strings.xml",
+    "app/src/main/res/drawable/ic_launcher_background.xml",
+    "app/src/main/res/drawable/ic_launcher_foreground.xml",
+    "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+    "app/src/main/res/values/colors.xml",
+    "app/src/main/res/values/themes.xml",
+    ".gradle/buildOutputCleanup/buildOutputCleanup.lock",
+    ".gradle/buildOutputCleanup/outputFiles.bin",
+    "app/src/test/java/com/inventory/scanner/NewlandScannerManagerTest.kt"
+  ],
+  "last_updated": "2026-03-27T11:11:09.309587"
+}

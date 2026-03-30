@@ -1,0 +1,68 @@
+{
+  "file_path": "app/proguard-rules.pro",
+  "main_branch_history": [],
+  "task_views": {
+    "001-initialize-project-scaffolding-with-standard-andro": {
+      "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T16:24:50.477846"
+      },
+      "worktree_state": {
+        "content": "# Add project specific ProGuard rules here.\n# You can control the set of applied configuration files using the\n# proguardFiles setting in build.gradle.kts.\n#\n# For more details, see\n#   http://developer.android.com/guide/developing/tools/proguard.html\n\n# If your project uses WebView with JS, uncomment the following\n# and specify the fully qualified class name to the JavaScript interface\n# class:\n#-keepclassmembers class fqcn.of.javascript.interface.for.webview {\n#   public *;\n#}\n\n# Uncomment this to preserve the line number information for\n# debugging stack traces.\n#-keepattributes SourceFile,LineNumberTable\n\n# If you keep the line number information, uncomment this to\n# hide the original source file name.\n#-renamesourcefileattribute SourceFile\n\n# Keep generic signature of Call, Response (R8 full mode strips signatures from non-kept items).\n-keepattributes Signature\n\n# Keep Exceptions, InnerClasses, and Annotations\n-keepattributes Exceptions,InnerClasses,*Annotation*\n\n# Keep metadata for reflection\n-keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations\n-keepattributes RuntimeVisibleParameterAnnotations,RuntimeInvisibleParameterAnnotations\n\n# AndroidX\n-keep class androidx.** { *; }\n-keep interface androidx.** { *; }\n-dontwarn androidx.**\n\n# Keep Android framework classes\n-keep public class * extends android.app.Activity\n-keep public class * extends android.app.Application\n-keep public class * extends android.app.Service\n-keep public class * extends android.content.BroadcastReceiver\n-keep public class * extends android.content.ContentProvider\n-keep public class * extends android.view.View\n\n# Keep native methods\n-keepclasseswithmembernames class * {\n    native <methods>;\n}\n\n# Keep view constructors (needed for XML inflation)\n-keepclasseswithmembers class * {\n    public <init>(android.content.Context, android.util.AttributeSet);\n}\n\n-keepclasseswithmembers class * {\n    public <init>(android.content.Context, android.util.AttributeSet, int);\n}\n\n# Keep Activity methods (for XML onClick handlers)\n-keepclassmembers class * extends android.app.Activity {\n    public void *(android.view.View);\n}\n\n# Keep enum classes\n-keepclassmembers enum * {\n    public static **[] values();\n    public static ** valueOf(java.lang.String);\n}\n\n# Keep Parcelable implementations\n-keep class * implements android.os.Parcelable {\n    public static final ** CREATOR;\n}\n\n# Keep Serializable classes\n-keepclassmembers class * implements java.io.Serializable {\n    static final long serialVersionUID;\n    private static final java.io.ObjectStreamField[] serialPersistentFields;\n    private void writeObject(java.io.ObjectOutputStream);\n    private void readObject(java.io.ObjectInputStream);\n    java.lang.Object writeReplace();\n    java.lang.Object readResolve();\n}\n\n# Keep R class and its inner classes\n-keep class **.R$* {\n    <fields>;\n}\n\n# Material Components\n-keep class com.google.android.material.** { *; }\n-dontwarn com.google.android.material.**\n\n# Kotlin\n-keep class kotlin.** { *; }\n-keep class kotlin.Metadata { *; }\n-dontwarn kotlin.**\n-keepclassmembers class **$WhenMappings {\n    <fields>;\n}\n-keepclassmembers class kotlin.Metadata {\n    public <methods>;\n}\n-assumenosideeffects class kotlin.jvm.internal.Intrinsics {\n    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);\n}\n\n# Lifecycle\n-keep class androidx.lifecycle.** { *; }\n-dontwarn androidx.lifecycle.**\n\n# ViewModel\n-keep class * extends androidx.lifecycle.ViewModel {\n    <init>();\n}\n-keep class * extends androidx.lifecycle.AndroidViewModel {\n    <init>(android.app.Application);\n}\n\n# Keep custom Application class\n-keep class * extends android.app.Application\n\n# Remove logging in release builds (optional - uncomment to enable)\n#-assumenosideeffects class android.util.Log {\n#    public static *** d(...);\n#    public static *** v(...);\n#    public static *** i(...);\n#    public static *** w(...);\n#    public static *** e(...);\n#}\n",
+        "last_modified": "2026-03-26T11:52:51.458572"
+      },
+      "task_intent": {
+        "title": "001-initialize-project-scaffolding-with-standard-andro",
+        "description": "Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon.",
+        "from_plan": true
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    },
+    "010-persistent-offline-sync-status-bar-with-pending-op": {
+      "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T11:01:04.889179"
+      },
+      "worktree_state": {
+        "content": "# Add project specific ProGuard rules here.\n# You can control the set of applied configuration files using the\n# proguardFiles setting in build.gradle.kts.\n#\n# For more details, see\n#   http://developer.android.com/guide/developing/tools/proguard.html\n\n# Keep Room entities and DAOs\n-keep class com.inventory.app.data.** { *; }\n-keep interface com.inventory.app.data.** { *; }\n",
+        "last_modified": "2026-03-26T15:51:31.173948"
+      },
+      "task_intent": {
+        "title": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    },
+    "004-set-up-dependency-injection-framework": {
+      "task_id": "004-set-up-dependency-injection-framework",
+      "branch_point": {
+        "commit_hash": "fb72c5b08fe09b2797d2f11a50ed2153870f77f2",
+        "content": "",
+        "timestamp": "2026-03-26T10:33:15.356050"
+      },
+      "worktree_state": {
+        "content": "# Add project specific ProGuard rules here.\n# You can control the set of applied configuration files using the\n# proguardFiles setting in build.gradle.\n#\n# For more details, see\n#   http://developer.android.com/guide/developing/tools/proguard.html\n\n# If your project uses WebView with JS, uncomment the following\n# and specify the fully qualified class name to the JavaScript interface\n# class:\n#-keepclassmembers class fqcn.of.javascript.interface.for.webview {\n#   public *;\n#}\n\n# Uncomment this to preserve the line number information for\n# debugging stack traces.\n#-keepattributes SourceFile,LineNumberTable\n\n# If you keep the line number information, uncomment this to\n# hide the original source file name.\n#-renamesourcefileattribute SourceFile\n\n# Kotlin\n-keep class kotlin.** { *; }\n-keep class kotlin.Metadata { *; }\n-dontwarn kotlin.**\n-keepclassmembers class **$WhenMappings {\n    <fields>;\n}\n-keepclassmembers class kotlin.Metadata {\n    public <methods>;\n}\n\n# AndroidX\n-keep class androidx.** { *; }\n-keep interface androidx.** { *; }\n-dontwarn androidx.**\n\n# Compose\n-keep class androidx.compose.** { *; }\n-dontwarn androidx.compose.**\n",
+        "last_modified": "2026-03-26T10:33:16.103658"
+      },
+      "task_intent": {
+        "title": "004-set-up-dependency-injection-framework",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 0,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-24T17:12:04.943084",
+  "last_updated": "2026-03-26T10:33:15.489099"
+}

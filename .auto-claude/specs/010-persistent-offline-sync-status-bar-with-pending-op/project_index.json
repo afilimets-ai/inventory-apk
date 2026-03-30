@@ -1,0 +1,32 @@
+{
+  "project_type": "single",
+  "services": {
+    "android-app": {
+      "path": "./app",
+      "tech_stack": ["kotlin", "android", "androidx", "room", "workmanager", "material"],
+      "port": null,
+      "dev_command": "./gradlew installDebug",
+      "test_command": "./gradlew test",
+      "build_command": "./gradlew assembleDebug"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "room-sqlite",
+    "background_jobs": "workmanager"
+  },
+  "conventions": {
+    "linter": "ktlint",
+    "formatter": "ktfmt",
+    "testing": "junit",
+    "architecture": "mvvm"
+  },
+  "android_specific": {
+    "namespace": "com.inventory.app",
+    "min_sdk": 24,
+    "target_sdk": 34,
+    "compile_sdk": 34,
+    "package_structure": "com/inventory/app",
+    "build_features": ["viewBinding", "buildConfig"]
+  }
+}

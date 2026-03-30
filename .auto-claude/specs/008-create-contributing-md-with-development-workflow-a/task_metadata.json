@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-003",
+  "rationale": "As an AI-assisted development project using the Auto Claude framework, clear contributing guidelines are especially important — both human developers and AI agents need to understand the expected workflow, naming conventions, and quality gates. Establishing these norms early prevents inconsistent patterns from being set during the critical first implementations.",
+  "category": "documentation",
+  "priority": "medium"
+}

@@ -1,0 +1,7 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "code-imp-003",
+  "rationale": "Early CI setup catches issues before they accumulate and establishes a quality-first development workflow.",
+  "category": "feature"
+}

@@ -1,0 +1,1083 @@
+{
+  "README.md": {
+    "file_path": "README.md",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:21:35.261922",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "011-document-project-roadmap-and-feature-specification",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:21:35.261922",
+        "completed_at": "2026-03-24T17:21:35.264932",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "2356675049d02857",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/README.md b/README.md\nnew file mode 100644\nindex 0000000..54382ee\n--- /dev/null\n+++ b/README.md\n@@ -0,0 +1,148 @@\n+# Inventory APK\n+\n+An Android application for efficient inventory management and tracking.\n+\n+## \ud83d\udccb Overview\n+\n+Inventory APK is a mobile inventory management solution designed to help businesses and individuals track, manage, and organize their inventory items efficiently. Built natively for Android, the application provides a streamlined interface for managing stock levels, tracking item movements, and generating reports on the go.\n+\n+## \ud83c\udfaf Purpose\n+\n+Traditional inventory management often requires desktop software or complex web applications. Inventory APK brings the power of inventory tracking directly to your mobile device, enabling:\n+\n+- **Real-time tracking**: Update inventory status immediately as items move\n+- **Offline-first operation**: Manage inventory without constant internet connectivity\n+- **Mobile convenience**: Use your smartphone to scan, update, and view inventory anywhere\n+- **Simplified workflow**: Intuitive interface designed for quick data entry and retrieval\n+\n+## \u2728 Key Features\n+\n+### Core Functionality (Planned)\n+- **Item Management**: Add, edit, and delete inventory items with detailed information\n+- **Barcode Scanning**: Quick item lookup and data entry using device camera\n+- **Stock Tracking**: Monitor quantity levels with low-stock alerts\n+- **Category Organization**: Group items by custom categories and tags\n+- **Search & Filter**: Quickly find items using powerful search capabilities\n+- **Offline Support**: Full functionality without internet connection\n+- **Data Export**: Export inventory data to CSV/Excel formats\n+\n+### Advanced Features (Future Roadmap)\n+- **Multi-location Support**: Manage inventory across multiple warehouses or stores\n+- **Supplier Management**: Track vendor information and purchase orders\n+- **Stock Movement History**: Complete audit trail of inventory changes\n+- **Reporting & Analytics**: Visual insights into inventory trends\n+- **Cloud Sync**: Synchronize data across multiple devices\n+- **Multi-user Access**: Collaborative inventory management with role-based permissions\n+\n+> **Note**: This project is in active development. See [ROADMAP.md](ROADMAP.md) for detailed feature timeline and MVP scope.\n+\n+## \ud83d\ude80 Getting Started\n+\n+### Prerequisites\n+\n+Before you begin, ensure you have the following installed:\n+\n+- **Android Studio**: Arctic Fox (2020.3.1) or later\n+- **JDK**: Java Development Kit 11 or higher\n+- **Android SDK**: API Level 24 (Android 7.0) minimum\n+- **Git**: For version control\n+\n+### Installation\n+\n+1. **Clone the repository**\n+   ```bash\n+   git clone https://github.com/yourusername/inventory-apk.git\n+   cd inventory-apk\n+   ```\n+\n+2. **Open in Android Studio**\n+   - Launch Android Studio\n+   - Select \"Open an Existing Project\"\n+   - Navigate to the cloned repository folder\n+   - Click \"OK\"\n+\n+3. **Sync Gradle dependencies**\n+   - Android Studio will automatically prompt to sync\n+   - Or manually sync via: File \u2192 Sync Project with Gradle Files\n+\n+4. **Configure Android Emulator** (optional)\n+   - Open AVD Manager (Tools \u2192 AVD Manager)\n+   - Create a new Virtual Device with API Level 24+\n+   - Or connect a physical Android device with USB debugging enabled\n+\n+5. **Build and Run**\n+   - Click the \"Run\" button (green play icon)\n+   - Select your target device (emulator or physical device)\n+   - The app will build and install automatically\n+\n+### Quick Start Guide\n+\n+Once the app is installed:\n+\n+1. **First Launch**: The app will create a local database for your inventory\n+2. **Add Your First Item**:\n+   - Tap the \"+\" floating action button\n+   - Enter item details (name, SKU, quantity, etc.)\n+   - Optionally scan a barcode for quick entry\n+   - Save the item\n+3. **View Inventory**: Browse your items in the main list view\n+4. **Update Stock**: Tap any item to adjust quantity or edit details\n+5. **Search Items**: Use the search bar to filter by name, SKU, or category\n+\n+> **Note**: As this is a greenfield project, the actual implementation is in progress. Check the [development roadmap](ROADMAP.md) for current status.\n+\n+## \ud83d\udcda Documentation\n+\n+- **[ROADMAP.md](ROADMAP.md)** - Development roadmap, MVP scope, and milestones\n+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Guidelines for contributing to the project\n+- **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Technical architecture and design decisions\n+- **[docs/features/](docs/features/)** - Detailed feature specifications\n+\n+## \ud83c\udfd7\ufe0f Project Status\n+\n+**Current Phase**: Initial Planning & Documentation\n+\n+This is a greenfield project currently in the planning and specification phase. Core documentation is being established to guide development. Active development of features will begin once the MVP scope is finalized.\n+\n+See [ROADMAP.md](ROADMAP.md) for detailed development timeline and priorities.\n+\n+## \ud83d\udee0\ufe0f Technology Stack\n+\n+**Target Platform**: Android 7.0 (API 24) and above\n+\n+**Planned Technologies**:\n+- **Language**: Kotlin\n+- **Architecture**: MVVM (Model-View-ViewModel)\n+- **Database**: Room (SQLite)\n+- **Dependency Injection**: Hilt/Dagger\n+- **Barcode Scanning**: ML Kit or ZXing\n+- **UI Framework**: Jetpack Compose / Material Design 3\n+\n+> See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed technical decisions and rationale.\n+\n+## \ud83e\udd1d Contributing\n+\n+We welcome contributions from the community! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.\n+\n+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for:\n+- Development setup instructions\n+- Coding standards and conventions\n+- Pull request process\n+- Issue reporting guidelines\n+\n+## \ud83d\udcdd License\n+\n+This project's license is to be determined. Check back soon for licensing information.\n+\n+## \ud83d\udce7 Contact & Support\n+\n+- **Issues**: [GitHub Issues](https://github.com/yourusername/inventory-apk/issues)\n+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/inventory-apk/discussions)\n+\n+## \ud83d\ude4f Acknowledgments\n+\n+This project is built with modern Android development best practices and leverages the Android Jetpack suite of libraries.\n+\n+---\n+\n+**Status**: \ud83d\udea7 In Development | **Version**: 0.1.0-alpha | **Last Updated**: March 2026\n"
+      }
+    ]
+  },
+  ".auto-claude/specs/001-initialize-project-scaffolding-with-standard-andro/build-progress.txt": {
+    "file_path": ".auto-claude/specs/001-initialize-project-scaffolding-with-standard-andro/build-progress.txt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:06.382116",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:06.382116",
+        "completed_at": "2026-03-26T11:52:51.976213",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "56d503fb9b506514",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.auto-claude/specs/001-initialize-project-scaffolding-with-standard-andro/build-progress.txt b/.auto-claude/specs/001-initialize-project-scaffolding-with-standard-andro/build-progress.txt\nnew file mode 100644\nindex 0000000..1dce82f\n--- /dev/null\n+++ b/.auto-claude/specs/001-initialize-project-scaffolding-with-standard-andro/build-progress.txt\n@@ -0,0 +1,206 @@\n+=== AUTO-BUILD PROGRESS ===\n+\n+Project: Initialize Android/Kotlin Project Scaffolding\n+Workspace: inventory-apk\n+Started: 2026-03-24\n+\n+Workflow Type: simple\n+Rationale: Straightforward project initialization task with no existing code. Follows a linear sequence of creating Gradle files, Android manifest, application structure, and basic resources. No service dependencies or complex orchestration needed.\n+\n+Session 1 (Planner):\n+- Created implementation_plan.json\n+- Phases: 6\n+- Total subtasks: 18\n+- Created init.sh\n+- Created project_index.json\n+- Created context.json\n+\n+Phase Summary:\n+- Phase 1 (Gradle Build System Setup): 4 subtasks, no dependencies\n+  * Create Gradle wrapper files\n+  * Create settings.gradle.kts\n+  * Create root build.gradle.kts\n+  * Create gradle.properties\n+\n+- Phase 2 (App Module Structure): 3 subtasks, depends on phase-1-gradle-setup\n+  * Create app module directory structure\n+  * Create app/build.gradle.kts\n+  * Create proguard-rules.pro\n+\n+- Phase 3 (Android Core Files): 3 subtasks, depends on phase-2-app-module\n+  * Create AndroidManifest.xml\n+  * Create InventoryApplication.kt (custom Application class)\n+  * Create MainActivity.kt\n+\n+- Phase 4 (Resources & Assets): 5 subtasks, depends on phase-3-android-core\n+  * Create activity_main.xml layout\n+  * Create strings.xml\n+  * Create colors.xml\n+  * Create themes.xml with Material3\n+  * Create launcher icons\n+\n+- Phase 5 (Git Configuration): 1 subtask, no dependencies\n+  * Update .gitignore with Android/Gradle patterns\n+\n+- Phase 6 (Build Verification): 3 subtasks, depends on phase-3-android-core and phase-4-resources\n+  * Run Gradle sync\n+  * Build debug APK\n+  * Verify APK artifact exists\n+\n+Services Involved:\n+- app: Android application module (Kotlin, Gradle)\n+\n+Parallelism Analysis:\n+- Max parallel phases: 2\n+- Recommended workers: 1\n+- Parallel groups:\n+  * phase-1-gradle-setup and phase-5-gitignore can run in parallel (no dependencies, different files)\n+  * Most phases are sequential due to build system dependencies\n+\n+Technology Stack:\n+- Language: Kotlin 1.9.20\n+- Build System: Gradle 8.2.0 with Kotlin DSL\n+- Android Gradle Plugin: 8.2.0\n+- Min SDK: 24 (Android 7.0)\n+- Target SDK: 34 (Android 14)\n+- Compile SDK: 34\n+- Architecture: MVVM (foundation for future features)\n+- Package: com.inventory.app\n+\n+Project Structure:\n+Root:\n+  - settings.gradle.kts\n+  - build.gradle.kts\n+  - gradle.properties\n+  - gradlew, gradlew.bat\n+  - gradle/wrapper/\n+\n+App Module:\n+  - app/build.gradle.kts\n+  - app/src/main/AndroidManifest.xml\n+  - app/src/main/java/com/inventory/app/\n+    * InventoryApplication.kt\n+    * MainActivity.kt\n+  - app/src/main/res/\n+    * layout/activity_main.xml\n+    * values/strings.xml\n+    * values/colors.xml\n+    * values/themes.xml\n+    * drawable/ (launcher icons)\n+    * mipmap-*/ (launcher icon densities)\n+\n+Verification Strategy:\n+- Risk Level: low\n+- Test Types: build verification only\n+- No unit tests required for initial scaffolding\n+- Acceptance Criteria:\n+  1. Project structure follows standard Android conventions\n+  2. Gradle build completes successfully\n+  3. Debug APK can be built\n+  4. All required files are present and correctly configured\n+\n+Next Steps:\n+The coder agent will:\n+1. Implement subtasks sequentially, respecting phase dependencies\n+2. Start with phase-1-gradle-setup (Gradle wrapper and build files)\n+3. Progress through app module, core files, and resources\n+4. Verify with final build and APK generation\n+5. Each subtask results in one git commit\n+\n+=== STARTUP COMMAND ===\n+\n+To continue building this spec, run:\n+\n+  source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 001 --parallel 1\n+\n+Or from the main project directory:\n+\n+  cd C:/Users/user/Documents/proj/inventory-apk\n+  source auto-claude/.venv/bin/activate\n+  python auto-claude/run.py --spec 001 --parallel 1\n+\n+=== PLANNING COMPLETE ===\n+\n+Status: Planning phase complete\n+Next: Implementation phase\n+Agent: Coder agent will execute subtasks\n+Date: 2026-03-24\n+\n+=== END SESSION 1 ===\n+\n+=== SESSION 2 (Coder) ===\n+Date: 2026-03-24\n+\n+Phase 1: Gradle Build System Setup\n+Status: In Progress\n+\n+Subtask 1-1: Create Gradle wrapper files\n+Status: Completed (with blocker noted)\n+Files Created:\n+  \u2713 gradlew (Unix executable)\n+  \u2713 gradlew.bat (Windows batch script)\n+  \u2713 gradle/wrapper/gradle-wrapper.properties (Gradle 8.2 configuration)\n+  \u2713 gradle/wrapper/gradle-wrapper.jar (wrapper JAR downloaded)\n+\n+Implementation Notes:\n+- Downloaded gradle-wrapper.jar from official Gradle repository (v8.2.0)\n+- Created standard gradlew and gradlew.bat scripts\n+- Configured wrapper to use Gradle 8.2 distribution\n+- Made gradlew executable with proper permissions\n+\n+BLOCKER IDENTIFIED:\n+- Java/JDK is not installed on the system\n+- Verification command \"./gradlew --version\" fails due to missing Java\n+- Java 17 or higher is required for Gradle 8.2 and Android development\n+- Gradle wrapper files are correctly created and will work once Java is installed\n+\n+Resolution Options:\n+1. Install Java JDK 17 or higher\n+2. Set JAVA_HOME environment variable\n+3. Ensure 'java' is in system PATH\n+\n+Next Steps:\n+- User needs to install Java/JDK before proceeding with remaining subtasks\n+- Once Java is installed, verification can be completed\n+- Remaining phase-1 subtasks require working Gradle wrapper\n+\n+Subtask 1-2: Create root-level settings.gradle.kts\n+Status: Completed\n+Files Created:\n+  \u2713 settings.gradle.kts (root project configuration)\n+\n+Implementation Notes:\n+- Set root project name to \"inventory-apk\"\n+- Configured pluginManagement with Google, Maven Central, and Gradle Plugin Portal repositories\n+- Configured dependencyResolutionManagement with strict repository mode\n+- Included :app module for Android application\n+\n+Subtask 1-3: Create root-level build.gradle.kts with Android Gradle Plugin\n+Status: Completed\n+Files Created:\n+  \u2713 build.gradle.kts (root build configuration)\n+\n+Implementation Notes:\n+- Added Android Gradle Plugin 8.2.0 with 'apply false'\n+- Added Kotlin Android Plugin 1.9.20 with 'apply false'\n+- Created clean task for build directory cleanup\n+- Plugins are declared at root level for subproject usage\n+\n+Subtask 1-4: Create gradle.properties with Android/Kotlin configuration\n+Status: Completed\n+Files Created:\n+  \u2713 gradle.properties (Gradle configuration properties)\n+\n+Implementation Notes:\n+- Configured JVM args: -Xmx2048m with UTF-8 encoding\n+- Enabled parallel builds for performance\n+- Enabled AndroidX support\n+- Set Kotlin code style to \"official\"\n+- Enabled non-transitive R class for reduced APK size\n+- Enabled Gradle configuration cache for faster builds\n+- Enabled Gradle build cache for incremental builds\n+\n+Phase 1 Status: COMPLETED \u2713\n+All 4 subtasks in Gradle Build System Setup phase are complete.\n+The project now has a fully configured Gradle build system.\n+\n"
+      }
+    ]
+  },
+  ".claude/settings.local.json": {
+    "file_path": ".claude/settings.local.json",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:06.815856",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:06.815856",
+        "completed_at": "2026-03-26T11:52:52.126183",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "a83296984ee6b437",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.claude/settings.local.json b/.claude/settings.local.json\nnew file mode 100644\nindex 0000000..4e4e60e\n--- /dev/null\n+++ b/.claude/settings.local.json\n@@ -0,0 +1,9 @@\n+{\n+  \"permissions\": {\n+    \"allow\": [\n+      \"Skill(update-config)\",\n+      \"Bash(claude mcp:*)\",\n+      \"Bash(npx -y @modelcontextprotocol/server-sequential-thinking --version)\"\n+    ]\n+  }\n+}\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:38.902480",
+        "completed_at": "2026-03-26T15:51:31.556107",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "2bfb142eba4b2e05",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.claude/settings.local.json b/.claude/settings.local.json\nnew file mode 100644\nindex 0000000..4e4e60e\n--- /dev/null\n+++ b/.claude/settings.local.json\n@@ -0,0 +1,9 @@\n+{\n+  \"permissions\": {\n+    \"allow\": [\n+      \"Skill(update-config)\",\n+      \"Bash(claude mcp:*)\",\n+      \"Bash(npx -y @modelcontextprotocol/server-sequential-thinking --version)\"\n+    ]\n+  }\n+}\n"
+      }
+    ]
+  },
+  "app/build.gradle.kts": {
+    "file_path": "app/build.gradle.kts",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:07.403150",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:07.403150",
+        "completed_at": "2026-03-26T11:52:52.259627",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "5cd92fa3cc98b33d",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/build.gradle.kts b/app/build.gradle.kts\nnew file mode 100644\nindex 0000000..b03bd93\n--- /dev/null\n+++ b/app/build.gradle.kts\n@@ -0,0 +1,84 @@\n+plugins {\n+    id(\"com.android.application\")\n+    id(\"org.jetbrains.kotlin.android\")\n+}\n+\n+android {\n+    namespace = \"com.inventory.app\"\n+    compileSdk = 34\n+\n+    defaultConfig {\n+        applicationId = \"com.inventory.app\"\n+        minSdk = 24\n+        targetSdk = 34\n+        versionCode = 1\n+        versionName = \"1.0.0\"\n+\n+        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n+        vectorDrawables {\n+            useSupportLibrary = true\n+        }\n+    }\n+\n+    buildTypes {\n+        release {\n+            isMinifyEnabled = true\n+            isShrinkResources = true\n+            proguardFiles(\n+                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n+                \"proguard-rules.pro\"\n+            )\n+        }\n+        debug {\n+            isMinifyEnabled = false\n+            applicationIdSuffix = \".debug\"\n+            versionNameSuffix = \"-debug\"\n+        }\n+    }\n+\n+    compileOptions {\n+        sourceCompatibility = JavaVersion.VERSION_17\n+        targetCompatibility = JavaVersion.VERSION_17\n+    }\n+\n+    kotlinOptions {\n+        jvmTarget = \"17\"\n+    }\n+\n+    buildFeatures {\n+        viewBinding = true\n+        buildConfig = true\n+    }\n+\n+    packaging {\n+        resources {\n+            excludes += \"/META-INF/{AL2.0,LGPL2.1}\"\n+        }\n+    }\n+}\n+\n+dependencies {\n+    // AndroidX Core\n+    implementation(\"androidx.core:core-ktx:1.12.0\")\n+    implementation(\"androidx.appcompat:appcompat:1.6.1\")\n+\n+    // Material Design\n+    implementation(\"com.google.android.material:material:1.11.0\")\n+\n+    // ConstraintLayout\n+    implementation(\"androidx.constraintlayout:constraintlayout:2.1.4\")\n+\n+    // Lifecycle\n+    implementation(\"androidx.lifecycle:lifecycle-runtime-ktx:2.7.0\")\n+    implementation(\"androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0\")\n+    implementation(\"androidx.lifecycle:lifecycle-livedata-ktx:2.7.0\")\n+\n+    // Activity & Fragment\n+    implementation(\"androidx.activity:activity-ktx:1.8.2\")\n+    implementation(\"androidx.fragment:fragment-ktx:1.6.2\")\n+\n+    // Testing\n+    testImplementation(\"junit:junit:4.13.2\")\n+    androidTestImplementation(\"androidx.test.ext:junit:1.1.5\")\n+    androidTestImplementation(\"androidx.test.espresso:espresso-core:3.5.1\")\n+}\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.486430",
+        "completed_at": "2026-03-26T15:51:35.341134",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "70e858b5f194f8b1",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/build.gradle.kts b/app/build.gradle.kts\nnew file mode 100644\nindex 0000000..615e8de\n--- /dev/null\n+++ b/app/build.gradle.kts\n@@ -0,0 +1,82 @@\n+plugins {\n+    id(\"com.android.application\")\n+    id(\"org.jetbrains.kotlin.android\")\n+    id(\"com.google.devtools.ksp\")\n+}\n+\n+android {\n+    namespace = \"com.inventory.app\"\n+    compileSdk = 34\n+\n+    defaultConfig {\n+        applicationId = \"com.inventory.app\"\n+        minSdk = 24\n+        targetSdk = 34\n+        versionCode = 1\n+        versionName = \"1.0\"\n+\n+        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n+    }\n+\n+    buildTypes {\n+        release {\n+            isMinifyEnabled = false\n+            proguardFiles(\n+                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n+                \"proguard-rules.pro\"\n+            )\n+        }\n+    }\n+\n+    compileOptions {\n+        sourceCompatibility = JavaVersion.VERSION_17\n+        targetCompatibility = JavaVersion.VERSION_17\n+    }\n+\n+    kotlinOptions {\n+        jvmTarget = \"17\"\n+    }\n+\n+    buildFeatures {\n+        viewBinding = true\n+    }\n+}\n+\n+kotlin {\n+    jvmToolchain(17)\n+}\n+\n+java {\n+    toolchain {\n+        languageVersion.set(JavaLanguageVersion.of(17))\n+    }\n+}\n+\n+dependencies {\n+    // AndroidX Core\n+    implementation(\"androidx.core:core-ktx:1.12.0\")\n+    implementation(\"androidx.appcompat:appcompat:1.6.1\")\n+    implementation(\"com.google.android.material:material:1.11.0\")\n+    implementation(\"androidx.constraintlayout:constraintlayout:2.1.4\")\n+\n+    // Room Database\n+    val roomVersion = \"2.6.1\"\n+    implementation(\"androidx.room:room-runtime:$roomVersion\")\n+    implementation(\"androidx.room:room-ktx:$roomVersion\")\n+    ksp(\"androidx.room:room-compiler:$roomVersion\")\n+\n+    // Coroutines\n+    implementation(\"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3\")\n+\n+    // Lifecycle\n+    implementation(\"androidx.lifecycle:lifecycle-runtime-ktx:2.7.0\")\n+    implementation(\"androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0\")\n+\n+    // WorkManager\n+    implementation(\"androidx.work:work-runtime-ktx:2.9.0\")\n+\n+    // Testing\n+    testImplementation(\"junit:junit:4.13.2\")\n+    androidTestImplementation(\"androidx.test.ext:junit:1.1.5\")\n+    androidTestImplementation(\"androidx.test.espresso:espresso-core:3.5.1\")\n+}\n"
+      }
+    ]
+  },
+  "app/proguard-rules.pro": {
+    "file_path": "app/proguard-rules.pro",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:07.671092",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:07.671092",
+        "completed_at": "2026-03-26T11:52:52.409524",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "d7de485b59b22ce4",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro\nnew file mode 100644\nindex 0000000..e85b428\n--- /dev/null\n+++ b/app/proguard-rules.pro\n@@ -0,0 +1,131 @@\n+# Add project specific ProGuard rules here.\n+# You can control the set of applied configuration files using the\n+# proguardFiles setting in build.gradle.kts.\n+#\n+# For more details, see\n+#   http://developer.android.com/guide/developing/tools/proguard.html\n+\n+# If your project uses WebView with JS, uncomment the following\n+# and specify the fully qualified class name to the JavaScript interface\n+# class:\n+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {\n+#   public *;\n+#}\n+\n+# Uncomment this to preserve the line number information for\n+# debugging stack traces.\n+#-keepattributes SourceFile,LineNumberTable\n+\n+# If you keep the line number information, uncomment this to\n+# hide the original source file name.\n+#-renamesourcefileattribute SourceFile\n+\n+# Keep generic signature of Call, Response (R8 full mode strips signatures from non-kept items).\n+-keepattributes Signature\n+\n+# Keep Exceptions, InnerClasses, and Annotations\n+-keepattributes Exceptions,InnerClasses,*Annotation*\n+\n+# Keep metadata for reflection\n+-keepattributes RuntimeVisibleAnnotations,RuntimeInvisibleAnnotations\n+-keepattributes RuntimeVisibleParameterAnnotations,RuntimeInvisibleParameterAnnotations\n+\n+# AndroidX\n+-keep class androidx.** { *; }\n+-keep interface androidx.** { *; }\n+-dontwarn androidx.**\n+\n+# Keep Android framework classes\n+-keep public class * extends android.app.Activity\n+-keep public class * extends android.app.Application\n+-keep public class * extends android.app.Service\n+-keep public class * extends android.content.BroadcastReceiver\n+-keep public class * extends android.content.ContentProvider\n+-keep public class * extends android.view.View\n+\n+# Keep native methods\n+-keepclasseswithmembernames class * {\n+    native <methods>;\n+}\n+\n+# Keep view constructors (needed for XML inflation)\n+-keepclasseswithmembers class * {\n+    public <init>(android.content.Context, android.util.AttributeSet);\n+}\n+\n+-keepclasseswithmembers class * {\n+    public <init>(android.content.Context, android.util.AttributeSet, int);\n+}\n+\n+# Keep Activity methods (for XML onClick handlers)\n+-keepclassmembers class * extends android.app.Activity {\n+    public void *(android.view.View);\n+}\n+\n+# Keep enum classes\n+-keepclassmembers enum * {\n+    public static **[] values();\n+    public static ** valueOf(java.lang.String);\n+}\n+\n+# Keep Parcelable implementations\n+-keep class * implements android.os.Parcelable {\n+    public static final ** CREATOR;\n+}\n+\n+# Keep Serializable classes\n+-keepclassmembers class * implements java.io.Serializable {\n+    static final long serialVersionUID;\n+    private static final java.io.ObjectStreamField[] serialPersistentFields;\n+    private void writeObject(java.io.ObjectOutputStream);\n+    private void readObject(java.io.ObjectInputStream);\n+    java.lang.Object writeReplace();\n+    java.lang.Object readResolve();\n+}\n+\n+# Keep R class and its inner classes\n+-keep class **.R$* {\n+    <fields>;\n+}\n+\n+# Material Components\n+-keep class com.google.android.material.** { *; }\n+-dontwarn com.google.android.material.**\n+\n+# Kotlin\n+-keep class kotlin.** { *; }\n+-keep class kotlin.Metadata { *; }\n+-dontwarn kotlin.**\n+-keepclassmembers class **$WhenMappings {\n+    <fields>;\n+}\n+-keepclassmembers class kotlin.Metadata {\n+    public <methods>;\n+}\n+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {\n+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);\n+}\n+\n+# Lifecycle\n+-keep class androidx.lifecycle.** { *; }\n+-dontwarn androidx.lifecycle.**\n+\n+# ViewModel\n+-keep class * extends androidx.lifecycle.ViewModel {\n+    <init>();\n+}\n+-keep class * extends androidx.lifecycle.AndroidViewModel {\n+    <init>(android.app.Application);\n+}\n+\n+# Keep custom Application class\n+-keep class * extends android.app.Application\n+\n+# Remove logging in release builds (optional - uncomment to enable)\n+#-assumenosideeffects class android.util.Log {\n+#    public static *** d(...);\n+#    public static *** v(...);\n+#    public static *** i(...);\n+#    public static *** w(...);\n+#    public static *** e(...);\n+#}\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.586121",
+        "completed_at": "2026-03-26T15:51:35.606772",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "0b6f7d6fece68692",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/proguard-rules.pro b/app/proguard-rules.pro\nnew file mode 100644\nindex 0000000..3e69196\n--- /dev/null\n+++ b/app/proguard-rules.pro\n@@ -0,0 +1,10 @@\n+# Add project specific ProGuard rules here.\n+# You can control the set of applied configuration files using the\n+# proguardFiles setting in build.gradle.kts.\n+#\n+# For more details, see\n+#   http://developer.android.com/guide/developing/tools/proguard.html\n+\n+# Keep Room entities and DAOs\n+-keep class com.inventory.app.data.** { *; }\n+-keep interface com.inventory.app.data.** { *; }\n"
+      }
+    ]
+  },
+  "app/src/main/AndroidManifest.xml": {
+    "file_path": "app/src/main/AndroidManifest.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:08.056831",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:08.056831",
+        "completed_at": "2026-03-26T11:52:52.526261",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "facaa986380784e5",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml\nnew file mode 100644\nindex 0000000..37a735e\n--- /dev/null\n+++ b/app/src/main/AndroidManifest.xml\n@@ -0,0 +1,29 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    package=\"com.inventory.app\">\n+\n+    <uses-permission android:name=\"android.permission.INTERNET\" />\n+    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n+\n+    <application\n+        android:name=\".InventoryApplication\"\n+        android:allowBackup=\"true\"\n+        android:icon=\"@mipmap/ic_launcher\"\n+        android:label=\"@string/app_name\"\n+        android:roundIcon=\"@mipmap/ic_launcher\"\n+        android:supportsRtl=\"true\"\n+        android:theme=\"@style/Theme.InventoryApp\">\n+\n+        <activity\n+            android:name=\".MainActivity\"\n+            android:exported=\"true\"\n+            android:label=\"@string/app_name\"\n+            android:theme=\"@style/Theme.InventoryApp\">\n+            <intent-filter>\n+                <action android:name=\"android.intent.action.MAIN\" />\n+                <category android:name=\"android.intent.category.LAUNCHER\" />\n+            </intent-filter>\n+        </activity>\n+    </application>\n+\n+</manifest>\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.702753",
+        "completed_at": "2026-03-26T15:51:35.768124",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "92b345d6b700607b",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml\nnew file mode 100644\nindex 0000000..ed94f92\n--- /dev/null\n+++ b/app/src/main/AndroidManifest.xml\n@@ -0,0 +1,39 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\">\n+\n+    <!--\n+        Permission required for NetworkMonitor to observe connectivity state changes\n+        via ConnectivityManager.NetworkCallback\n+    -->\n+    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n+\n+    <application\n+        android:allowBackup=\"true\"\n+        android:icon=\"@mipmap/ic_launcher\"\n+        android:label=\"@string/app_name\"\n+        android:roundIcon=\"@mipmap/ic_launcher_round\"\n+        android:supportsRtl=\"true\"\n+        android:theme=\"@style/Theme.AppCompat.Light.DarkActionBar\">\n+\n+        <!--\n+            MainActivity - Entry point of the application\n+\n+            Features:\n+            - Displays persistent SyncStatusBar at top of screen\n+            - Observes SyncStatusRepository for real-time sync state updates\n+            - Schedules periodic SyncWorker for background sync operations\n+\n+            Declared as launcher activity to be shown in app drawer and launched on app start\n+        -->\n+        <activity\n+            android:name=\".ui.MainActivity\"\n+            android:exported=\"true\">\n+            <intent-filter>\n+                <action android:name=\"android.intent.action.MAIN\" />\n+                <category android:name=\"android.intent.category.LAUNCHER\" />\n+            </intent-filter>\n+        </activity>\n+\n+    </application>\n+\n+</manifest>\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/InventoryApplication.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/InventoryApplication.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:08.381570",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:08.381570",
+        "completed_at": "2026-03-26T11:52:52.726188",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "cef0eb7c536441cf",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/InventoryApplication.kt b/app/src/main/java/com/inventory/app/InventoryApplication.kt\nnew file mode 100644\nindex 0000000..dbbbed4\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/InventoryApplication.kt\n@@ -0,0 +1,17 @@\n+package com.inventory.app\n+\n+import android.app.Application\n+\n+/**\n+ * Custom Application class for the Inventory app.\n+ * This class is instantiated before any other class when the process is created.\n+ * Use this for app-wide initialization and configuration.\n+ */\n+class InventoryApplication : Application() {\n+\n+    override fun onCreate() {\n+        super.onCreate()\n+        // Initialize app-wide components here\n+        // Examples: dependency injection, crash reporting, analytics, etc.\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/MainActivity.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/MainActivity.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:08.715422",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:08.715422",
+        "completed_at": "2026-03-26T11:52:52.909548",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "67f072f8b9e169ae",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/MainActivity.kt b/app/src/main/java/com/inventory/app/MainActivity.kt\nnew file mode 100644\nindex 0000000..aadae3f\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/MainActivity.kt\n@@ -0,0 +1,18 @@\n+package com.inventory.app\n+\n+import android.os.Bundle\n+import androidx.appcompat.app.AppCompatActivity\n+\n+/**\n+ * Main Activity for the Inventory app.\n+ * This is the entry point activity that is launched when the app starts.\n+ * It serves as the primary interface for user interaction.\n+ */\n+class MainActivity : AppCompatActivity() {\n+\n+    override fun onCreate(savedInstanceState: Bundle?) {\n+        super.onCreate(savedInstanceState)\n+        // Layout will be set when activity_main.xml is created\n+        // setContentView(R.layout.activity_main)\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/res/layout/activity_main.xml": {
+    "file_path": "app/src/main/res/layout/activity_main.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:09.036097",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:09.036097",
+        "completed_at": "2026-03-26T11:52:54.009515",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "62cc1c53bafdc9e7",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml\nnew file mode 100644\nindex 0000000..31197b3\n--- /dev/null\n+++ b/app/src/main/res/layout/activity_main.xml\n@@ -0,0 +1,20 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n+    xmlns:tools=\"http://schemas.android.com/tools\"\n+    android:layout_width=\"match_parent\"\n+    android:layout_height=\"match_parent\"\n+    tools:context=\".MainActivity\">\n+\n+    <TextView\n+        android:id=\"@+id/textView\"\n+        android:layout_width=\"wrap_content\"\n+        android:layout_height=\"wrap_content\"\n+        android:text=\"@string/app_name\"\n+        android:textAppearance=\"?attr/textAppearanceHeadline4\"\n+        app:layout_constraintBottom_toBottomOf=\"parent\"\n+        app:layout_constraintEnd_toEndOf=\"parent\"\n+        app:layout_constraintStart_toStartOf=\"parent\"\n+        app:layout_constraintTop_toTopOf=\"parent\" />\n+\n+</androidx.constraintlayout.widget.ConstraintLayout>\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.952387",
+        "completed_at": "2026-03-26T15:51:37.803235",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "4690f918b96c8a28",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml\nnew file mode 100644\nindex 0000000..8b24059\n--- /dev/null\n+++ b/app/src/main/res/layout/activity_main.xml\n@@ -0,0 +1,60 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<!--\n+    Main Activity Layout\n+\n+    Displays the persistent sync status bar at the top of the screen with\n+    placeholder content below for the main app functionality.\n+\n+    Structure:\n+    - Root LinearLayout with vertical orientation\n+    - SyncStatusBar component at top (handles its own expand/collapse)\n+    - Placeholder ScrollView for main content area\n+-->\n+<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    xmlns:tools=\"http://schemas.android.com/tools\"\n+    android:layout_width=\"match_parent\"\n+    android:layout_height=\"match_parent\"\n+    android:orientation=\"vertical\"\n+    tools:context=\".ui.MainActivity\">\n+\n+    <!-- Persistent sync status indicator -->\n+    <com.inventory.app.ui.components.SyncStatusBar\n+        android:id=\"@+id/syncStatusBar\"\n+        android:layout_width=\"match_parent\"\n+        android:layout_height=\"wrap_content\" />\n+\n+    <!-- Main content area (placeholder) -->\n+    <ScrollView\n+        android:layout_width=\"match_parent\"\n+        android:layout_height=\"0dp\"\n+        android:layout_weight=\"1\"\n+        android:fillViewport=\"true\">\n+\n+        <LinearLayout\n+            android:layout_width=\"match_parent\"\n+            android:layout_height=\"wrap_content\"\n+            android:orientation=\"vertical\"\n+            android:padding=\"16dp\"\n+            android:gravity=\"center\">\n+\n+            <!-- Placeholder content -->\n+            <TextView\n+                android:layout_width=\"wrap_content\"\n+                android:layout_height=\"wrap_content\"\n+                android:text=\"Inventory App\"\n+                android:textSize=\"24sp\"\n+                android:textStyle=\"bold\"\n+                android:layout_marginBottom=\"8dp\" />\n+\n+            <TextView\n+                android:layout_width=\"wrap_content\"\n+                android:layout_height=\"wrap_content\"\n+                android:text=\"Sync status bar appears above\"\n+                android:textSize=\"14sp\"\n+                android:textColor=\"@android:color/darker_gray\" />\n+\n+        </LinearLayout>\n+\n+    </ScrollView>\n+\n+</LinearLayout>\n"
+      }
+    ]
+  },
+  "app/src/main/res/values/strings.xml": {
+    "file_path": "app/src/main/res/values/strings.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:09.553280",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:09.553280",
+        "completed_at": "2026-03-26T11:52:54.410497",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "35dbb26cc213551d",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml\nnew file mode 100644\nindex 0000000..f795dda\n--- /dev/null\n+++ b/app/src/main/res/values/strings.xml\n@@ -0,0 +1,22 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<resources>\n+    <!-- Application name -->\n+    <string name=\"app_name\">Inventory</string>\n+\n+    <!-- Common actions -->\n+    <string name=\"action_settings\">Settings</string>\n+    <string name=\"action_search\">Search</string>\n+    <string name=\"action_add\">Add</string>\n+    <string name=\"action_edit\">Edit</string>\n+    <string name=\"action_delete\">Delete</string>\n+    <string name=\"action_save\">Save</string>\n+    <string name=\"action_cancel\">Cancel</string>\n+    <string name=\"action_ok\">OK</string>\n+\n+    <!-- Common messages -->\n+    <string name=\"loading\">Loading\u2026</string>\n+    <string name=\"error_generic\">An error occurred. Please try again.</string>\n+    <string name=\"error_network\">Network connection error. Please check your internet connection.</string>\n+    <string name=\"success_saved\">Saved successfully</string>\n+    <string name=\"success_deleted\">Deleted successfully</string>\n+</resources>\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.635836",
+        "completed_at": "2026-03-26T15:51:38.856613",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "39370b49a9a6ef00",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml\nnew file mode 100644\nindex 0000000..88a86ae\n--- /dev/null\n+++ b/app/src/main/res/values/strings.xml\n@@ -0,0 +1,4 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<resources>\n+    <string name=\"app_name\">Inventory</string>\n+</resources>\n"
+      }
+    ]
+  },
+  "build.gradle.kts": {
+    "file_path": "build.gradle.kts",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:10.058408",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:10.058408",
+        "completed_at": "2026-03-26T11:52:54.692903",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "048c8a0c612785f1",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/build.gradle.kts b/build.gradle.kts\nnew file mode 100644\nindex 0000000..f69274c\n--- /dev/null\n+++ b/build.gradle.kts\n@@ -0,0 +1,9 @@\n+// Top-level build file where you can add configuration options common to all sub-projects/modules.\n+plugins {\n+    id(\"com.android.application\") version \"8.2.0\" apply false\n+    id(\"org.jetbrains.kotlin.android\") version \"1.9.20\" apply false\n+}\n+\n+tasks.register(\"clean\", Delete::class) {\n+    delete(rootProject.layout.buildDirectory)\n+}\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.736038",
+        "completed_at": "2026-03-26T15:51:39.620879",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "515e219d284cfca2",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/build.gradle.kts b/build.gradle.kts\nnew file mode 100644\nindex 0000000..025439c\n--- /dev/null\n+++ b/build.gradle.kts\n@@ -0,0 +1,6 @@\n+// Top-level build file where you can add configuration options common to all sub-projects/modules.\n+plugins {\n+    id(\"com.android.application\") version \"8.2.0\" apply false\n+    id(\"org.jetbrains.kotlin.android\") version \"1.9.20\" apply false\n+    id(\"com.google.devtools.ksp\") version \"1.9.20-1.0.14\" apply false\n+}\n"
+      }
+    ]
+  },
+  "gradle.properties": {
+    "file_path": "gradle.properties",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:10.340164",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:10.340164",
+        "completed_at": "2026-03-26T11:52:54.809585",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "495766c6cd7a2690",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradle.properties b/gradle.properties\nnew file mode 100644\nindex 0000000..b39a90e\n--- /dev/null\n+++ b/gradle.properties\n@@ -0,0 +1,35 @@\n+# Project-wide Gradle settings.\n+# IDE (e.g. Android Studio) users:\n+# Gradle settings configured through the IDE *will override*\n+# any settings specified in this file.\n+# For more details on how to configure your build environment visit\n+# http://www.gradle.org/docs/current/userguide/build_environment.html\n+\n+# Specifies the JVM arguments used for the daemon process.\n+# The setting is particularly useful for tweaking memory settings.\n+# Default value: -Xmx1024m -XX:MaxMetaspaceSize=256m\n+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\n+\n+# When configured, Gradle will run in incubating parallel mode.\n+# This option should only be used with decoupled projects. More details, visit\n+# http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects\n+org.gradle.parallel=true\n+\n+# AndroidX package structure to make it clearer which packages are bundled with the\n+# Android operating system, and which are packaged with your app's APK\n+# https://developer.android.com/topic/libraries/support-library/androidx-rn\n+android.useAndroidX=true\n+\n+# Kotlin code style for this project: \"official\" or \"obsolete\".\n+kotlin.code.style=official\n+\n+# Enables namespacing of each library's R class so that its R class includes only the\n+# resources declared in the library itself and none from the library's dependencies,\n+# thereby reducing the size of the R class for that library\n+android.nonTransitiveRClass=true\n+\n+# Enable Gradle configuration cache\n+org.gradle.configuration-cache=true\n+\n+# Enable Gradle build cache\n+org.gradle.caching=true\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.852457",
+        "completed_at": "2026-03-26T15:51:39.933375",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "a683fd1550908aa9",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradle.properties b/gradle.properties\nnew file mode 100644\nindex 0000000..3fb2ddc\n--- /dev/null\n+++ b/gradle.properties\n@@ -0,0 +1,31 @@\n+# Project-wide Gradle settings.\n+# IDE (e.g. Android Studio) users:\n+# Gradle settings configured through the IDE *will override*\n+# any settings specified in this file.\n+# For more details on how to configure your build environment visit\n+# http://www.gradle.org/docs/current/userguide/build_environment.html\n+\n+# Specifies the JVM arguments used for the daemon process.\n+# The setting is particularly useful for tweaking memory settings.\n+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\n+\n+# When configured, Gradle will run in incubating parallel mode.\n+# This option should only be used with decoupled projects. More details, visit\n+# http://www.gradle.org/docs/current/userguide/multi_project_builds.html#sec:decoupled_projects\n+# org.gradle.parallel=true\n+\n+# AndroidX package structure to make it clearer which packages are bundled with the\n+# Android operating system, and which are packaged with your app's APK\n+# https://developer.android.com/topic/libraries/support-library/androidx-rn\n+android.useAndroidX=true\n+\n+# Kotlin code style for this project: \"official\" or \"obsolete\":\n+kotlin.code.style=official\n+\n+# Enables namespacing of each library's R class so that its R class includes only the\n+# resources declared in the library itself and none from the library's dependencies,\n+# thereby reducing the size of the R class for that library\n+android.nonTransitiveRClass=true\n+\n+# Java Toolchain - Use Android Studio's JDK\n+org.gradle.java.home=C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\n"
+      }
+    ]
+  },
+  "gradle/wrapper/gradle-wrapper.jar": {
+    "file_path": "gradle/wrapper/gradle-wrapper.jar",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:10.684606",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:10.684606",
+        "completed_at": "2026-03-26T11:52:54.942865",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "7a609f5a925fa7e2",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradle/wrapper/gradle-wrapper.jar b/gradle/wrapper/gradle-wrapper.jar\nnew file mode 100644\nindex 0000000..033e24c\nBinary files /dev/null and b/gradle/wrapper/gradle-wrapper.jar differ\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.969106",
+        "completed_at": "2026-03-26T15:51:40.242167",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "faf91d66e74587d0",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradle/wrapper/gradle-wrapper.jar b/gradle/wrapper/gradle-wrapper.jar\nnew file mode 100644\nindex 0000000..77c5a69\nBinary files /dev/null and b/gradle/wrapper/gradle-wrapper.jar differ\n"
+      }
+    ]
+  },
+  "gradle/wrapper/gradle-wrapper.properties": {
+    "file_path": "gradle/wrapper/gradle-wrapper.properties",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:11.003128",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:11.003128",
+        "completed_at": "2026-03-26T11:52:55.076340",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "35de83dec52b3733",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties\nnew file mode 100644\nindex 0000000..62f495d\n--- /dev/null\n+++ b/gradle/wrapper/gradle-wrapper.properties\n@@ -0,0 +1,7 @@\n+distributionBase=GRADLE_USER_HOME\n+distributionPath=wrapper/dists\n+distributionUrl=https\\://services.gradle.org/distributions/gradle-8.2-bin.zip\n+networkTimeout=10000\n+validateDistributionUrl=true\n+zipStoreBase=GRADLE_USER_HOME\n+zipStorePath=wrapper/dists\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:43.085964",
+        "completed_at": "2026-03-26T15:51:40.445287",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "f1da2d7623b57de3",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties\nnew file mode 100644\nindex 0000000..15de902\n--- /dev/null\n+++ b/gradle/wrapper/gradle-wrapper.properties\n@@ -0,0 +1,5 @@\n+distributionBase=GRADLE_USER_HOME\n+distributionPath=wrapper/dists\n+distributionUrl=https\\://services.gradle.org/distributions/gradle-8.2-bin.zip\n+zipStoreBase=GRADLE_USER_HOME\n+zipStorePath=wrapper/dists\n"
+      }
+    ]
+  },
+  "gradlew": {
+    "file_path": "gradlew",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:11.205355",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:11.205355",
+        "completed_at": "2026-03-26T11:52:55.209630",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "fc977a94723af68a",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradlew b/gradlew\nnew file mode 100644\nindex 0000000..1aa94a4\n--- /dev/null\n+++ b/gradlew\n@@ -0,0 +1,249 @@\n+#!/bin/sh\n+\n+#\n+# Copyright \u00a9 2015-2021 the original authors.\n+#\n+# Licensed under the Apache License, Version 2.0 (the \"License\");\n+# you may not use this file except in compliance with the License.\n+# You may obtain a copy of the License at\n+#\n+#      https://www.apache.org/licenses/LICENSE-2.0\n+#\n+# Unless required by applicable law or agreed to in writing, software\n+# distributed under the License is distributed on an \"AS IS\" BASIS,\n+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n+# See the License for the specific language governing permissions and\n+# limitations under the License.\n+#\n+\n+##############################################################################\n+#\n+#   Gradle start up script for POSIX generated by Gradle.\n+#\n+#   Important for running:\n+#\n+#   (1) You need a POSIX-compliant shell to run this script. If your /bin/sh is\n+#       noncompliant, but you have some other compliant shell such as ksh or\n+#       bash, then to run this script, type that shell name before the whole\n+#       command line, like:\n+#\n+#           ksh Gradle\n+#\n+#       Busybox and similar reduced shells will NOT work, because this script\n+#       requires all of these POSIX shell features:\n+#         * functions;\n+#         * expansions \u00ab$var\u00bb, \u00ab${var}\u00bb, \u00ab${var:-default}\u00bb, \u00ab${var+SET}\u00bb,\n+#           \u00ab${var#prefix}\u00bb, \u00ab${var%suffix}\u00bb, and \u00ab$( cmd )\u00bb;\n+#         * compound commands having a testable exit status, especially \u00abcase\u00bb;\n+#         * various built-in commands including \u00abcommand\u00bb, \u00abset\u00bb, and \u00abulimit\u00bb.\n+#\n+#   Important for patching:\n+#\n+#   (2) This script targets any POSIX shell, so it avoids extensions provided\n+#       by Bash, Ksh, etc; in particular arrays are avoided.\n+#\n+#       The \"traditional\" practice of packing multiple parameters into a\n+#       space-separated string is a well documented source of bugs and security\n+#       problems, so this is (mostly) avoided, by progressively accumulating\n+#       options in \"$@\", and eventually passing that to Java.\n+#\n+#       Where the inherited environment variables (DEFAULT_JVM_OPTS, JAVA_OPTS,\n+#       and GRADLE_OPTS) rely on word-splitting, this is performed explicitly;\n+#       see the in-line comments for details.\n+#\n+#       There are tweaks for specific operating systems such as AIX, CygWin,\n+#       Darwin, MinGW, and NonStop.\n+#\n+#   (3) This script is generated from the Groovy template\n+#       https://github.com/gradle/gradle/blob/HEAD/subprojects/plugins/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt\n+#       within the Gradle project.\n+#\n+#       You can find Gradle at https://github.com/gradle/gradle/.\n+#\n+##############################################################################\n+\n+# Attempt to set APP_HOME\n+\n+# Resolve links: $0 may be a link\n+app_path=$0\n+\n+# Need this for daisy-chained symlinks.\n+while\n+    APP_HOME=${app_path%\"${app_path##*/}\"}  # leaves a trailing /; empty if no leading path\n+    [ -h \"$app_path\" ]\n+do\n+    ls=$( ls -ld \"$app_path\" )\n+    link=${ls#*' -> '}\n+    case $link in             #(\n+      /*)   app_path=$link ;; #(\n+      *)    app_path=$APP_HOME$link ;;\n+    esac\n+done\n+\n+# This is normally unused\n+# shellcheck disable=SC2034\n+APP_BASE_NAME=${0##*/}\n+# Discard cd standard output in case $CDPATH is set (https://github.com/gradle/gradle/issues/25036)\n+APP_HOME=$( cd \"${APP_HOME:-./}\" > /dev/null && pwd -P ) || exit\n+\n+# Use the maximum available, or set MAX_FD != -1 to use that value.\n+MAX_FD=maximum\n+\n+warn () {\n+    echo \"$*\"\n+} >&2\n+\n+die () {\n+    echo\n+    echo \"$*\"\n+    echo\n+    exit 1\n+} >&2\n+\n+# OS specific support (must be 'true' or 'false').\n+cygwin=false\n+msys=false\n+darwin=false\n+nonstop=false\n+case \"$( uname )\" in                #(\n+  CYGWIN* )         cygwin=true  ;; #(\n+  Darwin* )         darwin=true  ;; #(\n+  MSYS* | MINGW* )  msys=true    ;; #(\n+  NONSTOP* )        nonstop=true ;;\n+esac\n+\n+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar\n+\n+\n+# Determine the Java command to use to start the JVM.\n+if [ -n \"$JAVA_HOME\" ] ; then\n+    if [ -x \"$JAVA_HOME/jre/sh/java\" ] ; then\n+        # IBM's JDK on AIX uses strange locations for the executables\n+        JAVACMD=$JAVA_HOME/jre/sh/java\n+    else\n+        JAVACMD=$JAVA_HOME/bin/java\n+    fi\n+    if [ ! -x \"$JAVACMD\" ] ; then\n+        die \"ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME\n+\n+Please set the JAVA_HOME variable in your environment to match the\n+location of your Java installation.\"\n+    fi\n+else\n+    JAVACMD=java\n+    if ! command -v java >/dev/null 2>&1\n+    then\n+        die \"ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\n+\n+Please set the JAVA_HOME variable in your environment to match the\n+location of your Java installation.\"\n+    fi\n+fi\n+\n+# Increase the maximum file descriptors if we can.\n+if ! \"$cygwin\" && ! \"$darwin\" && ! \"$nonstop\" ; then\n+    case $MAX_FD in #(\n+      max*)\n+        # In POSIX sh, ulimit -H is undefined. That's why the result is checked to see if it worked.\n+        # shellcheck disable=SC2039,SC3045\n+        MAX_FD=$( ulimit -H -n ) ||\n+            warn \"Could not query maximum file descriptor limit\"\n+    esac\n+    case $MAX_FD in  #(\n+      '' | soft) :;; #(\n+      *)\n+        # In POSIX sh, ulimit -n is undefined. That's why the result is checked to see if it worked.\n+        # shellcheck disable=SC2039,SC3045\n+        ulimit -n \"$MAX_FD\" ||\n+            warn \"Could not set maximum file descriptor limit to $MAX_FD\"\n+    esac\n+fi\n+\n+# Collect all arguments for the java command, stacking in reverse order:\n+#   * args from the command line\n+#   * the main class name\n+#   * -classpath\n+#   * -D...appname settings\n+#   * --module-path (only if needed)\n+#   * DEFAULT_JVM_OPTS, JAVA_OPTS, and GRADLE_OPTS environment variables.\n+\n+# For Cygwin or MSYS, switch paths to Windows format before running java\n+if \"$cygwin\" || \"$msys\" ; then\n+    APP_HOME=$( cygpath --path --mixed \"$APP_HOME\" )\n+    CLASSPATH=$( cygpath --path --mixed \"$CLASSPATH\" )\n+\n+    JAVACMD=$( cygpath --unix \"$JAVACMD\" )\n+\n+    # Now convert the arguments - kludge to limit ourselves to /bin/sh\n+    for arg do\n+        if\n+            case $arg in                                #(\n+              -*)   false ;;                            # don't mess with options #(\n+              /?*)  t=${arg#/} t=/${t%%/*}              # looks like a POSIX filepath\n+                    [ -e \"$t\" ] ;;                      #(\n+              *)    false ;;\n+            esac\n+        then\n+            arg=$( cygpath --path --ignore --mixed \"$arg\" )\n+        fi\n+        # Roll the args list around exactly as many times as the number of\n+        # args, so each arg winds up back in the position where it started, but\n+        # possibly modified.\n+        #\n+        # NB: a `for` loop captures its iteration list before it begins, so\n+        # changing the positional parameters here affects neither the number of\n+        # iterations, nor the values presented in `arg`.\n+        shift                   # remove old arg\n+        set -- \"$@\" \"$arg\"      # push replacement arg\n+    done\n+fi\n+\n+\n+# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.\n+DEFAULT_JVM_OPTS='\"-Xmx64m\" \"-Xms64m\"'\n+\n+# Collect all arguments for the java command:\n+#   * DEFAULT_JVM_OPTS, JAVA_OPTS, JAVA_OPTS, and optsEnvironmentVar are not allowed to contain shell fragments,\n+#     and any embedded shellness will be escaped.\n+#   * For example: A user cannot expect ${Hostname} to be expanded, as it is an environment variable and will be\n+#     treated as '${Hostname}' itself on the command line.\n+\n+set -- \\\n+        \"-Dorg.gradle.appname=$APP_BASE_NAME\" \\\n+        -classpath \"$CLASSPATH\" \\\n+        org.gradle.wrapper.GradleWrapperMain \\\n+        \"$@\"\n+\n+# Stop when \"xargs\" is not available.\n+if ! command -v xargs >/dev/null 2>&1\n+then\n+    die \"xargs is not available\"\n+fi\n+\n+# Use \"xargs\" to parse quoted args.\n+#\n+# With -n1 it outputs one arg per line, with the quotes and backslashes removed.\n+#\n+# In Bash we could simply go:\n+#\n+#   readarray ARGS < <( xargs -n1 <<<\"$var\" ) &&\n+#   set -- \"${ARGS[@]}\" \"$@\"\n+#\n+# but POSIX shell has neither arrays nor command substitution, so instead we\n+# post-process each arg (as a line of input to sed) to backslash-escape any\n+# character that might be a shell metacharacter, then use eval to reverse\n+# that process (while maintaining the separation between arguments), and wrap\n+# the whole thing up as a single \"set\" statement.\n+#\n+# This will of course break if any of these variables contains a newline or\n+# an unmatched quote.\n+#\n+\n+eval \"set -- $(\n+        printf '%s\\n' \"$DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS\" |\n+        xargs -n1 |\n+        sed ' s~[^-[:alnum:]+,./:=@_]~\\\\&~g; ' |\n+        tr '\\n' ' '\n+    )\" '\"$@\"'\n+\n+exec \"$JAVACMD\" \"$@\"\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:43.202472",
+        "completed_at": "2026-03-26T15:51:40.601538",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "3a53d19607bada77",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradlew b/gradlew\nnew file mode 100644\nindex 0000000..1d59df8\n--- /dev/null\n+++ b/gradlew\n@@ -0,0 +1,166 @@\n+#!/bin/sh\n+\n+##############################################################################\n+# Gradle start up script for UN*X\n+##############################################################################\n+\n+# Attempt to set APP_HOME\n+# Resolve links: $0 may be a link\n+PRG=\"$0\"\n+# Need this for relative symlinks.\n+while [ -h \"$PRG\" ] ; do\n+    ls=`ls -ld \"$PRG\"`\n+    link=`expr \"$ls\" : '.*-> \\(.*\\)$'`\n+    if expr \"$link\" : '/.*' > /dev/null; then\n+        PRG=\"$link\"\n+    else\n+        PRG=`dirname \"$PRG\"`\"/$link\"\n+    fi\n+done\n+SAVED=\"`pwd`\"\n+cd \"`dirname \\\"$PRG\\\"`/\" >/dev/null\n+APP_HOME=\"`pwd -P`\"\n+cd \"$SAVED\" >/dev/null\n+\n+APP_NAME=\"Gradle\"\n+APP_BASE_NAME=`basename \"$0\"`\n+\n+# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.\n+DEFAULT_JVM_OPTS='\"-Xmx64m\" \"-Xms64m\"'\n+\n+# Use the maximum available, or set MAX_FD != -1 to use that value.\n+MAX_FD=\"maximum\"\n+\n+warn () {\n+    echo \"$*\"\n+}\n+\n+die () {\n+    echo\n+    echo \"$*\"\n+    echo\n+    exit 1\n+}\n+\n+# OS specific support (must be 'true' or 'false').\n+cygwin=false\n+msys=false\n+darwin=false\n+nonstop=false\n+case \"`uname`\" in\n+  CYGWIN* )\n+    cygwin=true\n+    ;;\n+  Darwin* )\n+    darwin=true\n+    ;;\n+  MSYS* | MINGW* )\n+    msys=true\n+    ;;\n+  NONSTOP* )\n+    nonstop=true\n+    ;;\n+esac\n+\n+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar\n+\n+# Determine the Java command to use to start the JVM.\n+if [ -n \"$JAVA_HOME\" ] ; then\n+    if [ -x \"$JAVA_HOME/jre/sh/java\" ] ; then\n+        # IBM's JDK on AIX uses strange locations for the executables\n+        JAVACMD=\"$JAVA_HOME/jre/sh/java\"\n+    else\n+        JAVACMD=\"$JAVA_HOME/bin/java\"\n+    fi\n+    if [ ! -x \"$JAVACMD\" ] ; then\n+        die \"ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME\n+\n+Please set the JAVA_HOME variable in your environment to match the\n+location of your Java installation.\"\n+    fi\n+else\n+    JAVACMD=\"java\"\n+    which java >/dev/null 2>&1 || die \"ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\n+\n+Please set the JAVA_HOME variable in your environment to match the\n+location of your Java installation.\"\n+fi\n+\n+# Increase the maximum file descriptors if we can.\n+if [ \"$cygwin\" = \"false\" -a \"$darwin\" = \"false\" -a \"$nonstop\" = \"false\" ] ; then\n+    MAX_FD_LIMIT=`ulimit -H -n`\n+    if [ $? -eq 0 ] ; then\n+        if [ \"$MAX_FD\" = \"maximum\" -o \"$MAX_FD\" = \"max\" ] ; then\n+            MAX_FD=\"$MAX_FD_LIMIT\"\n+        fi\n+        ulimit -n $MAX_FD\n+        if [ $? -ne 0 ] ; then\n+            warn \"Could not set maximum file descriptor limit: $MAX_FD\"\n+        fi\n+    else\n+        warn \"Could not query maximum file descriptor limit: $MAX_FD_LIMIT\"\n+    fi\n+fi\n+\n+# For Darwin, add options to specify how the application appears in the dock\n+if $darwin; then\n+    GRADLE_OPTS=\"$GRADLE_OPTS \\\"-Xdock:name=$APP_NAME\\\" \\\"-Xdock:icon=$APP_HOME/media/gradle.icns\\\"\"\n+fi\n+\n+# For Cygwin or MSYS, switch paths to Windows format before running java\n+if [ \"$cygwin\" = \"true\" -o \"$msys\" = \"true\" ] ; then\n+    APP_HOME=`cygpath --path --mixed \"$APP_HOME\"`\n+    CLASSPATH=`cygpath --path --mixed \"$CLASSPATH\"`\n+\n+    JAVACMD=`cygpath --unix \"$JAVACMD\"`\n+\n+    # We build the pattern for arguments to be converted via cygpath\n+    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`\n+    SEP=\"\"\n+    for dir in $ROOTDIRSRAW ; do\n+        ROOTDIRS=\"$ROOTDIRS$SEP$dir\"\n+        SEP=\"|\"\n+    done\n+    OURCYGPATTERN=\"(^($ROOTDIRS))\"\n+    # Add a user-defined pattern to the cygpath arguments\n+    if [ \"$GRADLE_CYGPATTERN\" != \"\" ] ; then\n+        OURCYGPATTERN=\"$OURCYGPATTERN|($GRADLE_CYGPATTERN)\"\n+    fi\n+    # Now convert the arguments - kludge to limit ourselves to /bin/sh\n+    i=0\n+    for arg in \"$@\" ; do\n+        CHECK=`echo \"$arg\"|egrep -c \"$OURCYGPATTERN\" -`\n+        CHECK2=`echo \"$arg\"|egrep -c \"^-\"`                                 ### Determine if an option\n+\n+        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition\n+            eval `echo args$i`=`cygpath --path --ignore --mixed \"$arg\"`\n+        else\n+            eval `echo args$i`=\"\\\"$arg\\\"\"\n+        fi\n+        i=`expr $i + 1`\n+    done\n+    case $i in\n+        0) set -- ;;\n+        1) set -- \"$args0\" ;;\n+        2) set -- \"$args0\" \"$args1\" ;;\n+        3) set -- \"$args0\" \"$args1\" \"$args2\" ;;\n+        4) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" ;;\n+        5) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" ;;\n+        6) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" ;;\n+        7) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" \"$args6\" ;;\n+        8) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" \"$args6\" \"$args7\" ;;\n+        9) set -- \"$args0\" \"$args1\" \"$args2\" \"$args3\" \"$args4\" \"$args5\" \"$args6\" \"$args7\" \"$args8\" ;;\n+    esac\n+fi\n+\n+# Escape application args\n+save () {\n+    for i do printf %s\\\\n \"$i\" | sed \"s/'/'\\\\\\\\''/g;1s/^/'/;\\$s/\\$/' \\\\\\\\/\" ; done\n+    echo \" \"\n+}\n+APP_ARGS=`save \"$@\"`\n+\n+# Collect all arguments for the java command, following the shell quoting and substitution rules\n+eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS \"\\\"-Dorg.gradle.appname=$APP_BASE_NAME\\\"\" -classpath \"\\\"$CLASSPATH\\\"\" org.gradle.wrapper.GradleWrapperMain \"$APP_ARGS\"\n+\n+exec \"$JAVACMD\" \"$@\"\n"
+      }
+    ]
+  },
+  "gradlew.bat": {
+    "file_path": "gradlew.bat",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:11.458363",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:11.458392",
+        "completed_at": "2026-03-26T11:52:55.359651",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "18774a0ac0203f68",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradlew.bat b/gradlew.bat\nnew file mode 100644\nindex 0000000..93e3f59\n--- /dev/null\n+++ b/gradlew.bat\n@@ -0,0 +1,92 @@\n+@rem\n+@rem Copyright 2015 the original author or authors.\n+@rem\n+@rem Licensed under the Apache License, Version 2.0 (the \"License\");\n+@rem you may not use this file except in compliance with the License.\n+@rem You may obtain a copy of the License at\n+@rem\n+@rem      https://www.apache.org/licenses/LICENSE-2.0\n+@rem\n+@rem Unless required by applicable law or agreed to in writing, software\n+@rem distributed under the License is distributed on an \"AS IS\" BASIS,\n+@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n+@rem See the License for the specific language governing permissions and\n+@rem limitations under the License.\n+@rem\n+\n+@if \"%DEBUG%\"==\"\" @echo off\n+@rem ##########################################################################\n+@rem\n+@rem  Gradle startup script for Windows\n+@rem\n+@rem ##########################################################################\n+\n+@rem Set local scope for the variables with windows NT shell\n+if \"%OS%\"==\"Windows_NT\" setlocal\n+\n+set DIRNAME=%~dp0\n+if \"%DIRNAME%\"==\"\" set DIRNAME=.\n+@rem This is normally unused\n+set APP_BASE_NAME=%~n0\n+set APP_HOME=%DIRNAME%\n+\n+@rem Resolve any \".\" and \"..\" in APP_HOME to make it shorter.\n+for %%i in (\"%APP_HOME%\") do set APP_HOME=%%~fi\n+\n+@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.\n+set DEFAULT_JVM_OPTS=\"-Xmx64m\" \"-Xms64m\"\n+\n+@rem Find java.exe\n+if defined JAVA_HOME goto findJavaFromJavaHome\n+\n+set JAVA_EXE=java.exe\n+%JAVA_EXE% -version >NUL 2>&1\n+if %ERRORLEVEL% equ 0 goto execute\n+\n+echo.\n+echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\n+echo.\n+echo Please set the JAVA_HOME variable in your environment to match the\n+echo location of your Java installation.\n+\n+goto fail\n+\n+:findJavaFromJavaHome\n+set JAVA_HOME=%JAVA_HOME:\"=%\n+set JAVA_EXE=%JAVA_HOME%/bin/java.exe\n+\n+if exist \"%JAVA_EXE%\" goto execute\n+\n+echo.\n+echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%\n+echo.\n+echo Please set the JAVA_HOME variable in your environment to match the\n+echo location of your Java installation.\n+\n+goto fail\n+\n+:execute\n+@rem Setup the command line\n+\n+set CLASSPATH=%APP_HOME%\\gradle\\wrapper\\gradle-wrapper.jar\n+\n+\n+@rem Execute Gradle\n+\"%JAVA_EXE%\" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% \"-Dorg.gradle.appname=%APP_BASE_NAME%\" -classpath \"%CLASSPATH%\" org.gradle.wrapper.GradleWrapperMain %*\n+\n+:end\n+@rem End local scope for the variables with windows NT shell\n+if %ERRORLEVEL% equ 0 goto mainEnd\n+\n+:fail\n+rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of\n+rem the _cmd.exe /c_ return code!\n+set EXIT_CODE=%ERRORLEVEL%\n+if %EXIT_CODE% equ 0 set EXIT_CODE=1\n+if not \"\"==\"%GRADLE_EXIT_CONSOLE%\" exit %EXIT_CODE%\n+exit /b %EXIT_CODE%\n+\n+:mainEnd\n+if \"%OS%\"==\"Windows_NT\" endlocal\n+\n+:omega\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:43.302704",
+        "completed_at": "2026-03-26T15:51:40.904092",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "c46a27c79007746d",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/gradlew.bat b/gradlew.bat\nnew file mode 100644\nindex 0000000..107acd3\n--- /dev/null\n+++ b/gradlew.bat\n@@ -0,0 +1,89 @@\n+@rem\n+@rem Copyright 2015 the original author or authors.\n+@rem\n+@rem Licensed under the Apache License, Version 2.0 (the \"License\");\n+@rem you may not use this file except in compliance with the License.\n+@rem You may obtain a copy of the License at\n+@rem\n+@rem      https://www.apache.org/licenses/LICENSE-2.0\n+@rem\n+@rem Unless required by applicable law or agreed to in writing, software\n+@rem distributed under the License is distributed on an \"AS IS\" BASIS,\n+@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n+@rem See the License for the specific language governing permissions and\n+@rem limitations under the License.\n+@rem\n+\n+@if \"%DEBUG%\" == \"\" @echo off\n+@rem ##########################################################################\n+@rem\n+@rem  Gradle startup script for Windows\n+@rem\n+@rem ##########################################################################\n+\n+@rem Set local scope for the variables with windows NT shell\n+if \"%OS%\"==\"Windows_NT\" setlocal\n+\n+set DIRNAME=%~dp0\n+if \"%DIRNAME%\" == \"\" set DIRNAME=.\n+set APP_BASE_NAME=%~n0\n+set APP_HOME=%DIRNAME%\n+\n+@rem Resolve any \".\" and \"..\" in APP_HOME to make it shorter.\n+for %%i in (\"%APP_HOME%\") do set APP_HOME=%%~fi\n+\n+@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.\n+set DEFAULT_JVM_OPTS=\"-Xmx64m\" \"-Xms64m\"\n+\n+@rem Find java.exe\n+if defined JAVA_HOME goto findJavaFromJavaHome\n+\n+set JAVA_EXE=java.exe\n+%JAVA_EXE% -version >NUL 2>&1\n+if \"%ERRORLEVEL%\" == \"0\" goto execute\n+\n+echo.\n+echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.\n+echo.\n+echo Please set the JAVA_HOME variable in your environment to match the\n+echo location of your Java installation.\n+\n+goto fail\n+\n+:findJavaFromJavaHome\n+set JAVA_HOME=%JAVA_HOME:\"=%\n+set JAVA_EXE=%JAVA_HOME%/bin/java.exe\n+\n+if exist \"%JAVA_EXE%\" goto execute\n+\n+echo.\n+echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%\n+echo.\n+echo Please set the JAVA_HOME variable in your environment to match the\n+echo location of your Java installation.\n+\n+goto fail\n+\n+:execute\n+@rem Setup the command line\n+\n+set CLASSPATH=%APP_HOME%\\gradle\\wrapper\\gradle-wrapper.jar\n+\n+\n+@rem Execute Gradle\n+\"%JAVA_EXE%\" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% \"-Dorg.gradle.appname=%APP_BASE_NAME%\" -classpath \"%CLASSPATH%\" org.gradle.wrapper.GradleWrapperMain %*\n+\n+:end\n+@rem End local scope for the variables with windows NT shell\n+if \"%ERRORLEVEL%\"==\"0\" goto mainEnd\n+\n+:fail\n+rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of\n+rem the _cmd.exe /c_ return code!\n+if  not \"\" == \"%GRADLE_EXIT_CONSOLE%\" exit 1\n+exit /b 1\n+\n+:mainEnd\n+if \"%OS%\"==\"Windows_NT\" endlocal\n+\n+:omega\n"
+      }
+    ]
+  },
+  "settings.gradle.kts": {
+    "file_path": "settings.gradle.kts",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-24T17:22:11.812874",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-24T17:22:11.812874",
+        "completed_at": "2026-03-26T11:52:55.543917",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "08395029088df3f7",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/settings.gradle.kts b/settings.gradle.kts\nnew file mode 100644\nindex 0000000..3e6607e\n--- /dev/null\n+++ b/settings.gradle.kts\n@@ -0,0 +1,18 @@\n+pluginManagement {\n+    repositories {\n+        google()\n+        mavenCentral()\n+        gradlePluginPortal()\n+    }\n+}\n+\n+dependencyResolutionManagement {\n+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\n+    repositories {\n+        google()\n+        mavenCentral()\n+    }\n+}\n+\n+rootProject.name = \"inventory-apk\"\n+include(\":app\")\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:43.419511",
+        "completed_at": "2026-03-26T15:51:41.139470",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "e78396c92b6687eb",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/settings.gradle.kts b/settings.gradle.kts\nnew file mode 100644\nindex 0000000..80a4b24\n--- /dev/null\n+++ b/settings.gradle.kts\n@@ -0,0 +1,22 @@\n+pluginManagement {\n+    repositories {\n+        google()\n+        mavenCentral()\n+        gradlePluginPortal()\n+    }\n+}\n+\n+plugins {\n+    id(\"org.gradle.toolchains.foojay-resolver-convention\") version \"0.7.0\"\n+}\n+\n+dependencyResolutionManagement {\n+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\n+    repositories {\n+        google()\n+        mavenCentral()\n+    }\n+}\n+\n+rootProject.name = \"Inventory\"\n+include(\":app\")\n"
+      }
+    ]
+  },
+  "app/src/main/res/drawable/ic_launcher_background.xml": {
+    "file_path": "app/src/main/res/drawable/ic_launcher_background.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-25T16:07:06.275029",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-25T16:07:06.275029",
+        "completed_at": "2026-03-26T11:52:53.242957",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6ab8a5edfb80cfcb",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/drawable/ic_launcher_background.xml b/app/src/main/res/drawable/ic_launcher_background.xml\nnew file mode 100644\nindex 0000000..7267c50\n--- /dev/null\n+++ b/app/src/main/res/drawable/ic_launcher_background.xml\n@@ -0,0 +1,14 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<!--\n+  ~ Launcher icon background drawable\n+  ~ Used as the background layer for adaptive icons on Android 8.0+ (API 26+)\n+  -->\n+<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    android:width=\"108dp\"\n+    android:height=\"108dp\"\n+    android:viewportWidth=\"108\"\n+    android:viewportHeight=\"108\">\n+    <path\n+        android:fillColor=\"@color/primary\"\n+        android:pathData=\"M0,0h108v108h-108z\" />\n+</vector>\n"
+      }
+    ]
+  },
+  "app/src/main/res/drawable/ic_launcher_foreground.xml": {
+    "file_path": "app/src/main/res/drawable/ic_launcher_foreground.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-25T16:07:06.403172",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-25T16:07:06.403172",
+        "completed_at": "2026-03-26T11:52:53.843287",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6e4aee5f8e33d06d",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/drawable/ic_launcher_foreground.xml b/app/src/main/res/drawable/ic_launcher_foreground.xml\nnew file mode 100644\nindex 0000000..6ef8f16\n--- /dev/null\n+++ b/app/src/main/res/drawable/ic_launcher_foreground.xml\n@@ -0,0 +1,22 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<!--\n+  ~ Launcher icon foreground drawable\n+  ~ Used as the foreground layer for adaptive icons on Android 8.0+ (API 26+)\n+  ~ This is a simple placeholder that displays a stylized \"I\" for Inventory\n+  -->\n+<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    android:width=\"108dp\"\n+    android:height=\"108dp\"\n+    android:viewportWidth=\"108\"\n+    android:viewportHeight=\"108\">\n+    <group\n+        android:scaleX=\"0.5\"\n+        android:scaleY=\"0.5\"\n+        android:translateX=\"27\"\n+        android:translateY=\"27\">\n+        <!-- Simple \"I\" letter for Inventory app -->\n+        <path\n+            android:fillColor=\"#FFFFFF\"\n+            android:pathData=\"M42,20h24v8h-8v44h8v8h-24v-8h8v-44h-8z\" />\n+    </group>\n+</vector>\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.852491",
+        "completed_at": "2026-03-26T15:51:37.662608",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "c683aac615106dc5",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/drawable/ic_launcher_foreground.xml b/app/src/main/res/drawable/ic_launcher_foreground.xml\nnew file mode 100644\nindex 0000000..cd682f9\n--- /dev/null\n+++ b/app/src/main/res/drawable/ic_launcher_foreground.xml\n@@ -0,0 +1,12 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    android:width=\"108dp\"\n+    android:height=\"108dp\"\n+    android:viewportWidth=\"108\"\n+    android:viewportHeight=\"108\">\n+    <path\n+        android:fillColor=\"#FFFFFF\"\n+        android:pathData=\"M54,30 L54,78 M30,54 L78,54\"\n+        android:strokeWidth=\"4\"\n+        android:strokeColor=\"#FFFFFF\"/>\n+</vector>\n"
+      }
+    ]
+  },
+  "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml": {
+    "file_path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-25T16:07:06.665621",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-25T16:07:06.665621",
+        "completed_at": "2026-03-26T11:52:54.142942",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6f675c3a17b8aa26",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml b/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml\nnew file mode 100644\nindex 0000000..2433bf2\n--- /dev/null\n+++ b/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml\n@@ -0,0 +1,11 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<!--\n+  ~ Adaptive icon configuration for Android 8.0+ (API 26+)\n+  ~ Defines the launcher icon using separate background and foreground layers\n+  ~ This allows the system to apply different shapes (circle, rounded square, etc.)\n+  ~ based on device manufacturer and user preferences\n+  -->\n+<adaptive-icon xmlns:android=\"http://schemas.android.com/apk/res/android\">\n+    <background android:drawable=\"@drawable/ic_launcher_background\" />\n+    <foreground android:drawable=\"@drawable/ic_launcher_foreground\" />\n+</adaptive-icon>\n"
+      },
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.185700",
+        "completed_at": "2026-03-26T15:51:38.207589",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "5f3b1ed2282af327",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml b/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml\nnew file mode 100644\nindex 0000000..5ed0a2d\n--- /dev/null\n+++ b/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml\n@@ -0,0 +1,5 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<adaptive-icon xmlns:android=\"http://schemas.android.com/apk/res/android\">\n+    <background android:drawable=\"@color/ic_launcher_background\"/>\n+    <foreground android:drawable=\"@drawable/ic_launcher_foreground\"/>\n+</adaptive-icon>\n"
+      }
+    ]
+  },
+  "app/src/main/res/values/colors.xml": {
+    "file_path": "app/src/main/res/values/colors.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-25T16:07:06.778387",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-25T16:07:06.778387",
+        "completed_at": "2026-03-26T11:52:54.281811",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "d6972ba2928b587e",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/values/colors.xml b/app/src/main/res/values/colors.xml\nnew file mode 100644\nindex 0000000..4314d46\n--- /dev/null\n+++ b/app/src/main/res/values/colors.xml\n@@ -0,0 +1,61 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<resources>\n+    <!-- Material Design 3 Primary Colors -->\n+    <color name=\"md_theme_primary\">#6750A4</color>\n+    <color name=\"md_theme_onPrimary\">#FFFFFF</color>\n+    <color name=\"md_theme_primaryContainer\">#EADDFF</color>\n+    <color name=\"md_theme_onPrimaryContainer\">#21005D</color>\n+\n+    <!-- Material Design 3 Secondary Colors -->\n+    <color name=\"md_theme_secondary\">#625B71</color>\n+    <color name=\"md_theme_onSecondary\">#FFFFFF</color>\n+    <color name=\"md_theme_secondaryContainer\">#E8DEF8</color>\n+    <color name=\"md_theme_onSecondaryContainer\">#1D192B</color>\n+\n+    <!-- Material Design 3 Tertiary Colors -->\n+    <color name=\"md_theme_tertiary\">#7D5260</color>\n+    <color name=\"md_theme_onTertiary\">#FFFFFF</color>\n+    <color name=\"md_theme_tertiaryContainer\">#FFD8E4</color>\n+    <color name=\"md_theme_onTertiaryContainer\">#31111D</color>\n+\n+    <!-- Material Design 3 Error Colors -->\n+    <color name=\"md_theme_error\">#B3261E</color>\n+    <color name=\"md_theme_errorContainer\">#F9DEDC</color>\n+    <color name=\"md_theme_onError\">#FFFFFF</color>\n+    <color name=\"md_theme_onErrorContainer\">#410E0B</color>\n+\n+    <!-- Material Design 3 Background Colors -->\n+    <color name=\"md_theme_background\">#FFFBFE</color>\n+    <color name=\"md_theme_onBackground\">#1C1B1F</color>\n+\n+    <!-- Material Design 3 Surface Colors -->\n+    <color name=\"md_theme_surface\">#FFFBFE</color>\n+    <color name=\"md_theme_onSurface\">#1C1B1F</color>\n+    <color name=\"md_theme_surfaceVariant\">#E7E0EC</color>\n+    <color name=\"md_theme_onSurfaceVariant\">#49454F</color>\n+\n+    <!-- Material Design 3 Outline Colors -->\n+    <color name=\"md_theme_outline\">#79747E</color>\n+    <color name=\"md_theme_outlineVariant\">#CAC4D0</color>\n+\n+    <!-- Material Design 3 Other Colors -->\n+    <color name=\"md_theme_inverseSurface\">#313033</color>\n+    <color name=\"md_theme_inverseOnSurface\">#F4EFF4</color>\n+    <color name=\"md_theme_inversePrimary\">#D0BCFF</color>\n+    <color name=\"md_theme_shadow\">#000000</color>\n+    <color name=\"md_theme_surfaceTint\">#6750A4</color>\n+    <color name=\"md_theme_scrim\">#000000</color>\n+\n+    <!-- Legacy Material Design Colors (for compatibility) -->\n+    <color name=\"purple_200\">#FFBB86FC</color>\n+    <color name=\"purple_500\">#FF6200EE</color>\n+    <color name=\"purple_700\">#FF3700B3</color>\n+    <color name=\"teal_200\">#FF03DAC5</color>\n+    <color name=\"teal_700\">#FF018786</color>\n+    <color name=\"black\">#FF000000</color>\n+    <color name=\"white\">#FFFFFFFF</color>\n+\n+    <!-- Common UI Colors -->\n+    <color name=\"divider\">#1F000000</color>\n+    <color name=\"ripple\">#1F000000</color>\n+</resources>\n"
+      }
+    ]
+  },
+  "app/src/main/res/values/themes.xml": {
+    "file_path": "app/src/main/res/values/themes.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-25T16:07:06.998751",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+        "task_intent": "",
+        "started_at": "2026-03-25T16:07:06.998751",
+        "completed_at": "2026-03-26T11:52:54.542831",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "0ecfec30877551d3",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml\nnew file mode 100644\nindex 0000000..1f4175e\n--- /dev/null\n+++ b/app/src/main/res/values/themes.xml\n@@ -0,0 +1,64 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<resources>\n+    <!--\n+        Base application theme using Material Design 3\n+        This theme uses Material3's DayNight theme which automatically handles\n+        light/dark mode switching based on system settings.\n+    -->\n+    <style name=\"Theme.Inventory\" parent=\"Theme.Material3.DayNight.NoActionBar\">\n+        <!-- Primary brand color -->\n+        <item name=\"colorPrimary\">@color/md_theme_primary</item>\n+        <item name=\"colorOnPrimary\">@color/md_theme_onPrimary</item>\n+        <item name=\"colorPrimaryContainer\">@color/md_theme_primaryContainer</item>\n+        <item name=\"colorOnPrimaryContainer\">@color/md_theme_onPrimaryContainer</item>\n+\n+        <!-- Secondary brand color -->\n+        <item name=\"colorSecondary\">@color/md_theme_secondary</item>\n+        <item name=\"colorOnSecondary\">@color/md_theme_onSecondary</item>\n+        <item name=\"colorSecondaryContainer\">@color/md_theme_secondaryContainer</item>\n+        <item name=\"colorOnSecondaryContainer\">@color/md_theme_onSecondaryContainer</item>\n+\n+        <!-- Tertiary brand color -->\n+        <item name=\"colorTertiary\">@color/md_theme_tertiary</item>\n+        <item name=\"colorOnTertiary\">@color/md_theme_onTertiary</item>\n+        <item name=\"colorTertiaryContainer\">@color/md_theme_tertiaryContainer</item>\n+        <item name=\"colorOnTertiaryContainer\">@color/md_theme_onTertiaryContainer</item>\n+\n+        <!-- Error colors -->\n+        <item name=\"colorError\">@color/md_theme_error</item>\n+        <item name=\"colorErrorContainer\">@color/md_theme_errorContainer</item>\n+        <item name=\"colorOnError\">@color/md_theme_onError</item>\n+        <item name=\"colorOnErrorContainer\">@color/md_theme_onErrorContainer</item>\n+\n+        <!-- Background colors -->\n+        <item name=\"android:colorBackground\">@color/md_theme_background</item>\n+        <item name=\"colorOnBackground\">@color/md_theme_onBackground</item>\n+\n+        <!-- Surface colors -->\n+        <item name=\"colorSurface\">@color/md_theme_surface</item>\n+        <item name=\"colorOnSurface\">@color/md_theme_onSurface</item>\n+        <item name=\"colorSurfaceVariant\">@color/md_theme_surfaceVariant</item>\n+        <item name=\"colorOnSurfaceVariant\">@color/md_theme_onSurfaceVariant</item>\n+\n+        <!-- Outline colors -->\n+        <item name=\"colorOutline\">@color/md_theme_outline</item>\n+        <item name=\"colorOutlineVariant\">@color/md_theme_outlineVariant</item>\n+\n+        <!-- Other colors -->\n+        <item name=\"colorSurfaceInverse\">@color/md_theme_inverseSurface</item>\n+        <item name=\"colorOnSurfaceInverse\">@color/md_theme_inverseOnSurface</item>\n+        <item name=\"colorPrimaryInverse\">@color/md_theme_inversePrimary</item>\n+\n+        <!-- Status bar color -->\n+        <item name=\"android:statusBarColor\">@color/md_theme_primary</item>\n+\n+        <!-- Navigation bar color -->\n+        <item name=\"android:navigationBarColor\">@color/md_theme_surface</item>\n+\n+        <!-- Window background -->\n+        <item name=\"android:windowBackground\">@color/md_theme_background</item>\n+\n+        <!-- Enable edge-to-edge for modern Android -->\n+        <item name=\"android:windowLightStatusBar\">true</item>\n+    </style>\n+</resources>\n"
+      }
+    ]
+  },
+  "docs/ARCHITECTURE.md": {
+    "file_path": "docs/ARCHITECTURE.md",
+    "baseline_commit": "fb72c5b08fe09b2797d2f11a50ed2153870f77f2",
+    "baseline_captured_at": "2026-03-26T11:38:23.932182",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "007-create-architecture-md-documenting-system-design-a",
+        "task_intent": "",
+        "started_at": "2026-03-26T11:38:23.932182",
+        "completed_at": "2026-03-26T11:38:23.932182",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "4ba36b9a48016c80",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/docs/ARCHITECTURE.md b/docs/ARCHITECTURE.md\nnew file mode 100644\nindex 0000000..519a22b\n--- /dev/null\n+++ b/docs/ARCHITECTURE.md\n@@ -0,0 +1,875 @@\n+# Architecture Documentation\n+\n+## \ud83d\udcd0 System Overview\n+\n+Inventory APK is a native Android application designed with a clean, modular architecture that prioritizes offline-first functionality, maintainability, and scalability. The application follows modern Android development best practices, leveraging the Android Jetpack suite to provide a robust, testable, and user-friendly inventory management solution.\n+\n+### High-Level Architecture\n+\n+```\n+\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n+\u2502                     Presentation Layer                   \u2502\n+\u2502              (Jetpack Compose UI + ViewModels)          \u2502\n+\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n+                     \u2502\n+                     \u25bc\n+\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n+\u2502                      Domain Layer                        \u2502\n+\u2502              (Use Cases + Business Logic)                \u2502\n+\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n+                     \u2502\n+                     \u25bc\n+\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n+\u2502                       Data Layer                         \u2502\n+\u2502         (Repositories + Room Database + APIs)            \u2502\n+\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\n+```\n+\n+### Core Principles\n+\n+1. **Offline-First**: All core functionality works without internet connectivity\n+2. **Separation of Concerns**: Clear boundaries between UI, business logic, and data\n+3. **Single Source of Truth**: Room database as the authoritative data source\n+4. **Unidirectional Data Flow**: Data flows from data layer \u2192 domain \u2192 presentation\n+5. **Testability**: Architecture enables comprehensive unit and integration testing\n+6. **Reactive Programming**: UI updates automatically when data changes\n+\n+---\n+\n+## \ud83c\udfdb\ufe0f MVVM Architecture Pattern\n+\n+### Overview\n+\n+Inventory APK implements the **Model-View-ViewModel (MVVM)** architecture pattern, which provides clear separation between business logic and UI code, facilitating maintainability and testability.\n+\n+### Component Breakdown\n+\n+#### **Model**\n+- **Definition**: Represents the data layer and business logic\n+- **Components**:\n+  - Room database entities\n+  - Repository implementations\n+  - Domain models\n+  - Data sources (local database, future API services)\n+- **Responsibilities**:\n+  - Data persistence and retrieval\n+  - Business rule enforcement\n+  - Data transformation and validation\n+\n+#### **View**\n+- **Definition**: UI layer responsible for displaying data and capturing user input\n+- **Components**:\n+  - Jetpack Compose composables\n+  - Activity/Fragment containers (minimal usage)\n+  - UI state representations\n+- **Responsibilities**:\n+  - Render UI based on ViewModel state\n+  - Capture user interactions\n+  - Navigate between screens\n+  - Display loading, error, and success states\n+\n+#### **ViewModel**\n+- **Definition**: Mediator between View and Model\n+- **Components**:\n+  - AndroidX ViewModel classes\n+  - UI state holders\n+  - Use case orchestrators\n+- **Responsibilities**:\n+  - Expose UI state to the View via StateFlow/LiveData\n+  - Handle user actions and delegate to Use Cases\n+  - Manage UI-related data lifecycle\n+  - Survive configuration changes\n+  - No Android framework dependencies (except AndroidX ViewModel)\n+\n+### Data Flow Example\n+\n+```\n+User Action (e.g., \"Add Item\")\n+        \u2502\n+        \u25bc\n+    Composable (View)\n+        \u2502\n+        \u25bc\n+    ViewModel.onAddItemClicked()\n+        \u2502\n+        \u25bc\n+    AddItemUseCase.execute()\n+        \u2502\n+        \u25bc\n+    ItemRepository.insertItem()\n+        \u2502\n+        \u25bc\n+    Room Database (Model)\n+        \u2502\n+        \u25bc\n+    Flow<List<Item>> emits updated data\n+        \u2502\n+        \u25bc\n+    ViewModel updates UI State\n+        \u2502\n+        \u25bc\n+    Composable re-renders with new data\n+```\n+\n+### Benefits of MVVM for Inventory APK\n+\n+- **Testability**: ViewModels can be unit tested without Android framework\n+- **Lifecycle Awareness**: ViewModels survive configuration changes\n+- **Reactive UI**: Flow/StateFlow ensures UI always reflects current data state\n+- **Maintainability**: Clear separation makes code easier to modify and extend\n+- **Scalability**: Easy to add new features without impacting existing code\n+\n+---\n+\n+## \ud83d\udee0\ufe0f Technology Stack\n+\n+### Language & Framework\n+\n+#### **Kotlin** (Primary Language)\n+- **Why**: Modern, concise, null-safe, fully interoperable with Java\n+- **Benefits**:\n+  - Coroutines for asynchronous programming\n+  - Extension functions for cleaner code\n+  - Data classes for model definitions\n+  - Sealed classes for state management\n+  - Strong type system reduces bugs\n+\n+#### **Minimum SDK: API 24 (Android 7.0 Nougat)**\n+- **Rationale**:\n+  - Covers ~95% of active Android devices (as of 2026)\n+  - Supports modern Jetpack libraries\n+  - Reasonable baseline for features like multi-window support\n+- **Target SDK: Latest stable Android version**\n+\n+### UI Framework\n+\n+#### **Jetpack Compose**\n+- **Why**: Modern declarative UI toolkit\n+- **Benefits**:\n+  - Less boilerplate than XML layouts\n+  - Reactive UI that responds to state changes\n+  - Built-in Material Design 3 components\n+  - Easier to build complex, animated UIs\n+  - Better preview tools\n+  - Type-safe navigation\n+\n+#### **Material Design 3**\n+- **Why**: Consistent, accessible, modern design system\n+- **Benefits**:\n+  - Pre-built components (cards, lists, buttons, etc.)\n+  - Dynamic color theming\n+  - Accessibility built-in\n+  - Professional appearance\n+\n+### Database & Persistence\n+\n+#### **Room Persistence Library**\n+- **Why**: Official Android ORM, compile-time SQL verification\n+- **Benefits**:\n+  - Type-safe database access\n+  - Compile-time query verification (catches SQL errors early)\n+  - LiveData/Flow integration for reactive queries\n+  - Migration support for schema changes\n+  - Built on SQLite for reliability\n+\n+#### **SQLite**\n+- **Why**: Battle-tested, embedded database\n+- **Benefits**:\n+  - No server required (offline-first)\n+  - ACID compliance for data integrity\n+  - Efficient for mobile data volumes\n+  - Zero-configuration\n+  - Small footprint\n+\n+### Dependency Injection\n+\n+#### **Hilt** (Dagger for Android)\n+- **Why**: Official DI framework for Android\n+- **Benefits**:\n+  - Compile-time dependency graph validation\n+  - Reduces boilerplate with code generation\n+  - Lifecycle-aware scopes\n+  - Standard architecture components integration\n+  - Easier testing with test doubles\n+\n+**Alternative Considered**: Koin (runtime DI)\n+- **Decision**: Chose Hilt for compile-time safety and official Google support\n+\n+### Asynchronous Programming\n+\n+#### **Kotlin Coroutines**\n+- **Why**: First-class Kotlin support for async operations\n+- **Benefits**:\n+  - Sequential async code (no callback hell)\n+  - Structured concurrency (automatic cancellation)\n+  - Exception handling built-in\n+  - Lightweight threads (can run thousands)\n+  - Easy to test\n+\n+#### **Kotlin Flow**\n+- **Why**: Reactive streams for Kotlin coroutines\n+- **Benefits**:\n+  - Cold streams (only active when collected)\n+  - Backpressure handling\n+  - Operator chaining (map, filter, etc.)\n+  - StateFlow/SharedFlow for state management\n+  - Lifecycle-aware collection in UI\n+\n+### Additional Libraries (Planned)\n+\n+#### **Barcode Scanning**\n+- **Option 1**: ML Kit Barcode Scanning\n+  - On-device processing\n+  - No internet required\n+  - Free\n+- **Option 2**: ZXing\n+  - Open source\n+  - Mature, well-tested\n+  - More customization options\n+\n+**Decision**: Evaluate both during implementation; ML Kit preferred for seamless integration\n+\n+#### **Data Export**\n+- **Apache POI** or **OpenCSV**: For Excel/CSV export functionality\n+\n+#### **Camera Integration**\n+- **CameraX**: Jetpack library for camera access (barcode scanning, item photos)\n+\n+---\n+\n+## \ud83d\udcbe Data Layer Architecture\n+\n+### Overview\n+\n+The data layer is the single source of truth for all application data. It implements the repository pattern to abstract data sources from the rest of the application.\n+\n+### Components\n+\n+#### **1. Database (Room)**\n+\n+**Entities**: Define database schema\n+```kotlin\n+@Entity(tableName = \"items\")\n+data class ItemEntity(\n+    @PrimaryKey(autoGenerate = true) val id: Long = 0,\n+    @ColumnInfo(name = \"name\") val name: String,\n+    @ColumnInfo(name = \"sku\") val sku: String,\n+    @ColumnInfo(name = \"quantity\") val quantity: Int,\n+    @ColumnInfo(name = \"category\") val category: String,\n+    @ColumnInfo(name = \"created_at\") val createdAt: Long\n+)\n+```\n+\n+**DAOs (Data Access Objects)**: Define database operations\n+```kotlin\n+@Dao\n+interface ItemDao {\n+    @Query(\"SELECT * FROM items ORDER BY name ASC\")\n+    fun getAllItems(): Flow<List<ItemEntity>>\n+\n+    @Insert(onConflict = OnConflictStrategy.REPLACE)\n+    suspend fun insertItem(item: ItemEntity): Long\n+\n+    @Update\n+    suspend fun updateItem(item: ItemEntity)\n+\n+    @Delete\n+    suspend fun deleteItem(item: ItemEntity)\n+}\n+```\n+\n+**Database Class**: Singleton database instance\n+```kotlin\n+@Database(entities = [ItemEntity::class], version = 1)\n+abstract class InventoryDatabase : RoomDatabase() {\n+    abstract fun itemDao(): ItemDao\n+}\n+```\n+\n+#### **2. Repositories**\n+\n+**Purpose**: Abstract data sources and provide clean API to domain layer\n+\n+```kotlin\n+interface ItemRepository {\n+    fun getAllItems(): Flow<List<Item>>\n+    suspend fun getItemById(id: Long): Item?\n+    suspend fun insertItem(item: Item): Long\n+    suspend fun updateItem(item: Item)\n+    suspend fun deleteItem(item: Item)\n+    suspend fun searchItems(query: String): List<Item>\n+}\n+\n+class ItemRepositoryImpl @Inject constructor(\n+    private val itemDao: ItemDao\n+) : ItemRepository {\n+    override fun getAllItems(): Flow<List<Item>> {\n+        return itemDao.getAllItems().map { entities ->\n+            entities.map { it.toDomainModel() }\n+        }\n+    }\n+    // ... implementation\n+}\n+```\n+\n+#### **3. Data Mappers**\n+\n+**Purpose**: Convert between database entities and domain models\n+\n+```kotlin\n+// Entity \u2192 Domain Model\n+fun ItemEntity.toDomainModel(): Item {\n+    return Item(\n+        id = id,\n+        name = name,\n+        sku = sku,\n+        quantity = quantity,\n+        category = category,\n+        createdAt = Instant.ofEpochMilli(createdAt)\n+    )\n+}\n+\n+// Domain Model \u2192 Entity\n+fun Item.toEntity(): ItemEntity {\n+    return ItemEntity(\n+        id = id,\n+        name = name,\n+        sku = sku,\n+        quantity = quantity,\n+        category = category,\n+        createdAt = createdAt.toEpochMilli()\n+    )\n+}\n+```\n+\n+### Database Schema Design\n+\n+**Initial Tables** (MVP):\n+- `items`: Core inventory items\n+- `categories`: Item categories (future)\n+- `stock_movements`: History of quantity changes (future)\n+\n+**Design Principles**:\n+- Normalized schema to reduce redundancy\n+- Foreign key constraints for referential integrity\n+- Indexed columns for fast queries (SKU, name)\n+- Timestamps for audit trails\n+\n+### Future Enhancements\n+- Cloud sync capability (Room \u2192 Remote API)\n+- Conflict resolution for multi-device sync\n+- DataStore for app preferences\n+- Encrypted database for sensitive data\n+\n+---\n+\n+## \ud83c\udfa8 UI Layer Architecture\n+\n+### Jetpack Compose Structure\n+\n+#### **Screen-Level Composables**\n+\n+Each screen is a top-level composable function:\n+\n+```kotlin\n+@Composable\n+fun ItemListScreen(\n+    viewModel: ItemListViewModel = hiltViewModel(),\n+    onItemClick: (Item) -> Unit\n+) {\n+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()\n+\n+    ItemListContent(\n+        uiState = uiState,\n+        onItemClick = onItemClick,\n+        onAddClick = { viewModel.onAddItemClicked() }\n+    )\n+}\n+```\n+\n+#### **Content Composables**\n+\n+Stateless UI components:\n+\n+```kotlin\n+@Composable\n+fun ItemListContent(\n+    uiState: ItemListUiState,\n+    onItemClick: (Item) -> Unit,\n+    onAddClick: () -> Unit\n+) {\n+    Scaffold(\n+        topBar = { ItemListTopBar() },\n+        floatingActionButton = { AddItemFAB(onClick = onAddClick) }\n+    ) { padding ->\n+        when (uiState) {\n+            is Loading -> LoadingIndicator()\n+            is Success -> ItemList(items = uiState.items, onItemClick)\n+            is Error -> ErrorMessage(message = uiState.message)\n+        }\n+    }\n+}\n+```\n+\n+#### **Reusable UI Components**\n+\n+```kotlin\n+@Composable\n+fun ItemCard(\n+    item: Item,\n+    onClick: () -> Unit\n+) {\n+    Card(\n+        modifier = Modifier.clickable(onClick = onClick)\n+    ) {\n+        // Item details\n+    }\n+}\n+```\n+\n+### UI State Management\n+\n+#### **UI State Classes**\n+\n+```kotlin\n+sealed interface ItemListUiState {\n+    object Loading : ItemListUiState\n+    data class Success(val items: List<Item>) : ItemListUiState\n+    data class Error(val message: String) : ItemListUiState\n+}\n+```\n+\n+#### **State in ViewModels**\n+\n+```kotlin\n+class ItemListViewModel @Inject constructor(\n+    private val getAllItemsUseCase: GetAllItemsUseCase\n+) : ViewModel() {\n+\n+    private val _uiState = MutableStateFlow<ItemListUiState>(Loading)\n+    val uiState: StateFlow<ItemListUiState> = _uiState.asStateFlow()\n+\n+    init {\n+        loadItems()\n+    }\n+\n+    private fun loadItems() {\n+        viewModelScope.launch {\n+            getAllItemsUseCase()\n+                .catch { exception ->\n+                    _uiState.value = Error(exception.message ?: \"Unknown error\")\n+                }\n+                .collect { items ->\n+                    _uiState.value = Success(items)\n+                }\n+        }\n+    }\n+}\n+```\n+\n+### Navigation\n+\n+**Compose Navigation**: Type-safe navigation between screens\n+\n+```kotlin\n+@Composable\n+fun InventoryNavGraph(\n+    navController: NavHostController = rememberNavController()\n+) {\n+    NavHost(navController, startDestination = \"item_list\") {\n+        composable(\"item_list\") {\n+            ItemListScreen(\n+                onItemClick = { item ->\n+                    navController.navigate(\"item_detail/${item.id}\")\n+                }\n+            )\n+        }\n+        composable(\"item_detail/{itemId}\") { backStackEntry ->\n+            val itemId = backStackEntry.arguments?.getString(\"itemId\")\n+            ItemDetailScreen(itemId = itemId?.toLongOrNull())\n+        }\n+    }\n+}\n+```\n+\n+### Theming & Styling\n+\n+**Material 3 Theme**:\n+- Dynamic color from wallpaper (Android 12+)\n+- Custom color scheme for older devices\n+- Dark/Light mode support\n+- Typography system (headings, body, labels)\n+\n+---\n+\n+## \ud83d\udc89 Dependency Injection with Hilt\n+\n+### Module Structure\n+\n+#### **Application Module**\n+\n+```kotlin\n+@Module\n+@InstallIn(SingletonComponent::class)\n+object AppModule {\n+\n+    @Provides\n+    @Singleton\n+    fun provideInventoryDatabase(\n+        @ApplicationContext context: Context\n+    ): InventoryDatabase {\n+        return Room.databaseBuilder(\n+            context,\n+            InventoryDatabase::class.java,\n+            \"inventory_db\"\n+        ).build()\n+    }\n+\n+    @Provides\n+    fun provideItemDao(database: InventoryDatabase): ItemDao {\n+        return database.itemDao()\n+    }\n+}\n+```\n+\n+#### **Repository Module**\n+\n+```kotlin\n+@Module\n+@InstallIn(SingletonComponent::class)\n+abstract class RepositoryModule {\n+\n+    @Binds\n+    @Singleton\n+    abstract fun bindItemRepository(\n+        impl: ItemRepositoryImpl\n+    ): ItemRepository\n+}\n+```\n+\n+#### **Use Case Module**\n+\n+```kotlin\n+@Module\n+@InstallIn(ViewModelComponent::class)\n+object UseCaseModule {\n+\n+    @Provides\n+    fun provideGetAllItemsUseCase(\n+        repository: ItemRepository\n+    ): GetAllItemsUseCase {\n+        return GetAllItemsUseCase(repository)\n+    }\n+}\n+```\n+\n+### Scopes\n+\n+- **@Singleton**: Application-level (Database, Repositories)\n+- **@ViewModelScoped**: ViewModel lifecycle (Use Cases)\n+- **@ActivityRetainedScoped**: Activity retained lifecycle\n+- **@ActivityScoped**: Activity lifecycle\n+\n+### Testing Support\n+\n+Hilt provides `@HiltAndroidTest` for integration tests:\n+\n+```kotlin\n+@HiltAndroidTest\n+class ItemRepositoryTest {\n+\n+    @get:Rule\n+    var hiltRule = HiltAndroidRule(this)\n+\n+    @Inject\n+    lateinit var repository: ItemRepository\n+\n+    @Before\n+    fun init() {\n+        hiltRule.inject()\n+    }\n+\n+    @Test\n+    fun testInsertItem() = runTest {\n+        // Test implementation\n+    }\n+}\n+```\n+\n+---\n+\n+## \ud83d\udce6 Module Structure\n+\n+### Package Organization\n+\n+```\n+com.inventory.app/\n+\u2502\n+\u251c\u2500\u2500 data/                          # Data Layer\n+\u2502   \u251c\u2500\u2500 local/\n+\u2502   \u2502   \u251c\u2500\u2500 database/\n+\u2502   \u2502   \u2502   \u251c\u2500\u2500 InventoryDatabase.kt\n+\u2502   \u2502   \u2502   \u2514\u2500\u2500 entities/\n+\u2502   \u2502   \u2502       \u2514\u2500\u2500 ItemEntity.kt\n+\u2502   \u2502   \u2514\u2500\u2500 dao/\n+\u2502   \u2502       \u2514\u2500\u2500 ItemDao.kt\n+\u2502   \u251c\u2500\u2500 repository/\n+\u2502   \u2502   \u2514\u2500\u2500 ItemRepositoryImpl.kt\n+\u2502   \u2514\u2500\u2500 mapper/\n+\u2502       \u2514\u2500\u2500 ItemMapper.kt\n+\u2502\n+\u251c\u2500\u2500 domain/                        # Domain Layer\n+\u2502   \u251c\u2500\u2500 model/\n+\u2502   \u2502   \u2514\u2500\u2500 Item.kt\n+\u2502   \u251c\u2500\u2500 repository/\n+\u2502   \u2502   \u2514\u2500\u2500 ItemRepository.kt (interface)\n+\u2502   \u2514\u2500\u2500 usecase/\n+\u2502       \u251c\u2500\u2500 GetAllItemsUseCase.kt\n+\u2502       \u251c\u2500\u2500 AddItemUseCase.kt\n+\u2502       \u2514\u2500\u2500 UpdateItemUseCase.kt\n+\u2502\n+\u251c\u2500\u2500 presentation/                  # Presentation Layer\n+\u2502   \u251c\u2500\u2500 ui/\n+\u2502   \u2502   \u251c\u2500\u2500 screens/\n+\u2502   \u2502   \u2502   \u251c\u2500\u2500 itemlist/\n+\u2502   \u2502   \u2502   \u2502   \u251c\u2500\u2500 ItemListScreen.kt\n+\u2502   \u2502   \u2502   \u2502   \u251c\u2500\u2500 ItemListViewModel.kt\n+\u2502   \u2502   \u2502   \u2502   \u2514\u2500\u2500 ItemListUiState.kt\n+\u2502   \u2502   \u2502   \u2514\u2500\u2500 itemdetail/\n+\u2502   \u2502   \u2502       \u251c\u2500\u2500 ItemDetailScreen.kt\n+\u2502   \u2502   \u2502       \u2514\u2500\u2500 ItemDetailViewModel.kt\n+\u2502   \u2502   \u251c\u2500\u2500 components/\n+\u2502   \u2502   \u2502   \u251c\u2500\u2500 ItemCard.kt\n+\u2502   \u2502   \u2502   \u2514\u2500\u2500 SearchBar.kt\n+\u2502   \u2502   \u251c\u2500\u2500 theme/\n+\u2502   \u2502   \u2502   \u251c\u2500\u2500 Color.kt\n+\u2502   \u2502   \u2502   \u251c\u2500\u2500 Theme.kt\n+\u2502   \u2502   \u2502   \u2514\u2500\u2500 Type.kt\n+\u2502   \u2502   \u2514\u2500\u2500 navigation/\n+\u2502   \u2502       \u2514\u2500\u2500 NavGraph.kt\n+\u2502\n+\u251c\u2500\u2500 di/                            # Dependency Injection\n+\u2502   \u251c\u2500\u2500 AppModule.kt\n+\u2502   \u251c\u2500\u2500 DatabaseModule.kt\n+\u2502   \u251c\u2500\u2500 RepositoryModule.kt\n+\u2502   \u2514\u2500\u2500 UseCaseModule.kt\n+\u2502\n+\u2514\u2500\u2500 InventoryApplication.kt        # Application Class\n+```\n+\n+### Layer Responsibilities\n+\n+#### **Data Layer** (`data/`)\n+- Database access\n+- Repository implementations\n+- External API clients (future)\n+- Data source management\n+- Entity-to-model mapping\n+\n+#### **Domain Layer** (`domain/`)\n+- Business logic (Use Cases)\n+- Domain models (pure Kotlin classes)\n+- Repository interfaces\n+- Business rules and validation\n+- No Android dependencies\n+\n+#### **Presentation Layer** (`presentation/`)\n+- UI components (Composables)\n+- ViewModels\n+- UI state definitions\n+- Navigation logic\n+- Theme and styling\n+\n+#### **DI Layer** (`di/`)\n+- Hilt modules\n+- Dependency provisioning\n+- Scope definitions\n+\n+### Dependency Rules\n+\n+```\n+Presentation \u2192 Domain \u2192 Data\n+     \u2193           \u2193        \u2193\n+   Hilt       Hilt     Hilt\n+```\n+\n+**Strict Rules**:\n+- Presentation can depend on Domain\n+- Domain can depend on Data (interfaces only)\n+- Data implements Domain interfaces\n+- Domain has NO dependencies on Android framework\n+- Data can depend on Android framework (Room, etc.)\n+\n+---\n+\n+## \ud83c\udfaf Design Principles\n+\n+### 1. **Clean Architecture**\n+- Clear separation of concerns across layers\n+- Domain layer is framework-agnostic\n+- Easy to test each layer independently\n+- Changes in one layer don't ripple to others\n+\n+### 2. **Offline-First Design**\n+- Local database is the primary data source\n+- All core features work without connectivity\n+- Sync to cloud is additive, not required\n+- User can always access their data\n+\n+### 3. **Single Responsibility Principle**\n+- Each class has one reason to change\n+- ViewModels handle UI logic only\n+- Use Cases handle single business operations\n+- Repositories handle data access only\n+\n+### 4. **Dependency Inversion**\n+- High-level modules don't depend on low-level modules\n+- Both depend on abstractions (interfaces)\n+- Hilt provides concrete implementations at runtime\n+\n+### 5. **Don't Repeat Yourself (DRY)**\n+- Reusable composables for common UI patterns\n+- Shared base Use Cases for common operations\n+- Mapper functions for data transformations\n+\n+### 6. **SOLID Principles**\n+- **S**ingle Responsibility\n+- **O**pen/Closed (open for extension, closed for modification)\n+- **L**iskov Substitution (subtypes are substitutable)\n+- **I**nterface Segregation (small, focused interfaces)\n+- **D**ependency Inversion (depend on abstractions)\n+\n+### 7. **Reactive Programming**\n+- UI reacts to state changes automatically\n+- Flow/StateFlow for reactive data streams\n+- ViewModel exposes state, View observes and renders\n+\n+### 8. **Testability First**\n+- Write testable code from the start\n+- Use dependency injection for easy mocking\n+- Pure functions where possible\n+- Separate business logic from framework code\n+\n+---\n+\n+## \ud83d\udd2e Future Considerations\n+\n+### Scalability Enhancements\n+\n+#### **Multi-Module Architecture**\n+When the app grows, consider splitting into Gradle modules:\n+```\n+:app                    (Application module)\n+:feature:itemlist       (Item list feature)\n+:feature:itemdetail     (Item detail feature)\n+:core:data              (Data layer)\n+:core:domain            (Domain layer)\n+:core:ui                (Shared UI components)\n+```\n+\n+**Benefits**:\n+- Faster build times (parallel compilation)\n+- Better separation of features\n+- Easier team collaboration\n+- Forced architectural boundaries\n+\n+#### **Cloud Synchronization**\n+- **Architecture**: Local-first with background sync\n+- **Sync Strategy**: Eventual consistency with conflict resolution\n+- **Implementation**: WorkManager for background sync jobs\n+- **Conflict Resolution**: Last-write-wins or manual merge\n+\n+#### **Multi-User Support**\n+- User authentication (Firebase Auth, custom backend)\n+- Role-based access control (RBAC)\n+- Shared inventory across team members\n+- Activity logging and audit trails\n+\n+### Performance Optimizations\n+\n+#### **Database Optimization**\n+- Pagination for large datasets (Paging 3 library)\n+- Indexed columns for frequently queried fields\n+- Database triggers for complex operations\n+- Query optimization and profiling\n+\n+#### **UI Performance**\n+- LazyColumn for efficient list rendering\n+- Image caching for item photos\n+- Background processing for heavy operations\n+- Debouncing for search queries\n+\n+### Advanced Features\n+\n+#### **Barcode Scanning Enhancements**\n+- Batch scanning mode\n+- Custom barcode generation\n+- QR code support for item sharing\n+\n+#### **Analytics & Reporting**\n+- Inventory value calculations\n+- Stock movement trends\n+- Low-stock predictions\n+- Custom report generation\n+\n+#### **Export/Import**\n+- Multiple format support (CSV, Excel, JSON)\n+- Bulk import with validation\n+- Scheduled exports\n+- Cloud backup integration\n+\n+### Technology Evolution\n+\n+#### **Kotlin Multiplatform (KMP)**\n+- Share business logic between Android and iOS\n+- Keep UI platform-specific\n+- Reduce duplication for cross-platform apps\n+\n+#### **Jetpack Compose Multiplatform**\n+- Share UI code across Android, iOS, Desktop, Web\n+- Evaluate when maturity reaches production-ready state\n+\n+#### **AI/ML Integration**\n+- Smart categorization suggestions\n+- Demand forecasting\n+- Anomaly detection (unusual stock changes)\n+- Image recognition for item identification\n+\n+### Security Considerations\n+\n+#### **Data Encryption**\n+- SQLCipher for encrypted database\n+- Secure storage for sensitive data (keystore)\n+- Certificate pinning for API calls\n+\n+#### **Authentication & Authorization**\n+- Biometric authentication\n+- OAuth 2.0 for cloud services\n+- Token-based session management\n+\n+---\n+\n+## \ud83d\udcda References & Resources\n+\n+### Official Documentation\n+- [Android Developers Guide](https://developer.android.com/)\n+- [Jetpack Compose Documentation](https://developer.android.com/jetpack/compose)\n+- [Room Persistence Library](https://developer.android.com/training/data-storage/room)\n+- [Hilt Dependency Injection](https://developer.android.com/training/dependency-injection/hilt-android)\n+- [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)\n+\n+### Architecture Patterns\n+- [Guide to App Architecture](https://developer.android.com/topic/architecture)\n+- [MVVM Pattern](https://developer.android.com/topic/architecture#recommended-app-arch)\n+- [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)\n+\n+### Best Practices\n+- [Android Best Practices](https://developer.android.com/topic/architecture/recommendations)\n+- [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html)\n+- [Material Design Guidelines](https://m3.material.io/)\n+\n+---\n+\n+**Document Version**: 1.0\n+**Last Updated**: March 2026\n+**Maintained By**: Inventory APK Development Team\n"
+      }
+    ]
+  },
+  ".gitignore": {
+    "file_path": ".gitignore",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.019124",
+    "baseline_content_hash": "9992df62187f7da4",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.019124",
+        "completed_at": "2026-03-26T15:51:31.727981",
+        "content_hash_before": "9992df62187f7da4",
+        "content_hash_after": "44ec2ed2e5ab20b3",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gitignore b/.gitignore\nindex d4801b0..7dbacac 100644\n--- a/.gitignore\n+++ b/.gitignore\n@@ -8,3 +8,58 @@\n .worktrees/\n .security-key\n logs/security/\n+\n+# Android build files\n+*.iml\n+.gradle\n+/local.properties\n+/.idea/caches\n+/.idea/libraries\n+/.idea/modules.xml\n+/.idea/workspace.xml\n+/.idea/navEditor.xml\n+/.idea/assetWizardSettings.xml\n+.DS_Store\n+/build\n+/captures\n+.externalNativeBuild\n+.cxx\n+local.properties\n+\n+# Android Studio Navigation editor temp files\n+.navigation/\n+\n+# Android Studio captures folder\n+captures/\n+\n+# IntelliJ\n+*.iml\n+.idea/\n+# Keystore files\n+*.jks\n+*.keystore\n+\n+# Google Services (e.g. APIs or Firebase)\n+google-services.json\n+\n+# Freeline\n+freeline.py\n+freeline/\n+freeline_project_description.json\n+\n+# fastlane\n+fastlane/report.xml\n+fastlane/Preview.html\n+fastlane/screenshots\n+fastlane/test_output\n+fastlane/readme.md\n+\n+# Version control\n+vcs.xml\n+\n+# lint\n+lint/intermediates/\n+lint/generated/\n+lint/outputs/\n+lint/tmp/\n+lint-baseline.xml\n"
+      }
+    ]
+  },
+  ".gradle/8.2/checksums/checksums.lock": {
+    "file_path": ".gradle/8.2/checksums/checksums.lock",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.135739",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.135739",
+        "completed_at": "2026-03-26T15:51:31.884230",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "a45b0a13df2d1a5e",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/checksums/checksums.lock b/.gradle/8.2/checksums/checksums.lock\nnew file mode 100644\nindex 0000000..96be6bc\nBinary files /dev/null and b/.gradle/8.2/checksums/checksums.lock differ\n"
+      }
+    ]
+  },
+  ".gradle/8.2/checksums/md5-checksums.bin": {
+    "file_path": ".gradle/8.2/checksums/md5-checksums.bin",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.252790",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.252790",
+        "completed_at": "2026-03-26T15:51:32.040482",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "a67d5bff2efff741",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/checksums/md5-checksums.bin b/.gradle/8.2/checksums/md5-checksums.bin\nnew file mode 100644\nindex 0000000..d493540\nBinary files /dev/null and b/.gradle/8.2/checksums/md5-checksums.bin differ\n"
+      }
+    ]
+  },
+  ".gradle/8.2/checksums/sha1-checksums.bin": {
+    "file_path": ".gradle/8.2/checksums/sha1-checksums.bin",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.367469",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.367469",
+        "completed_at": "2026-03-26T15:51:32.185066",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6ac3a4b709086f5c",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/checksums/sha1-checksums.bin b/.gradle/8.2/checksums/sha1-checksums.bin\nnew file mode 100644\nindex 0000000..f6841d7\nBinary files /dev/null and b/.gradle/8.2/checksums/sha1-checksums.bin differ\n"
+      }
+    ]
+  },
+  ".gradle/8.2/dependencies-accessors/dependencies-accessors.lock": {
+    "file_path": ".gradle/8.2/dependencies-accessors/dependencies-accessors.lock",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.469310",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.469310",
+        "completed_at": "2026-03-26T15:51:32.430823",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "5c044bfa377c8650",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/dependencies-accessors/dependencies-accessors.lock b/.gradle/8.2/dependencies-accessors/dependencies-accessors.lock\nnew file mode 100644\nindex 0000000..faba510\nBinary files /dev/null and b/.gradle/8.2/dependencies-accessors/dependencies-accessors.lock differ\n"
+      }
+    ]
+  },
+  ".gradle/8.2/dependencies-accessors/gc.properties": {
+    "file_path": ".gradle/8.2/dependencies-accessors/gc.properties",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.586364",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.586364",
+        "completed_at": "2026-03-26T15:51:33.326500",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "e3b0c44298fc1c14",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/dependencies-accessors/gc.properties b/.gradle/8.2/dependencies-accessors/gc.properties\nnew file mode 100644\nindex 0000000..e69de29\n"
+      }
+    ]
+  },
+  ".gradle/8.2/fileChanges/last-build.bin": {
+    "file_path": ".gradle/8.2/fileChanges/last-build.bin",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.701842",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.702567",
+        "completed_at": "2026-03-26T15:51:33.639218",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6e340b9cffb37a98",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/fileChanges/last-build.bin b/.gradle/8.2/fileChanges/last-build.bin\nnew file mode 100644\nindex 0000000..f76dd23\nBinary files /dev/null and b/.gradle/8.2/fileChanges/last-build.bin differ\n"
+      }
+    ]
+  },
+  ".gradle/8.2/fileHashes/fileHashes.lock": {
+    "file_path": ".gradle/8.2/fileHashes/fileHashes.lock",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.802622",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.802622",
+        "completed_at": "2026-03-26T15:51:33.764214",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "9d6581647f467ce8",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/fileHashes/fileHashes.lock b/.gradle/8.2/fileHashes/fileHashes.lock\nnew file mode 100644\nindex 0000000..9d5bee7\nBinary files /dev/null and b/.gradle/8.2/fileHashes/fileHashes.lock differ\n"
+      }
+    ]
+  },
+  ".gradle/8.2/gc.properties": {
+    "file_path": ".gradle/8.2/gc.properties",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:39.919319",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:39.919319",
+        "completed_at": "2026-03-26T15:51:33.920471",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "e3b0c44298fc1c14",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/8.2/gc.properties b/.gradle/8.2/gc.properties\nnew file mode 100644\nindex 0000000..e69de29\n"
+      }
+    ]
+  },
+  ".gradle/buildOutputCleanup/buildOutputCleanup.lock": {
+    "file_path": ".gradle/buildOutputCleanup/buildOutputCleanup.lock",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:40.036112",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.036112",
+        "completed_at": "2026-03-26T15:51:34.220300",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6e440750f6405b49",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/buildOutputCleanup/buildOutputCleanup.lock b/.gradle/buildOutputCleanup/buildOutputCleanup.lock\nnew file mode 100644\nindex 0000000..15a1a5b\nBinary files /dev/null and b/.gradle/buildOutputCleanup/buildOutputCleanup.lock differ\n"
+      }
+    ]
+  },
+  ".gradle/buildOutputCleanup/cache.properties": {
+    "file_path": ".gradle/buildOutputCleanup/cache.properties",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:40.135961",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.135961",
+        "completed_at": "2026-03-26T15:51:34.573778",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "cba8cfc0e54b3907",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/buildOutputCleanup/cache.properties b/.gradle/buildOutputCleanup/cache.properties\nnew file mode 100644\nindex 0000000..3b18d66\n--- /dev/null\n+++ b/.gradle/buildOutputCleanup/cache.properties\n@@ -0,0 +1,2 @@\n+#Wed Mar 25 11:03:21 EET 2026\n+gradle.version=8.2\n"
+      }
+    ]
+  },
+  ".gradle/buildOutputCleanup/outputFiles.bin": {
+    "file_path": ".gradle/buildOutputCleanup/outputFiles.bin",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:40.252629",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.252629",
+        "completed_at": "2026-03-26T15:51:34.888133",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "a56a5f59204aa408",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/buildOutputCleanup/outputFiles.bin b/.gradle/buildOutputCleanup/outputFiles.bin\nnew file mode 100644\nindex 0000000..6c91d6b\nBinary files /dev/null and b/.gradle/buildOutputCleanup/outputFiles.bin differ\n"
+      }
+    ]
+  },
+  ".gradle/vcs-1/gc.properties": {
+    "file_path": ".gradle/vcs-1/gc.properties",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:40.369580",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.369580",
+        "completed_at": "2026-03-26T15:51:35.122508",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "e3b0c44298fc1c14",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/.gradle/vcs-1/gc.properties b/.gradle/vcs-1/gc.properties\nnew file mode 100644\nindex 0000000..e69de29\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/data/local/AppDatabase.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/data/local/AppDatabase.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:40.819419",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.819419",
+        "completed_at": "2026-03-26T15:51:35.967201",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "d5f48df4ac14f5de",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/data/local/AppDatabase.kt b/app/src/main/java/com/inventory/app/data/local/AppDatabase.kt\nnew file mode 100644\nindex 0000000..b5b9aad\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/data/local/AppDatabase.kt\n@@ -0,0 +1,47 @@\n+package com.inventory.app.data.local\n+\n+import android.content.Context\n+import androidx.room.Database\n+import androidx.room.Room\n+import androidx.room.RoomDatabase\n+import com.inventory.app.data.local.outbox.OutboxDao\n+import com.inventory.app.data.local.outbox.OutboxEntity\n+\n+/**\n+ * Main Room database for the application.\n+ * Implements offline-first architecture with outbox pattern for sync operations.\n+ */\n+@Database(\n+    entities = [OutboxEntity::class],\n+    version = 1,\n+    exportSchema = false\n+)\n+abstract class AppDatabase : RoomDatabase() {\n+    /**\n+     * Access to outbox operations for pending sync management.\n+     */\n+    abstract fun outboxDao(): OutboxDao\n+\n+    companion object {\n+        @Volatile\n+        private var INSTANCE: AppDatabase? = null\n+\n+        /**\n+         * Get singleton database instance.\n+         * Uses double-check locking pattern for thread-safe initialization.\n+         */\n+        fun getDatabase(context: Context): AppDatabase {\n+            return INSTANCE ?: synchronized(this) {\n+                val instance = Room.databaseBuilder(\n+                    context.applicationContext,\n+                    AppDatabase::class.java,\n+                    \"inventory_database\"\n+                )\n+                    .fallbackToDestructiveMigration()\n+                    .build()\n+                INSTANCE = instance\n+                instance\n+            }\n+        }\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:40.935827",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:40.935827",
+        "completed_at": "2026-03-26T15:51:36.185960",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "6296f4445187350d",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt b/app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt\nnew file mode 100644\nindex 0000000..0fb5fd5\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt\n@@ -0,0 +1,71 @@\n+package com.inventory.app.data.local.outbox\n+\n+import androidx.room.Dao\n+import androidx.room.Delete\n+import androidx.room.Insert\n+import androidx.room.OnConflictStrategy\n+import androidx.room.Query\n+import kotlinx.coroutines.flow.Flow\n+\n+/**\n+ * Data Access Object for outbox operations.\n+ * Provides reactive queries for sync status monitoring.\n+ */\n+@Dao\n+interface OutboxDao {\n+    /**\n+     * Get count of pending operations (excluding failed).\n+     * Returns a Flow for reactive observation in the UI.\n+     */\n+    @Query(\"SELECT COUNT(*) FROM outbox WHERE syncStatus = 'PENDING'\")\n+    fun getPendingCount(): Flow<Int>\n+\n+    /**\n+     * Get all outbox entries ordered by creation time.\n+     * Returns a Flow for reactive observation.\n+     */\n+    @Query(\"SELECT * FROM outbox ORDER BY createdAt ASC\")\n+    fun getAll(): Flow<List<OutboxEntity>>\n+\n+    /**\n+     * Get all pending entries for sync processing.\n+     */\n+    @Query(\"SELECT * FROM outbox WHERE syncStatus = 'PENDING' ORDER BY createdAt ASC\")\n+    suspend fun getPendingOperations(): List<OutboxEntity>\n+\n+    /**\n+     * Insert a new operation into the outbox.\n+     */\n+    @Insert(onConflict = OnConflictStrategy.REPLACE)\n+    suspend fun insert(entity: OutboxEntity): Long\n+\n+    /**\n+     * Insert multiple operations.\n+     */\n+    @Insert(onConflict = OnConflictStrategy.REPLACE)\n+    suspend fun insertAll(entities: List<OutboxEntity>)\n+\n+    /**\n+     * Delete an operation from the outbox (after successful sync).\n+     */\n+    @Delete\n+    suspend fun delete(entity: OutboxEntity)\n+\n+    /**\n+     * Delete an operation by ID.\n+     */\n+    @Query(\"DELETE FROM outbox WHERE id = :id\")\n+    suspend fun deleteById(id: Long)\n+\n+    /**\n+     * Update sync status for an operation.\n+     */\n+    @Query(\"UPDATE outbox SET syncStatus = :status WHERE id = :id\")\n+    suspend fun updateSyncStatus(id: Long, status: String)\n+\n+    /**\n+     * Clear all synced operations (for maintenance).\n+     */\n+    @Query(\"DELETE FROM outbox WHERE syncStatus != 'PENDING'\")\n+    suspend fun clearSynced()\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.052456",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.052456",
+        "completed_at": "2026-03-26T15:51:36.331615",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "0818d70c15878068",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt b/app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt\nnew file mode 100644\nindex 0000000..7f6b521\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt\n@@ -0,0 +1,34 @@\n+package com.inventory.app.data.local.outbox\n+\n+import androidx.room.Entity\n+import androidx.room.PrimaryKey\n+\n+/**\n+ * Outbox entity for storing pending sync operations.\n+ * Part of the offline-first architecture with outbox pattern.\n+ */\n+@Entity(tableName = \"outbox\")\n+data class OutboxEntity(\n+    @PrimaryKey(autoGenerate = true)\n+    val id: Long = 0,\n+\n+    /**\n+     * Type of operation (e.g., \"CREATE_ITEM\", \"UPDATE_ITEM\", \"DELETE_ITEM\")\n+     */\n+    val operationType: String,\n+\n+    /**\n+     * JSON payload containing the operation data\n+     */\n+    val payload: String,\n+\n+    /**\n+     * Timestamp when the operation was created (milliseconds since epoch)\n+     */\n+    val createdAt: Long = System.currentTimeMillis(),\n+\n+    /**\n+     * Sync status: \"PENDING\", \"SYNCING\", \"FAILED\"\n+     */\n+    val syncStatus: String = \"PENDING\"\n+)\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.169783",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.169783",
+        "completed_at": "2026-03-26T15:51:36.472241",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "290e69dc2baa0055",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt b/app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt\nnew file mode 100644\nindex 0000000..51f892c\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt\n@@ -0,0 +1,78 @@\n+package com.inventory.app.sync\n+\n+import android.content.Context\n+import android.net.ConnectivityManager\n+import android.net.Network\n+import android.net.NetworkCapabilities\n+import android.net.NetworkRequest\n+import kotlinx.coroutines.channels.awaitClose\n+import kotlinx.coroutines.flow.Flow\n+import kotlinx.coroutines.flow.callbackFlow\n+import kotlinx.coroutines.flow.distinctUntilChanged\n+\n+/**\n+ * Monitors network connectivity state and exposes it as a reactive Flow.\n+ * Uses ConnectivityManager.NetworkCallback for real-time network state observation.\n+ */\n+class NetworkMonitor(private val context: Context) {\n+\n+    private val connectivityManager =\n+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager\n+\n+    /**\n+     * Flow that emits the current network connectivity state.\n+     * Emits `true` when network is available, `false` when offline.\n+     * Automatically registers/unregisters network callback based on Flow collection lifecycle.\n+     */\n+    val isOnline: Flow<Boolean> = callbackFlow {\n+        // Check initial network state\n+        val initialState = isCurrentlyOnline()\n+        trySend(initialState)\n+\n+        // Create network callback to monitor changes\n+        val callback = object : ConnectivityManager.NetworkCallback() {\n+            override fun onAvailable(network: Network) {\n+                trySend(true)\n+            }\n+\n+            override fun onLost(network: Network) {\n+                trySend(false)\n+            }\n+\n+            override fun onCapabilitiesChanged(\n+                network: Network,\n+                networkCapabilities: NetworkCapabilities\n+            ) {\n+                // Verify network has internet capability\n+                val hasInternet = networkCapabilities.hasCapability(\n+                    NetworkCapabilities.NET_CAPABILITY_INTERNET\n+                )\n+                trySend(hasInternet)\n+            }\n+        }\n+\n+        // Register network callback\n+        val networkRequest = NetworkRequest.Builder()\n+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)\n+            .build()\n+\n+        connectivityManager.registerNetworkCallback(networkRequest, callback)\n+\n+        // Unregister callback when Flow collection is cancelled\n+        awaitClose {\n+            connectivityManager.unregisterNetworkCallback(callback)\n+        }\n+    }.distinctUntilChanged()\n+\n+    /**\n+     * Checks if the device is currently connected to a network with internet capability.\n+     * Used for initial state determination.\n+     *\n+     * @return true if network is available and has internet capability, false otherwise\n+     */\n+    private fun isCurrentlyOnline(): Boolean {\n+        val network = connectivityManager.activeNetwork ?: return false\n+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false\n+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/sync/SyncState.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/sync/SyncState.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.285953",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.285953",
+        "completed_at": "2026-03-26T15:51:36.638473",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "9110a6a8f7f46cda",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/sync/SyncState.kt b/app/src/main/java/com/inventory/app/sync/SyncState.kt\nnew file mode 100644\nindex 0000000..cc4f457\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/sync/SyncState.kt\n@@ -0,0 +1,25 @@\n+package com.inventory.app.sync\n+\n+/**\n+ * Sealed class representing the current synchronization state.\n+ * Used to drive the UI state of the sync status bar.\n+ */\n+sealed class SyncState {\n+    /**\n+     * Device is offline with pending operations in the outbox.\n+     * @param pendingCount Number of operations waiting to be synced\n+     */\n+    data class Offline(val pendingCount: Int) : SyncState()\n+\n+    /**\n+     * Device is online and actively syncing pending operations.\n+     * @param progress Sync progress as a percentage (0-100), or null if indeterminate\n+     */\n+    data class Syncing(val progress: Int? = null) : SyncState()\n+\n+    /**\n+     * Device is online and all operations are synced.\n+     * No pending operations in the outbox.\n+     */\n+    data object Online : SyncState()\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.385787",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.385787",
+        "completed_at": "2026-03-26T15:51:36.825971",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "c65acd6159242d09",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt b/app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt\nnew file mode 100644\nindex 0000000..0663ecc\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt\n@@ -0,0 +1,45 @@\n+package com.inventory.app.sync\n+\n+import com.inventory.app.data.local.outbox.OutboxDao\n+import kotlinx.coroutines.flow.Flow\n+import kotlinx.coroutines.flow.combine\n+\n+/**\n+ * Repository that combines network connectivity state and outbox pending operations\n+ * to produce a comprehensive sync status for the UI.\n+ *\n+ * Combines two reactive data sources:\n+ * - NetworkMonitor: Provides network connectivity state (online/offline)\n+ * - OutboxDao: Provides count of pending operations waiting to sync\n+ *\n+ * The resulting Flow emits SyncState that drives the sync status bar UI:\n+ * - Offline: Network unavailable, shows pending count\n+ * - Syncing: Network available with pending operations\n+ * - Online: Network available, all operations synced\n+ */\n+class SyncStatusRepository(\n+    private val networkMonitor: NetworkMonitor,\n+    private val outboxDao: OutboxDao\n+) {\n+\n+    /**\n+     * Flow that emits the current sync status by combining network and outbox state.\n+     *\n+     * State determination logic:\n+     * - Network offline \u2192 Offline(pendingCount)\n+     * - Network online + pending operations \u2192 Syncing(null)\n+     * - Network online + no pending operations \u2192 Online\n+     *\n+     * The Flow automatically updates when either network state or pending count changes.\n+     */\n+    val syncState: Flow<SyncState> = combine(\n+        networkMonitor.isOnline,\n+        outboxDao.getPendingCount()\n+    ) { isOnline, pendingCount ->\n+        when {\n+            !isOnline -> SyncState.Offline(pendingCount)\n+            pendingCount > 0 -> SyncState.Syncing(progress = null)\n+            else -> SyncState.Online\n+        }\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/sync/SyncWorker.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/sync/SyncWorker.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.503444",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.503444",
+        "completed_at": "2026-03-26T15:51:36.970518",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "32bd9689b5bb53ac",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/sync/SyncWorker.kt b/app/src/main/java/com/inventory/app/sync/SyncWorker.kt\nnew file mode 100644\nindex 0000000..77d2828\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/sync/SyncWorker.kt\n@@ -0,0 +1,87 @@\n+package com.inventory.app.sync\n+\n+import android.content.Context\n+import androidx.work.CoroutineWorker\n+import androidx.work.WorkerParameters\n+import com.inventory.app.data.local.AppDatabase\n+import kotlinx.coroutines.Dispatchers\n+import kotlinx.coroutines.withContext\n+\n+/**\n+ * Background worker that drains the outbox when network is available.\n+ * Uses WorkManager for reliable background execution with network constraints.\n+ *\n+ * Processes pending operations from the outbox and syncs them to the server.\n+ * This worker should be scheduled with network connectivity constraints.\n+ */\n+class SyncWorker(\n+    context: Context,\n+    params: WorkerParameters\n+) : CoroutineWorker(context, params) {\n+\n+    /**\n+     * Executes the sync operation.\n+     * Fetches all pending operations from the outbox and attempts to sync them.\n+     *\n+     * @return Result.success() if sync completed successfully,\n+     *         Result.retry() if a temporary failure occurred,\n+     *         Result.failure() if a permanent failure occurred\n+     */\n+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {\n+        try {\n+            val database = AppDatabase.getDatabase(applicationContext)\n+            val outboxDao = database.outboxDao()\n+\n+            // Fetch all pending operations\n+            val pendingOperations = outboxDao.getPendingOperations()\n+\n+            if (pendingOperations.isEmpty()) {\n+                // No operations to sync\n+                return@withContext Result.success()\n+            }\n+\n+            // Process each pending operation\n+            var failureCount = 0\n+            for (operation in pendingOperations) {\n+                try {\n+                    // Update status to SYNCING\n+                    outboxDao.updateSyncStatus(operation.id, \"SYNCING\")\n+\n+                    // TODO: Perform actual sync operation to server\n+                    // For now, we'll simulate a successful sync\n+                    // In production, this would make HTTP requests based on operationType\n+                    // Example:\n+                    // when (operation.operationType) {\n+                    //     \"CREATE_ITEM\" -> apiClient.createItem(operation.payload)\n+                    //     \"UPDATE_ITEM\" -> apiClient.updateItem(operation.payload)\n+                    //     \"DELETE_ITEM\" -> apiClient.deleteItem(operation.payload)\n+                    // }\n+\n+                    // If sync successful, delete the operation from outbox\n+                    outboxDao.deleteById(operation.id)\n+\n+                } catch (e: Exception) {\n+                    // Mark operation as failed but continue processing others\n+                    outboxDao.updateSyncStatus(operation.id, \"FAILED\")\n+                    failureCount++\n+\n+                    // Log error for debugging\n+                    // In production, use proper logging framework (Timber, etc.)\n+                    e.printStackTrace()\n+                }\n+            }\n+\n+            // Determine result based on success/failure ratio\n+            when {\n+                failureCount == 0 -> Result.success()\n+                failureCount < pendingOperations.size -> Result.success() // Partial success\n+                else -> Result.retry() // All operations failed, retry later\n+            }\n+\n+        } catch (e: Exception) {\n+            // Unexpected error during sync\n+            e.printStackTrace()\n+            Result.retry()\n+        }\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/ui/MainActivity.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/ui/MainActivity.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.619077",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.619077",
+        "completed_at": "2026-03-26T15:51:37.303233",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "d22961511c29c2d4",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/ui/MainActivity.kt b/app/src/main/java/com/inventory/app/ui/MainActivity.kt\nnew file mode 100644\nindex 0000000..ffdd0f6\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/ui/MainActivity.kt\n@@ -0,0 +1,107 @@\n+package com.inventory.app.ui\n+\n+import android.os.Bundle\n+import androidx.appcompat.app.AppCompatActivity\n+import androidx.lifecycle.lifecycleScope\n+import androidx.work.Constraints\n+import androidx.work.ExistingPeriodicWorkPolicy\n+import androidx.work.NetworkType\n+import androidx.work.PeriodicWorkRequestBuilder\n+import androidx.work.WorkManager\n+import com.inventory.app.R\n+import com.inventory.app.data.local.AppDatabase\n+import com.inventory.app.sync.NetworkMonitor\n+import com.inventory.app.sync.SyncStatusRepository\n+import com.inventory.app.sync.SyncWorker\n+import com.inventory.app.ui.components.SyncStatusBar\n+import kotlinx.coroutines.launch\n+import java.util.concurrent.TimeUnit\n+\n+/**\n+ * Main activity that displays the sync status bar and initializes background sync.\n+ *\n+ * Responsibilities:\n+ * - Observes [SyncStatusRepository.syncState] and updates the [SyncStatusBar] UI\n+ * - Initializes periodic [SyncWorker] via WorkManager for background sync operations\n+ * - Wires together the database, network monitoring, and UI components\n+ *\n+ * The activity demonstrates the offline-first architecture:\n+ * - Displays real-time sync status (Offline/Syncing/Online)\n+ * - Shows count of pending operations when offline\n+ * - Schedules background sync when network becomes available\n+ */\n+class MainActivity : AppCompatActivity() {\n+\n+    private lateinit var syncStatusBar: SyncStatusBar\n+    private lateinit var syncStatusRepository: SyncStatusRepository\n+\n+    override fun onCreate(savedInstanceState: Bundle?) {\n+        super.onCreate(savedInstanceState)\n+        setContentView(R.layout.activity_main)\n+\n+        // Initialize UI components\n+        syncStatusBar = findViewById(R.id.syncStatusBar)\n+\n+        // Initialize dependencies\n+        val database = AppDatabase.getDatabase(applicationContext)\n+        val networkMonitor = NetworkMonitor(applicationContext)\n+        syncStatusRepository = SyncStatusRepository(\n+            networkMonitor = networkMonitor,\n+            outboxDao = database.outboxDao()\n+        )\n+\n+        // Observe sync state and update UI\n+        observeSyncState()\n+\n+        // Schedule periodic sync worker\n+        schedulePeriodicSync()\n+    }\n+\n+    /**\n+     * Observes the sync state Flow and updates the SyncStatusBar UI reactively.\n+     *\n+     * Uses lifecycleScope to automatically cancel observation when activity is destroyed.\n+     * The Flow will emit updates whenever network state or pending operations count changes.\n+     */\n+    private fun observeSyncState() {\n+        lifecycleScope.launch {\n+            syncStatusRepository.syncState.collect { state ->\n+                syncStatusBar.updateState(state)\n+            }\n+        }\n+    }\n+\n+    /**\n+     * Schedules periodic background sync using WorkManager.\n+     *\n+     * Configuration:\n+     * - Runs every 15 minutes when network is available\n+     * - Requires network connectivity constraint\n+     * - Uses KEEP policy to avoid duplicate work requests\n+     * - Work is identified by unique name \"sync_work\" for management\n+     *\n+     * The SyncWorker will process pending operations from the outbox\n+     * and attempt to sync them to the server when network is available.\n+     */\n+    private fun schedulePeriodicSync() {\n+        // Define constraints: require network connectivity\n+        val constraints = Constraints.Builder()\n+            .setRequiredNetworkType(NetworkType.CONNECTED)\n+            .build()\n+\n+        // Create periodic work request (runs every 15 minutes)\n+        val syncWorkRequest = PeriodicWorkRequestBuilder<SyncWorker>(\n+            repeatInterval = 15,\n+            repeatIntervalTimeUnit = TimeUnit.MINUTES\n+        )\n+            .setConstraints(constraints)\n+            .build()\n+\n+        // Enqueue the work request with KEEP policy to avoid duplicates\n+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(\n+            \"sync_work\",\n+            ExistingPeriodicWorkPolicy.KEEP,\n+            syncWorkRequest\n+        )\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt": {
+    "file_path": "app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:41.736162",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:41.736162",
+        "completed_at": "2026-03-26T15:51:37.443858",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "96844b69c1a3ee9c",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt b/app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt\nnew file mode 100644\nindex 0000000..9ea3d70\n--- /dev/null\n+++ b/app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt\n@@ -0,0 +1,154 @@\n+package com.inventory.app.ui.components\n+\n+import android.content.Context\n+import android.util.AttributeSet\n+import android.view.LayoutInflater\n+import android.view.View\n+import android.widget.FrameLayout\n+import android.widget.LinearLayout\n+import android.widget.ProgressBar\n+import android.widget.TextView\n+import androidx.core.content.ContextCompat\n+import com.inventory.app.R\n+import com.inventory.app.sync.SyncState\n+\n+/**\n+ * Custom view component displaying persistent sync status indicator.\n+ *\n+ * Provides three visual states:\n+ * - **Offline**: Amber bar showing \"Offline \u2014 N changes pending sync\"\n+ * - **Syncing**: Blue bar with progress animation showing \"Syncing...\"\n+ * - **Online**: Collapsed to small green dot (8dp)\n+ *\n+ * Updates reactively via [updateState] method when sync status changes.\n+ *\n+ * Usage in XML:\n+ * ```xml\n+ * <com.inventory.app.ui.components.SyncStatusBar\n+ *     android:id=\"@+id/syncStatusBar\"\n+ *     android:layout_width=\"match_parent\"\n+ *     android:layout_height=\"wrap_content\" />\n+ * ```\n+ *\n+ * Usage in code:\n+ * ```kotlin\n+ * syncStatusBar.updateState(SyncState.Offline(pendingCount = 5))\n+ * syncStatusBar.updateState(SyncState.Syncing(progress = 50))\n+ * syncStatusBar.updateState(SyncState.Online)\n+ * ```\n+ */\n+class SyncStatusBar @JvmOverloads constructor(\n+    context: Context,\n+    attrs: AttributeSet? = null,\n+    defStyleAttr: Int = 0\n+) : FrameLayout(context, attrs, defStyleAttr) {\n+\n+    // UI components from layout\n+    private val expandedContainer: LinearLayout\n+    private val statusText: TextView\n+    private val progressBar: ProgressBar\n+    private val collapsedDot: View\n+\n+    init {\n+        // Inflate the layout\n+        LayoutInflater.from(context).inflate(\n+            R.layout.component_sync_status_bar,\n+            this,\n+            true\n+        )\n+\n+        // Get references to UI components\n+        expandedContainer = findViewById(R.id.expandedContainer)\n+        statusText = findViewById(R.id.statusText)\n+        progressBar = findViewById(R.id.progressBar)\n+        collapsedDot = findViewById(R.id.collapsedDot)\n+    }\n+\n+    /**\n+     * Updates the visual state of the sync status bar.\n+     *\n+     * Handles transitions between three states with appropriate colors,\n+     * text, and visibility changes.\n+     *\n+     * @param state The new [SyncState] to display\n+     */\n+    fun updateState(state: SyncState) {\n+        when (state) {\n+            is SyncState.Offline -> showOfflineState(state.pendingCount)\n+            is SyncState.Syncing -> showSyncingState(state.progress)\n+            is SyncState.Online -> showOnlineState()\n+        }\n+    }\n+\n+    /**\n+     * Shows offline state: amber bar with pending operations count.\n+     *\n+     * @param pendingCount Number of operations waiting to sync\n+     */\n+    private fun showOfflineState(pendingCount: Int) {\n+        // Show expanded container, hide collapsed dot\n+        expandedContainer.visibility = View.VISIBLE\n+        collapsedDot.visibility = View.GONE\n+\n+        // Set amber background color\n+        expandedContainer.setBackgroundColor(\n+            ContextCompat.getColor(context, R.color.sync_offline_amber)\n+        )\n+\n+        // Update text with pending count\n+        val countText = if (pendingCount == 1) {\n+            \"Offline \u2014 1 change pending sync\"\n+        } else {\n+            \"Offline \u2014 $pendingCount changes pending sync\"\n+        }\n+        statusText.text = countText\n+\n+        // Hide progress bar (not syncing)\n+        progressBar.visibility = View.GONE\n+    }\n+\n+    /**\n+     * Shows syncing state: blue bar with progress animation.\n+     *\n+     * @param progress Sync progress percentage (0-100), or null for indeterminate\n+     */\n+    private fun showSyncingState(progress: Int?) {\n+        // Show expanded container, hide collapsed dot\n+        expandedContainer.visibility = View.VISIBLE\n+        collapsedDot.visibility = View.GONE\n+\n+        // Set blue background color\n+        expandedContainer.setBackgroundColor(\n+            ContextCompat.getColor(context, R.color.sync_syncing_blue)\n+        )\n+\n+        // Update text for syncing state\n+        statusText.text = if (progress != null) {\n+            \"Syncing... $progress%\"\n+        } else {\n+            \"Syncing...\"\n+        }\n+\n+        // Show progress bar\n+        progressBar.visibility = View.VISIBLE\n+\n+        // Set progress bar mode based on progress value\n+        if (progress != null) {\n+            progressBar.isIndeterminate = false\n+            progressBar.progress = progress\n+        } else {\n+            progressBar.isIndeterminate = true\n+        }\n+    }\n+\n+    /**\n+     * Shows online state: collapsed to small green dot.\n+     *\n+     * Indicates all operations are synced and device is online.\n+     */\n+    private fun showOnlineState() {\n+        // Hide expanded container, show collapsed dot\n+        expandedContainer.visibility = View.GONE\n+        collapsedDot.visibility = View.VISIBLE\n+    }\n+}\n"
+      }
+    ]
+  },
+  "app/src/main/res/layout/component_sync_status_bar.xml": {
+    "file_path": "app/src/main/res/layout/component_sync_status_bar.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:42.069302",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.069302",
+        "completed_at": "2026-03-26T15:51:38.021986",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "58d9f793ec644f06",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/layout/component_sync_status_bar.xml b/app/src/main/res/layout/component_sync_status_bar.xml\nnew file mode 100644\nindex 0000000..bff7e69\n--- /dev/null\n+++ b/app/src/main/res/layout/component_sync_status_bar.xml\n@@ -0,0 +1,72 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<!--\n+    Sync Status Bar Component Layout\n+\n+    A persistent status indicator showing network connectivity and sync queue depth.\n+\n+    Three visual states:\n+    - Offline: Amber bar with text \"Offline \u2014 N changes pending sync\"\n+    - Syncing: Blue bar with progress animation\n+    - Online: Collapsed to small green dot (8dp)\n+\n+    Components:\n+    - expandedContainer: LinearLayout shown for Offline/Syncing states\n+    - statusText: TextView displaying status message\n+    - progressBar: ProgressBar shown during sync\n+    - collapsedDot: View shown as green dot when online and synced\n+-->\n+<merge xmlns:android=\"http://schemas.android.com/apk/res/android\"\n+    xmlns:tools=\"http://schemas.android.com/tools\">\n+\n+    <!-- Expanded bar for Offline/Syncing states -->\n+    <LinearLayout\n+        android:id=\"@+id/expandedContainer\"\n+        android:layout_width=\"match_parent\"\n+        android:layout_height=\"wrap_content\"\n+        android:orientation=\"horizontal\"\n+        android:paddingStart=\"16dp\"\n+        android:paddingTop=\"8dp\"\n+        android:paddingEnd=\"16dp\"\n+        android:paddingBottom=\"8dp\"\n+        android:gravity=\"center_vertical\"\n+        android:visibility=\"visible\"\n+        tools:background=\"@color/sync_offline_amber\">\n+\n+        <!-- Status text (e.g., \"Offline \u2014 5 changes pending sync\") -->\n+        <TextView\n+            android:id=\"@+id/statusText\"\n+            android:layout_width=\"0dp\"\n+            android:layout_height=\"wrap_content\"\n+            android:layout_weight=\"1\"\n+            android:textColor=\"@android:color/white\"\n+            android:textSize=\"14sp\"\n+            android:textStyle=\"bold\"\n+            android:maxLines=\"1\"\n+            android:ellipsize=\"end\"\n+            tools:text=\"Offline \u2014 5 changes pending sync\" />\n+\n+        <!-- Progress indicator for syncing state -->\n+        <ProgressBar\n+            android:id=\"@+id/progressBar\"\n+            style=\"?android:attr/progressBarStyleHorizontal\"\n+            android:layout_width=\"100dp\"\n+            android:layout_height=\"4dp\"\n+            android:layout_marginStart=\"12dp\"\n+            android:indeterminate=\"true\"\n+            android:visibility=\"gone\"\n+            tools:visibility=\"visible\" />\n+\n+    </LinearLayout>\n+\n+    <!-- Collapsed dot for Online state -->\n+    <View\n+        android:id=\"@+id/collapsedDot\"\n+        android:layout_width=\"8dp\"\n+        android:layout_height=\"8dp\"\n+        android:layout_gravity=\"center_horizontal\"\n+        android:layout_marginTop=\"4dp\"\n+        android:background=\"@color/sync_online_green\"\n+        android:visibility=\"gone\"\n+        tools:visibility=\"visible\" />\n+\n+</merge>\n"
+      }
+    ]
+  },
+  "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml": {
+    "file_path": "app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:42.302675",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.302675",
+        "completed_at": "2026-03-26T15:51:38.363841",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "5f3b1ed2282af327",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml b/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml\nnew file mode 100644\nindex 0000000..5ed0a2d\n--- /dev/null\n+++ b/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml\n@@ -0,0 +1,5 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<adaptive-icon xmlns:android=\"http://schemas.android.com/apk/res/android\">\n+    <background android:drawable=\"@color/ic_launcher_background\"/>\n+    <foreground android:drawable=\"@drawable/ic_launcher_foreground\"/>\n+</adaptive-icon>\n"
+      }
+    ]
+  },
+  "app/src/main/res/values/colors_launcher.xml": {
+    "file_path": "app/src/main/res/values/colors_launcher.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:42.402699",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.402699",
+        "completed_at": "2026-03-26T15:51:38.504466",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "82dabb7b79995bda",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/values/colors_launcher.xml b/app/src/main/res/values/colors_launcher.xml\nnew file mode 100644\nindex 0000000..087f740\n--- /dev/null\n+++ b/app/src/main/res/values/colors_launcher.xml\n@@ -0,0 +1,4 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<resources>\n+    <color name=\"ic_launcher_background\">#3F51B5</color>\n+</resources>\n"
+      }
+    ]
+  },
+  "app/src/main/res/values/colors_sync.xml": {
+    "file_path": "app/src/main/res/values/colors_sync.xml",
+    "baseline_commit": "2854371512bcffeec37978036d7031eb25564b7f",
+    "baseline_captured_at": "2026-03-26T15:40:42.519507",
+    "baseline_content_hash": "e3b0c44298fc1c14",
+    "baseline_snapshot_path": "",
+    "task_snapshots": [
+      {
+        "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "task_intent": "",
+        "started_at": "2026-03-26T15:40:42.519507",
+        "completed_at": "2026-03-26T15:51:38.662953",
+        "content_hash_before": "e3b0c44298fc1c14",
+        "content_hash_after": "2581fb9c3318d744",
+        "semantic_changes": [],
+        "raw_diff": "diff --git a/app/src/main/res/values/colors_sync.xml b/app/src/main/res/values/colors_sync.xml\nnew file mode 100644\nindex 0000000..8b33300\n--- /dev/null\n+++ b/app/src/main/res/values/colors_sync.xml\n@@ -0,0 +1,19 @@\n+<?xml version=\"1.0\" encoding=\"utf-8\"?>\n+<!--\n+    Sync Status Bar Color Resources\n+\n+    Defines colors for the three sync states:\n+    - Offline: Amber (warning state - changes pending sync)\n+    - Syncing: Blue (active sync in progress)\n+    - Online: Green (success state - all synced)\n+-->\n+<resources>\n+    <!-- Offline state: Amber/Orange to indicate warning/pending operations -->\n+    <color name=\"sync_offline_amber\">#FF9800</color>\n+\n+    <!-- Syncing state: Blue to indicate active progress -->\n+    <color name=\"sync_syncing_blue\">#2196F3</color>\n+\n+    <!-- Online/Synced state: Green to indicate success/healthy state -->\n+    <color name=\"sync_online_green\">#4CAF50</color>\n+</resources>\n"
+      }
+    ]
+  }
+}

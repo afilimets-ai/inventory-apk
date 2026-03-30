@@ -1,0 +1,48 @@
+{
+  "file_path": "app/src/main/res/values/colors.xml",
+  "main_branch_history": [],
+  "task_views": {
+    "001-initialize-project-scaffolding-with-standard-andro": {
+      "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T16:24:50.477846"
+      },
+      "worktree_state": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n    <!-- Material Design 3 Primary Colors -->\n    <color name=\"md_theme_primary\">#6750A4</color>\n    <color name=\"md_theme_onPrimary\">#FFFFFF</color>\n    <color name=\"md_theme_primaryContainer\">#EADDFF</color>\n    <color name=\"md_theme_onPrimaryContainer\">#21005D</color>\n\n    <!-- Material Design 3 Secondary Colors -->\n    <color name=\"md_theme_secondary\">#625B71</color>\n    <color name=\"md_theme_onSecondary\">#FFFFFF</color>\n    <color name=\"md_theme_secondaryContainer\">#E8DEF8</color>\n    <color name=\"md_theme_onSecondaryContainer\">#1D192B</color>\n\n    <!-- Material Design 3 Tertiary Colors -->\n    <color name=\"md_theme_tertiary\">#7D5260</color>\n    <color name=\"md_theme_onTertiary\">#FFFFFF</color>\n    <color name=\"md_theme_tertiaryContainer\">#FFD8E4</color>\n    <color name=\"md_theme_onTertiaryContainer\">#31111D</color>\n\n    <!-- Material Design 3 Error Colors -->\n    <color name=\"md_theme_error\">#B3261E</color>\n    <color name=\"md_theme_errorContainer\">#F9DEDC</color>\n    <color name=\"md_theme_onError\">#FFFFFF</color>\n    <color name=\"md_theme_onErrorContainer\">#410E0B</color>\n\n    <!-- Material Design 3 Background Colors -->\n    <color name=\"md_theme_background\">#FFFBFE</color>\n    <color name=\"md_theme_onBackground\">#1C1B1F</color>\n\n    <!-- Material Design 3 Surface Colors -->\n    <color name=\"md_theme_surface\">#FFFBFE</color>\n    <color name=\"md_theme_onSurface\">#1C1B1F</color>\n    <color name=\"md_theme_surfaceVariant\">#E7E0EC</color>\n    <color name=\"md_theme_onSurfaceVariant\">#49454F</color>\n\n    <!-- Material Design 3 Outline Colors -->\n    <color name=\"md_theme_outline\">#79747E</color>\n    <color name=\"md_theme_outlineVariant\">#CAC4D0</color>\n\n    <!-- Material Design 3 Other Colors -->\n    <color name=\"md_theme_inverseSurface\">#313033</color>\n    <color name=\"md_theme_inverseOnSurface\">#F4EFF4</color>\n    <color name=\"md_theme_inversePrimary\">#D0BCFF</color>\n    <color name=\"md_theme_shadow\">#000000</color>\n    <color name=\"md_theme_surfaceTint\">#6750A4</color>\n    <color name=\"md_theme_scrim\">#000000</color>\n\n    <!-- Legacy Material Design Colors (for compatibility) -->\n    <color name=\"purple_200\">#FFBB86FC</color>\n    <color name=\"purple_500\">#FF6200EE</color>\n    <color name=\"purple_700\">#FF3700B3</color>\n    <color name=\"teal_200\">#FF03DAC5</color>\n    <color name=\"teal_700\">#FF018786</color>\n    <color name=\"black\">#FF000000</color>\n    <color name=\"white\">#FFFFFFFF</color>\n\n    <!-- Common UI Colors -->\n    <color name=\"divider\">#1F000000</color>\n    <color name=\"ripple\">#1F000000</color>\n</resources>\n",
+        "last_modified": "2026-03-26T11:52:51.491996"
+      },
+      "task_intent": {
+        "title": "001-initialize-project-scaffolding-with-standard-andro",
+        "description": "Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon.",
+        "from_plan": true
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    },
+    "004-set-up-dependency-injection-framework": {
+      "task_id": "004-set-up-dependency-injection-framework",
+      "branch_point": {
+        "commit_hash": "fb72c5b08fe09b2797d2f11a50ed2153870f77f2",
+        "content": "",
+        "timestamp": "2026-03-26T10:33:15.356050"
+      },
+      "worktree_state": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n    <color name=\"purple_200\">#FFBB86FC</color>\n    <color name=\"purple_500\">#FF6200EE</color>\n    <color name=\"purple_700\">#FF3700B3</color>\n    <color name=\"teal_200\">#FF03DAC5</color>\n    <color name=\"teal_700\">#FF018786</color>\n    <color name=\"black\">#FF000000</color>\n    <color name=\"white\">#FFFFFFFF</color>\n</resources>\n",
+        "last_modified": "2026-03-26T10:33:16.103658"
+      },
+      "task_intent": {
+        "title": "004-set-up-dependency-injection-framework",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 0,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T16:24:51.313851",
+  "last_updated": "2026-03-26T10:33:15.570408"
+}

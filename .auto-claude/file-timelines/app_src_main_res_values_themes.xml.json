@@ -1,0 +1,28 @@
+{
+  "file_path": "app/src/main/res/values/themes.xml",
+  "main_branch_history": [],
+  "task_views": {
+    "001-initialize-project-scaffolding-with-standard-andro": {
+      "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T16:24:50.477846"
+      },
+      "worktree_state": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources>\n    <!--\n        Base application theme using Material Design 3\n        This theme uses Material3's DayNight theme which automatically handles\n        light/dark mode switching based on system settings.\n    -->\n    <style name=\"Theme.Inventory\" parent=\"Theme.Material3.DayNight.NoActionBar\">\n        <!-- Primary brand color -->\n        <item name=\"colorPrimary\">@color/md_theme_primary</item>\n        <item name=\"colorOnPrimary\">@color/md_theme_onPrimary</item>\n        <item name=\"colorPrimaryContainer\">@color/md_theme_primaryContainer</item>\n        <item name=\"colorOnPrimaryContainer\">@color/md_theme_onPrimaryContainer</item>\n\n        <!-- Secondary brand color -->\n        <item name=\"colorSecondary\">@color/md_theme_secondary</item>\n        <item name=\"colorOnSecondary\">@color/md_theme_onSecondary</item>\n        <item name=\"colorSecondaryContainer\">@color/md_theme_secondaryContainer</item>\n        <item name=\"colorOnSecondaryContainer\">@color/md_theme_onSecondaryContainer</item>\n\n        <!-- Tertiary brand color -->\n        <item name=\"colorTertiary\">@color/md_theme_tertiary</item>\n        <item name=\"colorOnTertiary\">@color/md_theme_onTertiary</item>\n        <item name=\"colorTertiaryContainer\">@color/md_theme_tertiaryContainer</item>\n        <item name=\"colorOnTertiaryContainer\">@color/md_theme_onTertiaryContainer</item>\n\n        <!-- Error colors -->\n        <item name=\"colorError\">@color/md_theme_error</item>\n        <item name=\"colorErrorContainer\">@color/md_theme_errorContainer</item>\n        <item name=\"colorOnError\">@color/md_theme_onError</item>\n        <item name=\"colorOnErrorContainer\">@color/md_theme_onErrorContainer</item>\n\n        <!-- Background colors -->\n        <item name=\"android:colorBackground\">@color/md_theme_background</item>\n        <item name=\"colorOnBackground\">@color/md_theme_onBackground</item>\n\n        <!-- Surface colors -->\n        <item name=\"colorSurface\">@color/md_theme_surface</item>\n        <item name=\"colorOnSurface\">@color/md_theme_onSurface</item>\n        <item name=\"colorSurfaceVariant\">@color/md_theme_surfaceVariant</item>\n        <item name=\"colorOnSurfaceVariant\">@color/md_theme_onSurfaceVariant</item>\n\n        <!-- Outline colors -->\n        <item name=\"colorOutline\">@color/md_theme_outline</item>\n        <item name=\"colorOutlineVariant\">@color/md_theme_outlineVariant</item>\n\n        <!-- Other colors -->\n        <item name=\"colorSurfaceInverse\">@color/md_theme_inverseSurface</item>\n        <item name=\"colorOnSurfaceInverse\">@color/md_theme_inverseOnSurface</item>\n        <item name=\"colorPrimaryInverse\">@color/md_theme_inversePrimary</item>\n\n        <!-- Status bar color -->\n        <item name=\"android:statusBarColor\">@color/md_theme_primary</item>\n\n        <!-- Navigation bar color -->\n        <item name=\"android:navigationBarColor\">@color/md_theme_surface</item>\n\n        <!-- Window background -->\n        <item name=\"android:windowBackground\">@color/md_theme_background</item>\n\n        <!-- Enable edge-to-edge for modern Android -->\n        <item name=\"android:windowLightStatusBar\">true</item>\n    </style>\n</resources>\n",
+        "last_modified": "2026-03-26T11:52:51.493206"
+      },
+      "task_intent": {
+        "title": "001-initialize-project-scaffolding-with-standard-andro",
+        "description": "Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon.",
+        "from_plan": true
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T16:24:51.455852",
+  "last_updated": "2026-03-25T16:24:51.511845"
+}

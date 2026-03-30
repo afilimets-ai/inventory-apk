@@ -1,0 +1,37 @@
+{
+  "task_type": "documentation",
+  "workflow_type": "simple",
+  "files_to_create": {
+    "documentation": [
+      "README.md",
+      "ROADMAP.md",
+      "docs/features/README.md",
+      "docs/ARCHITECTURE.md",
+      "CONTRIBUTING.md"
+    ]
+  },
+  "files_to_modify": {},
+  "files_to_reference": [],
+  "patterns": {
+    "documentation_pattern": "Standard markdown-based project documentation following open-source best practices",
+    "roadmap_pattern": "Milestone-based roadmap with MVP/v1.0/v2.0 structure",
+    "feature_pattern": "Individual feature specifications in docs/features/ directory"
+  },
+  "existing_implementations": {
+    "description": "This is a greenfield project with no existing code or documentation",
+    "relevant_files": []
+  },
+  "documentation_goals": [
+    "Create version-controlled project overview and getting started guide (README.md)",
+    "Define development roadmap with MVP scope and milestones (ROADMAP.md)",
+    "Establish feature specification structure (docs/features/)",
+    "Document architecture decisions and design patterns (docs/ARCHITECTURE.md)",
+    "Provide contribution guidelines for collaborators (CONTRIBUTING.md)"
+  ],
+  "target_audience": [
+    "New developers joining the project",
+    "Project stakeholders and product owners",
+    "Open-source contributors",
+    "Future maintainers"
+  ]
+}

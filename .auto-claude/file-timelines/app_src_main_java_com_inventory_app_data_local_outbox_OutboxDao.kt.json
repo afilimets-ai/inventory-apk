@@ -1,0 +1,28 @@
+{
+  "file_path": "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt",
+  "main_branch_history": [],
+  "task_views": {
+    "010-persistent-offline-sync-status-bar-with-pending-op": {
+      "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T11:01:04.889179"
+      },
+      "worktree_state": {
+        "content": "package com.inventory.app.data.local.outbox\n\nimport androidx.room.Dao\nimport androidx.room.Delete\nimport androidx.room.Insert\nimport androidx.room.OnConflictStrategy\nimport androidx.room.Query\nimport kotlinx.coroutines.flow.Flow\n\n/**\n * Data Access Object for outbox operations.\n * Provides reactive queries for sync status monitoring.\n */\n@Dao\ninterface OutboxDao {\n    /**\n     * Get count of pending operations (excluding failed).\n     * Returns a Flow for reactive observation in the UI.\n     */\n    @Query(\"SELECT COUNT(*) FROM outbox WHERE syncStatus = 'PENDING'\")\n    fun getPendingCount(): Flow<Int>\n\n    /**\n     * Get all outbox entries ordered by creation time.\n     * Returns a Flow for reactive observation.\n     */\n    @Query(\"SELECT * FROM outbox ORDER BY createdAt ASC\")\n    fun getAll(): Flow<List<OutboxEntity>>\n\n    /**\n     * Get all pending entries for sync processing.\n     */\n    @Query(\"SELECT * FROM outbox WHERE syncStatus = 'PENDING' ORDER BY createdAt ASC\")\n    suspend fun getPendingOperations(): List<OutboxEntity>\n\n    /**\n     * Insert a new operation into the outbox.\n     */\n    @Insert(onConflict = OnConflictStrategy.REPLACE)\n    suspend fun insert(entity: OutboxEntity): Long\n\n    /**\n     * Insert multiple operations.\n     */\n    @Insert(onConflict = OnConflictStrategy.REPLACE)\n    suspend fun insertAll(entities: List<OutboxEntity>)\n\n    /**\n     * Delete an operation from the outbox (after successful sync).\n     */\n    @Delete\n    suspend fun delete(entity: OutboxEntity)\n\n    /**\n     * Delete an operation by ID.\n     */\n    @Query(\"DELETE FROM outbox WHERE id = :id\")\n    suspend fun deleteById(id: Long)\n\n    /**\n     * Update sync status for an operation.\n     */\n    @Query(\"UPDATE outbox SET syncStatus = :status WHERE id = :id\")\n    suspend fun updateSyncStatus(id: Long, status: String)\n\n    /**\n     * Clear all synced operations (for maintenance).\n     */\n    @Query(\"DELETE FROM outbox WHERE syncStatus != 'PENDING'\")\n    suspend fun clearSynced()\n}\n",
+        "last_modified": "2026-03-26T15:51:31.173948"
+      },
+      "task_intent": {
+        "title": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T11:01:05.107939",
+  "last_updated": "2026-03-25T11:01:05.154814"
+}

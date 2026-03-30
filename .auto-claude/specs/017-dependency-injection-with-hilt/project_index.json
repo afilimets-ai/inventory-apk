@@ -1,0 +1,27 @@
+{
+  "project_type": "single",
+  "services": {
+    "android_app": {
+      "path": "./app",
+      "tech_stack": ["kotlin", "android", "jetpack-compose", "hilt", "coroutines"],
+      "build_system": "gradle",
+      "build_command": "./gradlew assembleDebug",
+      "test_command": "./gradlew test",
+      "clean_command": "./gradlew clean"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "room_sqlite",
+    "di_framework": "hilt"
+  },
+  "conventions": {
+    "language": "kotlin",
+    "architecture": "mvvm",
+    "ui_framework": "jetpack_compose",
+    "min_sdk": 24,
+    "target_sdk": 34,
+    "package_structure": "com.inventory",
+    "testing": "junit"
+  }
+}

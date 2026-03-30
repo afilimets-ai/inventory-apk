@@ -1,0 +1,7 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "code-imp-002",
+  "rationale": "Setting up code style enforcement early ensures all future contributions follow a consistent pattern from day one.",
+  "category": "feature"
+}

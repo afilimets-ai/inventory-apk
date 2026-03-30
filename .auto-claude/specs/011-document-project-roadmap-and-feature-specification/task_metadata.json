@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-005",
+  "rationale": "Planning artifacts stored only in gitignored directories are invisible to collaborators and at risk of being lost. A version-controlled roadmap ensures all contributors understand project direction and priorities. For a greenfield project, clearly defining the MVP feature set prevents scope creep and gives developers concrete targets. The ideation_context.json confirms planned_features is an empty array, meaning no features have been formally planned yet.",
+  "category": "documentation",
+  "priority": "high"
+}

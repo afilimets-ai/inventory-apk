@@ -1,0 +1,33 @@
+{
+  "project_type": "single",
+  "services": {
+    "android": {
+      "path": ".",
+      "tech_stack": ["kotlin", "android", "agp-8", "androidx"],
+      "port": null,
+      "dev_command": "./gradlew installDebug",
+      "test_command": "./gradlew test",
+      "build_command": "./gradlew assembleDebug"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "room",
+    "ci_cd": null
+  },
+  "conventions": {
+    "language": "kotlin",
+    "architecture": "MVVM",
+    "package_structure": "data/domain/presentation",
+    "formatter": ".editorconfig",
+    "min_sdk": 29,
+    "target_sdk": 34,
+    "compile_sdk": 34
+  },
+  "tooling": {
+    "agp_version": "8.3.0",
+    "kotlin_version": "1.9.22",
+    "gradle_version": "8.2",
+    "gradle_wrapper": true
+  }
+}

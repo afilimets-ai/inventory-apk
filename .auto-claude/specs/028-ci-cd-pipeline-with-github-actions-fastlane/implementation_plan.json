@@ -1,0 +1,8 @@
+{
+  "feature": "CI/CD Pipeline with GitHub Actions & Fastlane",
+  "description": "# CI/CD Pipeline with GitHub Actions & Fastlane\n\nConfigure automated CI/CD: GitHub Actions workflow for build, lint (ktlint/detekt), and test on every PR. Fastlane lanes for debug and release APK generation. Automated signing configuration for release builds. Artifact upload for generated APKs. Foundation for per-flavor builds in Phase 2.\n\n## Rationale\nCI/CD is specified in the tech stack and is critical for maintaining code quality as the codebase grows. With white-label Product Flavors coming in Phase 2, the pipeline needs to support building multiple APK variants. Automated quality gates prevent regressions.\n\n## User Stories\n- As a developer, I want automated builds and lint checks on every PR so that code quality issues are caught before merge\n- As the project owner, I want release APKs generated automatically so that deployment to Ndevor is streamlined\n\n## Acceptance Criteria\n- [ ] GitHub Actions workflow triggers on push to main and on PR creation\n- [ ] Workflow runs: compile, lint (ktlint or detekt), unit tests\n- [ ] Fastlane configured with at least 'debug' and 'release' lanes\n- [ ] Release APK signed with proper keystore (secrets in GitHub)\n- [ ] Build artifacts (APK) uploaded and downloadable from workflow\n- [ ] Build status badge available for README\n- [ ] Pipeline completes in < 10 minutes\n",
+  "created_at": "2026-03-24T15:07:37.602Z",
+  "updated_at": "2026-03-24T15:07:37.602Z",
+  "status": "pending",
+  "phases": []
+}

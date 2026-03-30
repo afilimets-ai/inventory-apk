@@ -1,0 +1,52 @@
+{
+  "project_status": "greenfield",
+  "existing_code": {
+    "android_project": false,
+    "scanner_implementation": false,
+    "description": "No Android project structure exists yet. This task will create the core scanner manager infrastructure."
+  },
+  "files_to_create": {
+    "android-app": [
+      "app/src/main/java/com/inventory/scanner/NewlandScannerManager.kt",
+      "app/src/main/java/com/inventory/scanner/ScanResult.kt",
+      "app/src/main/java/com/inventory/di/ScannerModule.kt",
+      "app/src/test/java/com/inventory/scanner/NewlandScannerManagerTest.kt"
+    ],
+    "project_setup": [
+      "build.gradle.kts",
+      "app/build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties",
+      "app/src/main/AndroidManifest.xml"
+    ]
+  },
+  "files_to_reference": {
+    "patterns": "Standard Android MVVM + Hilt patterns from Android documentation",
+    "scanner_patterns": "Newland MT90 SDK documentation for BroadcastReceiver integration"
+  },
+  "patterns": {
+    "singleton_pattern": "Use Hilt @Singleton annotation for Application-scoped manager",
+    "lifecycle_pattern": "BroadcastReceiver registered in register() and unregistered in unregister()",
+    "reactive_pattern": "SharedFlow for event emission to ViewModels",
+    "debounce_pattern": "Use timestamp comparison for 300ms debounce protection"
+  },
+  "dependencies": {
+    "required": [
+      "com.google.dagger:hilt-android:2.48",
+      "androidx.lifecycle:lifecycle-runtime-ktx",
+      "org.jetbrains.kotlinx:kotlinx-coroutines-core",
+      "org.jetbrains.kotlinx:kotlinx-coroutines-android"
+    ],
+    "test": [
+      "junit:junit:4.13.2",
+      "org.mockito:mockito-core",
+      "org.jetbrains.kotlinx:kotlinx-coroutines-test"
+    ]
+  },
+  "technical_notes": {
+    "mt90_scanner": "Newland MT90 uses broadcast intents for scanner results. Hardware scan button sends KeyEvent.KEYCODE_F6.",
+    "memory_leak_fix": "Previous POC (mentioned in spec) had memory leak from not unregistering BroadcastReceiver. This implementation must call unregisterReceiver().",
+    "debounce_requirement": "300ms debounce prevents duplicate scans from hardware button multiple presses",
+    "testing_limitation": "Physical MT90 device required for full validation - emulator cannot simulate hardware scanner"
+  }
+}

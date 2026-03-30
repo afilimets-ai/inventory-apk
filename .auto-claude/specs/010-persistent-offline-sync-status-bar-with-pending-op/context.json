@@ -1,0 +1,36 @@
+{
+  "files_to_modify": {},
+  "files_to_create": {
+    "android-app": [
+      "app/src/main/java/com/inventory/app/data/local/AppDatabase.kt",
+      "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt",
+      "app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt",
+      "app/src/main/java/com/inventory/app/sync/SyncStatusRepository.kt",
+      "app/src/main/java/com/inventory/app/sync/SyncState.kt",
+      "app/src/main/java/com/inventory/app/sync/NetworkMonitor.kt",
+      "app/src/main/java/com/inventory/app/sync/SyncWorker.kt",
+      "app/src/main/java/com/inventory/app/ui/components/SyncStatusBar.kt",
+      "app/src/main/java/com/inventory/app/ui/MainActivity.kt",
+      "app/src/main/res/layout/activity_main.xml",
+      "app/src/main/res/layout/component_sync_status_bar.xml",
+      "app/src/main/res/values/colors_sync.xml",
+      "app/src/main/AndroidManifest.xml"
+    ]
+  },
+  "files_to_reference": [],
+  "patterns": {
+    "database_pattern": "Room database with DAO pattern - will create AppDatabase as single source of truth",
+    "repository_pattern": "Repository provides reactive streams (Flow) of sync state, observes both network and outbox",
+    "ui_pattern": "Composable ViewBinding with StateFlow observation, collapsed/expanded states based on sync status",
+    "worker_pattern": "WorkManager with ExistingPeriodicWorkPolicy.KEEP for background sync, triggered by network availability"
+  },
+  "existing_implementations": {
+    "description": "Greenfield Android project - gradle setup exists but no app code yet. Need to create from scratch following Android best practices.",
+    "relevant_files": ["app/build.gradle.kts"]
+  },
+  "architecture_notes": {
+    "offline_first": "Spec mentions CLAUDE.md defines offline-first with outbox pattern - all operations write to local DB first, then WorkManager drains to server",
+    "sync_states": "Three states: Offline (amber, shows N pending), Syncing (blue, progress animation), Online+Synced (green dot, collapsed)",
+    "network_awareness": "Use ConnectivityManager.NetworkCallback to monitor network state changes in real-time"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "file_path": "app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt",
+  "main_branch_history": [],
+  "task_views": {
+    "010-persistent-offline-sync-status-bar-with-pending-op": {
+      "task_id": "010-persistent-offline-sync-status-bar-with-pending-op",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T11:01:04.889179"
+      },
+      "worktree_state": {
+        "content": "package com.inventory.app.data.local.outbox\n\nimport androidx.room.Entity\nimport androidx.room.PrimaryKey\n\n/**\n * Outbox entity for storing pending sync operations.\n * Part of the offline-first architecture with outbox pattern.\n */\n@Entity(tableName = \"outbox\")\ndata class OutboxEntity(\n    @PrimaryKey(autoGenerate = true)\n    val id: Long = 0,\n\n    /**\n     * Type of operation (e.g., \"CREATE_ITEM\", \"UPDATE_ITEM\", \"DELETE_ITEM\")\n     */\n    val operationType: String,\n\n    /**\n     * JSON payload containing the operation data\n     */\n    val payload: String,\n\n    /**\n     * Timestamp when the operation was created (milliseconds since epoch)\n     */\n    val createdAt: Long = System.currentTimeMillis(),\n\n    /**\n     * Sync status: \"PENDING\", \"SYNCING\", \"FAILED\"\n     */\n    val syncStatus: String = \"PENDING\"\n)\n",
+        "last_modified": "2026-03-26T15:51:31.173948"
+      },
+      "task_intent": {
+        "title": "010-persistent-offline-sync-status-bar-with-pending-op",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T11:01:05.154814",
+  "last_updated": "2026-03-25T11:01:05.217317"
+}

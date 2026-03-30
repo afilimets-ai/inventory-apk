@@ -1,0 +1,119 @@
+{
+  "security_hardening": [
+    {
+      "id": "sec-001",
+      "type": "security_hardening",
+      "title": "BroadcastReceiver never unregistered — memory leak and scan event duplication",
+      "description": "In MainActivity.java (line 42-65), an anonymous BroadcastReceiver is registered in onCreate() but never unregistered in onDestroy(). The onDestroy() override on line 84 is empty. This causes the receiver to leak across Activity lifecycle events, leading to memory leaks and duplicate scan event processing. The project's own CLAUDE.md explicitly flags this as a critical pitfall: 'ЗАВЖДИ unregister() в onDestroy() — інакше memory leak і дублювання подій'.",
+      "rationale": "On industrial terminals running continuous scanning sessions (warehouse workflows), leaked receivers accumulate with each Activity recreation (rotation, config change), causing progressive memory consumption and duplicate barcode processing. On MT90 devices with limited RAM, this can lead to OOM crashes during extended shifts. Duplicate scan events could corrupt inventory counts — a data integrity issue with direct business impact across 50-200 deployed devices.",
+      "category": "configuration",
+      "severity": "high",
+      "affectedFiles": ["NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java"],
+      "vulnerability": "CWE-404: Improper Resource Shutdown or Release",
+      "currentRisk": "Memory leak on every Activity recreation; duplicate scan event processing can corrupt inventory data; potential OOM crash on long-running warehouse shifts",
+      "remediation": "Store the BroadcastReceiver in a field variable and call unregisterReceiver() in onDestroy(). For the production Kotlin/Compose app, implement NewlandScannerManager as a singleton in Application scope with register()/unregister() lifecycle management, and expose scan events via SharedFlow with debounce(300ms) as specified in CLAUDE.md architecture. Example fix for the POC:\n\n```java\nprivate BroadcastReceiver scanReceiver;\n\n@Override\nprotected void onCreate(Bundle savedInstanceState) {\n    // ...\n    scanReceiver = new BroadcastReceiver() { /* existing code */ };\n    registerReceiver(scanReceiver, new IntentFilter(\"nlscan.action.SCANNER_RESULT\"));\n}\n\n@Override\nprotected void onDestroy() {\n    if (scanReceiver != null) {\n        unregisterReceiver(scanReceiver);\n        scanReceiver = null;\n    }\n    super.onDestroy();\n}\n```",
+      "references": [
+        "https://developer.android.com/reference/android/content/Context#unregisterReceiver(android.content.BroadcastReceiver)",
+        "https://cwe.mitre.org/data/definitions/404.html"
+      ],
+      "compliance": []
+    },
+    {
+      "id": "sec-002",
+      "type": "security_hardening",
+      "title": "Severely outdated toolchain with known CVEs (Gradle 4.6, AGP 3.2.1, targetSdk 28, jcenter())",
+      "description": "The entire build toolchain is 6+ years out of date: Gradle 4.6 (current: 8.x), Android Gradle Plugin 3.2.1 (current: 8.x), compileSdkVersion/targetSdkVersion 28 (Android 9; current: 35), and dependencies on the deprecated android.support library (appcompat-v7:28.0.0) instead of AndroidX. The build.gradle references jcenter() which was sunset in February 2022 and may serve compromised or stale artifacts. Testing dependencies (JUnit 4.12, Espresso 3.0.2, test runner 1.0.2) also have known vulnerabilities and are multiple major versions behind.",
+      "rationale": "targetSdkVersion 28 means the app does not benefit from 6 years of Android platform security hardening: scoped storage (Android 10), one-time permissions (Android 11), approximate location (Android 12), notification permissions (Android 13), foreground service type requirements (Android 14), and edge-to-edge enforcement (Android 15). Google Play requires targetSdk 34+ for new apps. jcenter() shutdown creates a supply chain risk — resolved artifacts may come from mirrors with no integrity guarantee. Gradle 4.6 has known path traversal and zip-slip CVEs in dependency resolution.",
+      "category": "dependencies",
+      "severity": "critical",
+      "affectedFiles": [
+        "NewLand-Scanner-DeviceMT90-master/build.gradle",
+        "NewLand-Scanner-DeviceMT90-master/app/build.gradle",
+        "NewLand-Scanner-DeviceMT90-master/gradle/wrapper/gradle-wrapper.properties"
+      ],
+      "vulnerability": "CWE-1104: Use of Unmaintained Third-Party Components",
+      "currentRisk": "Missing 6 years of Android platform security hardening; jcenter() dependency resolution is a supply chain attack vector; known CVEs in Gradle 4.6 and AGP 3.2.1; app will be rejected from Google Play; android.support library is EOL with no security patches",
+      "remediation": "For the production app: upgrade to Gradle 8.x, AGP 8.x, compileSdk/targetSdk 35, migrate from android.support to AndroidX, replace jcenter() with mavenCentral(), and adopt the Kotlin/Compose/Hilt stack specified in CLAUDE.md. The POC reference code should only be used for understanding scan broadcast API patterns (intent actions and extras), never as a build template. Enable Gradle dependency verification (gradle/verification-metadata.xml) and use Dependabot/Renovate for automated dependency updates in CI.",
+      "references": [
+        "https://developer.android.com/google/play/requirements/target-sdk",
+        "https://jfrog.com/blog/into-the-sunset-bintray-jcenter-gocenter-and-chartcenter/",
+        "https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/"
+      ],
+      "compliance": ["SOC2"]
+    },
+    {
+      "id": "sec-003",
+      "type": "security_hardening",
+      "title": "Release builds lack code obfuscation and shrinking (minifyEnabled false)",
+      "description": "In app/build.gradle line 14-16, the release buildType has `minifyEnabled false`, meaning ProGuard/R8 will not obfuscate or shrink the release APK. The proguard-rules.pro file is also empty (only comments). This makes compiled APKs trivially decompilable with tools like jadx, apktool, or BytecodeViewer, exposing all class names, method names, string constants, API endpoint patterns, and complete business logic.",
+      "rationale": "For an inventory management app deployed on 50-200 industrial devices handling client-specific business logic in a white-label model, code visibility is a significant competitive and security risk. An attacker or competitor with physical access to any single device can extract the APK via `adb pull` and fully reverse-engineer: API endpoint construction, authentication flow, outbox/sync protocol, Room database schema, feature flag logic, and all white-label client configurations. In the white-label architecture — where one codebase serves multiple clients — compromising one APK reveals ALL clients' logic and potentially their API endpoints.",
+      "category": "configuration",
+      "severity": "high",
+      "affectedFiles": [
+        "NewLand-Scanner-DeviceMT90-master/app/build.gradle",
+        "NewLand-Scanner-DeviceMT90-master/app/proguard-rules.pro"
+      ],
+      "vulnerability": "CWE-311: Missing Encryption of Sensitive Data (binary protection)",
+      "currentRisk": "Complete reverse-engineering of business logic, API contracts, sync protocol, and client-specific configurations from any extracted APK",
+      "remediation": "Enable R8 in the production app's release buildType:\n```groovy\nbuildTypes {\n    release {\n        minifyEnabled true\n        shrinkResources true\n        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n    }\n}\n```\nWrite ProGuard/R8 rules to keep Retrofit models (@SerializedName), Room entities (@Entity, @Dao), Hilt injection points, and Parcelable classes while obfuscating all business logic. Add `-allowaccessmodification` and `-repackageclasses` for stronger obfuscation. Consider DexGuard for advanced obfuscation (string encryption, control flow obfuscation) on enterprise builds. Implement APK integrity checks (SafetyNet/Play Integrity API) to detect tampered APKs, and root/Magisk detection for the enterprise deployment environment.",
+      "references": [
+        "https://developer.android.com/build/shrink-code",
+        "https://owasp.org/www-project-mobile-top-10/2024-risks/m7-insufficient-binary-protections"
+      ],
+      "compliance": ["SOC2"]
+    },
+    {
+      "id": "sec-004",
+      "type": "security_hardening",
+      "title": "AndroidManifest allowBackup='true' enables ADB data extraction on shared devices",
+      "description": "The AndroidManifest.xml has `android:allowBackup=\"true\"` (line 6) without any `android:fullBackupContent` restrictions or `android:dataExtractionRules` (Android 12+). This allows anyone with physical USB access to a device to run `adb backup` and extract the app's entire data directory — including the Room/SQLite database with inventory records, sync tokens, outbox queue, cached API responses, and any stored credentials or session tokens.",
+      "rationale": "The target deployment is 50-200 MT90 industrial terminals in warehouse/logistics environments where devices are shared among shift workers and physical access is routine. An insider threat or a stolen/lost device allows full database extraction via ADB without needing the device to be rooted. The Room database will contain: inventory records (potentially commercially sensitive per-client data), delta sync tokens (enabling replay or impersonation attacks against the API), outbox queue contents (pending mutations), and any cached authentication tokens. For a white-label app where devices from different clients might be serviced by the same technician, cross-client data leakage is a concrete risk.",
+      "category": "data_protection",
+      "severity": "high",
+      "affectedFiles": ["NewLand-Scanner-DeviceMT90-master/app/src/main/AndroidManifest.xml"],
+      "vulnerability": "CWE-921: Storage of Sensitive Data in a Mechanism without Access Control",
+      "currentRisk": "Full app data extraction (Room DB, sync tokens, cached credentials, inventory records) via USB access to any deployment device; cross-client data leakage in white-label deployment",
+      "remediation": "1. Set `android:allowBackup=\"false\"` in the production AndroidManifest.\n2. If device migration backup is needed, use `android:fullBackupContent=\"@xml/backup_rules\"` with a backup_rules.xml that explicitly excludes databases, shared_prefs containing tokens, and cache directories.\n3. On Android 12+, also set `android:dataExtractionRules=\"@xml/data_extraction_rules\"`.\n4. Encrypt the Room database using SQLCipher and store the encryption key in Android Keystore (hardware-backed on MT90 which is Android Enterprise Recommended).\n5. Use Ndevor MDM policy to disable ADB on production devices — this is the strongest defense and is available at no cost on MT90.\n6. Add `android:exported=\"false\"` to any activities/services/receivers that don't need to be externally accessible.",
+      "references": [
+        "https://developer.android.com/guide/topics/data/autobackup",
+        "https://owasp.org/www-project-mobile-top-10/2024-risks/m9-insecure-data-storage",
+        "https://cwe.mitre.org/data/definitions/921.html"
+      ],
+      "compliance": ["SOC2", "GDPR"]
+    },
+    {
+      "id": "sec-005",
+      "type": "security_hardening",
+      "title": "No Network Security Config — missing cert pinning, cleartext restrictions, and input validation",
+      "description": "The AndroidManifest has no `android:networkSecurityConfig` attribute, and no `network_security_config.xml` exists in the project. As the app evolves to include Retrofit + OkHttp for API delta-sync (per CLAUDE.md roadmap), this means: no certificate pinning against MITM attacks, no explicit cleartext traffic restriction (targetSdk 28 allows cleartext by default), and no restriction on trusted CAs. Additionally, barcode scanner input is displayed directly in the UI (line 51: `txtbarcode.setText(barcode)`) without any validation or sanitization. In the production app, unvalidated scanner input will flow into Room database queries, Retrofit API requests, and potentially WebView rendering.",
+      "rationale": "Industrial terminals in warehouse environments connect through shared WiFi networks or cellular where MITM attacks are feasible. The production app will transmit inventory data, delta sync tokens, idempotency keys, and auth credentials via Retrofit. Without certificate pinning, an attacker on the same network can intercept all traffic using a rogue CA. Without cleartext restriction, a misconfigured per-client API base URL (e.g., http:// instead of https://) would transmit all data in plaintext. Scanner input validation is critical because barcodes can be intentionally crafted to contain SQL injection payloads, path traversal sequences, or oversized data that triggers buffer issues — a real concern in supply chain environments where QR codes on packages could be tampered with by adversaries.",
+      "category": "data_protection",
+      "severity": "medium",
+      "affectedFiles": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/AndroidManifest.xml",
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java"
+      ],
+      "vulnerability": "CWE-295: Improper Certificate Validation / CWE-20: Improper Input Validation",
+      "currentRisk": "Future API traffic vulnerable to MITM without cert pinning; barcode scanner input flowing unvalidated into database queries and API requests; cleartext traffic allowed by default on targetSdk 28",
+      "remediation": "1. Create `res/xml/network_security_config.xml`:\n```xml\n<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<network-security-config>\n    <base-config cleartextTrafficPermitted=\"false\">\n        <trust-anchors>\n            <certificates src=\"system\" />\n        </trust-anchors>\n    </base-config>\n    <domain-config>\n        <domain includeSubdomains=\"true\">api.example.com</domain>\n        <pin-set expiration=\"2025-06-01\">\n            <pin digest=\"SHA-256\">base64_encoded_pin=</pin>\n            <pin digest=\"SHA-256\">backup_pin=</pin>\n        </pin-set>\n    </domain-config>\n    <debug-overrides>\n        <trust-anchors>\n            <certificates src=\"user\" />\n        </trust-anchors>\n    </debug-overrides>\n</network-security-config>\n```\n2. Reference in AndroidManifest: `android:networkSecurityConfig=\"@xml/network_security_config\"`\n3. Implement a `ScanInputValidator` utility that enforces: max barcode length (e.g., 4096 chars), charset whitelist (alphanumeric + standard barcode special characters), format-specific regex validation per barcode type, and rejects input containing SQL keywords, path traversal sequences (`../`), or HTML/script tags.\n4. Use Room's parameterized queries (already safe from SQL injection) as defense-in-depth, but validate at the scan boundary before data enters any processing pipeline.\n5. Add OkHttp CertificatePinner as an additional layer alongside network security config for programmatic enforcement.",
+      "references": [
+        "https://developer.android.com/privacy-and-security/security-config",
+        "https://owasp.org/www-project-mobile-top-10/2024-risks/m5-insecure-communication",
+        "https://cwe.mitre.org/data/definitions/295.html",
+        "https://cwe.mitre.org/data/definitions/20.html"
+      ],
+      "compliance": ["SOC2", "PCI-DSS"]
+    }
+  ],
+  "metadata": {
+    "dependenciesScanned": 6,
+    "knownVulnerabilities": 4,
+    "filesAnalyzed": 14,
+    "criticalIssues": 1,
+    "highIssues": 3,
+    "mediumIssues": 1,
+    "lowIssues": 0,
+    "generatedAt": "2026-03-24T12:00:00Z",
+    "notes": "Analysis performed on the Newland MT90 POC reference project (NewLand-Scanner-DeviceMT90-master). This is a minimal Java/android.support proof-of-concept for scanner broadcast integration, not the production Kotlin/Compose app described in CLAUDE.md. Findings focus on security anti-patterns in the POC that MUST NOT be carried forward into the production inventory app. The most urgent finding (sec-002) is the completely outdated toolchain with known CVEs. All 5 findings map to concrete remediation steps aligned with the target architecture (Kotlin, Compose, Hilt, Room, Retrofit, WorkManager) specified in CLAUDE.md."
+  }
+}

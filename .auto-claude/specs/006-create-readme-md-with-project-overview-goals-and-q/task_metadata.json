@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-001",
+  "rationale": "README.md is the first file any developer, contributor, or stakeholder sees. Without it, there is zero discoverability of what the project does, how to run it, or how to contribute. This is the single highest-impact documentation gap for any repository, especially a greenfield project where onboarding clarity sets the trajectory for all future development.",
+  "category": "documentation",
+  "priority": "high"
+}

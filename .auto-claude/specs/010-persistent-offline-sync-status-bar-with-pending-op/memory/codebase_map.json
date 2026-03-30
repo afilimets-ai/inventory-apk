@@ -1,0 +1,20 @@
+{
+  "discovered_files": {
+    "./app/src/main/java/com/inventory/app/data/local/outbox/OutboxEntity.kt": {
+      "description": "OutboxEntity represents pending sync operations in the offline-first architecture. Uses Room @Entity with fields: id (auto-generated PK), operationType (e.g., CREATE_ITEM), payload (JSON string), createdAt (timestamp), syncStatus (PENDING/SYNCING/FAILED).",
+      "category": "database",
+      "discovered_at": "2026-03-24T15:18:46.191986+00:00"
+    },
+    "./app/src/main/java/com/inventory/app/data/local/outbox/OutboxDao.kt": {
+      "description": "OutboxDao provides reactive queries for sync monitoring. Key method: getPendingCount() returns Flow<Int> for reactive UI observation of pending operations count. Also includes getAll(), getPendingOperations(), insert(), delete(), updateSyncStatus() for full CRUD operations.",
+      "category": "database",
+      "discovered_at": "2026-03-24T15:18:48.112491+00:00"
+    },
+    "./app/src/main/java/com/inventory/app/sync/SyncWorker.kt": {
+      "description": "SyncWorker extends CoroutineWorker to drain the outbox when network is available. Uses AppDatabase.getDatabase() to access OutboxDao, fetches pending operations with getPendingOperations(), updates status to SYNCING during processing, and deletes operations after successful sync or marks as FAILED on error. Includes partial success handling (if some operations succeed). Uses withContext(Dispatchers.IO) for database operations. Returns Result.success(), Result.retry(), or Result.failure() based on operation outcomes.",
+      "category": "sync-infrastructure",
+      "discovered_at": "2026-03-25T09:09:52.256991+00:00"
+    }
+  },
+  "last_updated": "2026-03-25T09:09:52.256991+00:00"
+}

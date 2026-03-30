@@ -1,0 +1,7 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "code-imp-004",
+  "rationale": "Retrofitting dependency injection into an existing codebase is significantly harder than starting with it. This enables clean architecture patterns for the inventory management features.",
+  "category": "feature"
+}

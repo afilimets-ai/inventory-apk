@@ -1,0 +1,8 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "documentation_gaps",
+  "ideaId": "doc-002",
+  "rationale": "Architecture documentation is critical at the start of a greenfield project — it captures foundational decisions that shape all future development. Without it, multiple developers (or AI agents) may make conflicting assumptions about the tech stack, patterns, and module boundaries. Documenting these decisions early prevents costly rework and ensures alignment across all contributors.",
+  "category": "documentation",
+  "priority": "high"
+}

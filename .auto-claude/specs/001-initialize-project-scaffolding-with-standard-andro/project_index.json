@@ -1,0 +1,30 @@
+{
+  "project_type": "single",
+  "description": "Android inventory management application",
+  "services": {
+    "app": {
+      "path": "./app",
+      "tech_stack": ["kotlin", "android", "gradle"],
+      "port": null,
+      "dev_command": "./gradlew installDebug",
+      "test_command": "./gradlew test",
+      "build_command": "./gradlew assembleDebug"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "sqlite",
+    "build_system": "gradle",
+    "min_sdk": 24,
+    "target_sdk": 34,
+    "compile_sdk": 34
+  },
+  "conventions": {
+    "language": "kotlin",
+    "package_name": "com.inventory.app",
+    "architecture": "mvvm",
+    "dependency_injection": "manual",
+    "testing": "junit",
+    "code_style": "kotlin_official"
+  }
+}

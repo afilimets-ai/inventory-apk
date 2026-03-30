@@ -1,0 +1,28 @@
+{
+  "file_path": "app/src/main/res/drawable/ic_launcher_background.xml",
+  "main_branch_history": [],
+  "task_views": {
+    "001-initialize-project-scaffolding-with-standard-andro": {
+      "task_id": "001-initialize-project-scaffolding-with-standard-andro",
+      "branch_point": {
+        "commit_hash": "2854371512bcffeec37978036d7031eb25564b7f",
+        "content": "",
+        "timestamp": "2026-03-25T16:24:50.477846"
+      },
+      "worktree_state": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!--\n  ~ Launcher icon background drawable\n  ~ Used as the background layer for adaptive icons on Android 8.0+ (API 26+)\n  -->\n<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:width=\"108dp\"\n    android:height=\"108dp\"\n    android:viewportWidth=\"108\"\n    android:viewportHeight=\"108\">\n    <path\n        android:fillColor=\"@color/primary\"\n        android:pathData=\"M0,0h108v108h-108z\" />\n</vector>\n",
+        "last_modified": "2026-03-26T11:52:51.459548"
+      },
+      "task_intent": {
+        "title": "001-initialize-project-scaffolding-with-standard-andro",
+        "description": "Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon.",
+        "from_plan": true
+      },
+      "commits_behind_main": 2,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-25T16:24:50.977844",
+  "last_updated": "2026-03-25T16:24:51.088846"
+}

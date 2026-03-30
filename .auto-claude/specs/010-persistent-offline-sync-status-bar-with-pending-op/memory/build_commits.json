@@ -1,0 +1,74 @@
+{
+  "commits": [
+    {
+      "hash": "2dd76fe8f2cdef1250b820af74a6fc0311c43a3b",
+      "subtask_id": "subtask-1-2",
+      "timestamp": "2026-03-24T15:19:12.465235+00:00"
+    },
+    {
+      "hash": "bc3b3898a71c42995d681edd576a662d2a58dddd",
+      "subtask_id": "subtask-1-3",
+      "timestamp": "2026-03-24T15:21:39.747644+00:00"
+    },
+    {
+      "hash": "e2c573d97abe6c7aec776a2484e0d4e81b589407",
+      "subtask_id": "subtask-2-1",
+      "timestamp": "2026-03-25T09:04:30.479732+00:00"
+    },
+    {
+      "hash": "27db187b76e63ec4cd37240808d2cd795533c660",
+      "subtask_id": "subtask-2-2",
+      "timestamp": "2026-03-25T09:06:21.264240+00:00"
+    },
+    {
+      "hash": "97742e6cb8998db17a7823e5f657dfb67a1589ff",
+      "subtask_id": "subtask-2-3",
+      "timestamp": "2026-03-25T09:07:51.962086+00:00"
+    },
+    {
+      "hash": "c4e6cb8e6956e75183d8b08804337317f56dea09",
+      "subtask_id": "subtask-2-4",
+      "timestamp": "2026-03-25T09:10:06.785429+00:00"
+    },
+    {
+      "hash": "8d075764a0b530c875ecce5e29e52fba05d946d9",
+      "subtask_id": "subtask-3-1",
+      "timestamp": "2026-03-25T09:11:45.714584+00:00"
+    },
+    {
+      "hash": "105b9212913596415cea969678d21a25de8cbb29",
+      "subtask_id": "subtask-3-2",
+      "timestamp": "2026-03-25T09:13:46.677718+00:00"
+    },
+    {
+      "hash": "c088143701c0ff00ca7eb019ce7a2362fc7cf0dd",
+      "subtask_id": "subtask-3-3",
+      "timestamp": "2026-03-25T09:16:06.532676+00:00"
+    },
+    {
+      "hash": "4a31541d8310047f493410780289e6bd39421d55",
+      "subtask_id": "subtask-4-1",
+      "timestamp": "2026-03-25T09:17:59.555384+00:00"
+    },
+    {
+      "hash": "0aee681b347618aa45476ca71a4f0d85848b9eff",
+      "subtask_id": "subtask-4-2",
+      "timestamp": "2026-03-25T09:19:50.018894+00:00"
+    },
+    {
+      "hash": "c2844dcaceed7f2a0b25119c678427204d01406a",
+      "subtask_id": "subtask-4-3",
+      "timestamp": "2026-03-25T09:21:48.992506+00:00"
+    },
+    {
+      "hash": "d8315912282f41a4ad66f67aeaaf23f4128fdc77",
+      "subtask_id": "subtask-4-4",
+      "timestamp": "2026-03-25T09:36:06.378199+00:00"
+    }
+  ],
+  "last_good_commit": "d8315912282f41a4ad66f67aeaaf23f4128fdc77",
+  "metadata": {
+    "created_at": "2026-03-24T10:33:20.979564+00:00",
+    "last_updated": "2026-03-25T09:36:06.378199+00:00"
+  }
+}

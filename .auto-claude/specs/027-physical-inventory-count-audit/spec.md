@@ -1,0 +1,21 @@
+# Physical Inventory Count & Audit
+
+Implement the audit/count workflow: select 'Count' mode → set location/zone → scan items sequentially → system records counted quantities → at session end, generate variance report (expected vs. counted). Supports full count (all items in a zone) and cycle count (subset of items). Each count operation persists via the outbox pattern.
+
+## Rationale
+Physical inventory counts are mandatory for most warehouse operations (regulatory, insurance, accuracy). This is the second most common operation after receiving. Accurate counts are the core value that warehouse managers expect from an inventory system.
+
+## User Stories
+- As a warehouse worker, I want to scan items during a physical count so that I can quickly verify inventory accuracy
+- As a warehouse supervisor, I want to see variances between expected and counted quantities so that I can investigate discrepancies
+
+## Acceptance Criteria
+- [ ] Count mode accessible from main menu
+- [ ] Location/zone selection at session start
+- [ ] Each scan increments the counted quantity for that item in that zone
+- [ ] Expected vs. counted quantity visible per item during count
+- [ ] Variance report generated at session end (items with discrepancies highlighted)
+- [ ] Supports scanning the same item multiple times (quantity accumulates)
+- [ ] Count session can be paused and resumed (state persists)
+- [ ] Count operations sync via outbox pattern
+- [ ] Items not scanned in a full count are flagged as potential missing items

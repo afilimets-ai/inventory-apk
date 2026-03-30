@@ -1,0 +1,532 @@
+{
+  "feature": "Initialize project scaffolding with standard Android/Kotlin structure",
+  "workflow_type": "simple",
+  "workflow_rationale": "This is a straightforward project initialization task with no existing code. It follows a linear sequence of creating Gradle files, Android manifest, application structure, and basic resources. No service dependencies or complex orchestration needed.",
+  "description": "Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon.",
+  "phases": [
+    {
+      "id": "phase-1-gradle-setup",
+      "name": "Gradle Build System Setup",
+      "type": "setup",
+      "description": "Initialize Gradle build system with wrapper, root build files, and settings",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Create Gradle wrapper files (gradlew, gradlew.bat, wrapper properties)",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "gradlew",
+            "gradlew.bat",
+            "gradle/wrapper/gradle-wrapper.properties",
+            "gradle/wrapper/gradle-wrapper.jar"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew --version",
+            "expected": "Gradle 8.2"
+          },
+          "status": "completed",
+          "notes": "Successfully created all Gradle wrapper files (gradlew, gradlew.bat, gradle-wrapper.properties, gradle-wrapper.jar) for Gradle 8.2. Files committed to git. Note: Verification with './gradlew --version' requires Java/JDK 17+ to be installed on the system.",
+          "updated_at": "2026-03-24T10:26:02.905695+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Create root-level settings.gradle.kts",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "settings.gradle.kts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew projects",
+            "expected": "Root project 'inventory-apk'"
+          },
+          "status": "completed",
+          "notes": "Successfully created settings.gradle.kts with root project name 'inventory-apk', plugin management repositories (Google, Maven Central, Gradle Plugin Portal), dependency resolution repositories, and :app module inclusion. File committed to git. Note: Verification with './gradlew projects' requires Java/JDK 17+ to be installed on the system.",
+          "updated_at": "2026-03-24T10:27:34.807112+00:00"
+        },
+        {
+          "id": "subtask-1-3",
+          "description": "Create root-level build.gradle.kts with Android Gradle Plugin",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "build.gradle.kts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew tasks --all",
+            "expected": "Build tasks available"
+          },
+          "status": "completed",
+          "notes": "Successfully created root-level build.gradle.kts with Android Gradle Plugin 8.2.0 and Kotlin Android Plugin 1.9.20. Configured plugins with 'apply false' for subproject usage and added clean task for build directory cleanup. File committed to git. Note: Verification with './gradlew tasks --all' requires Java/JDK 17+ to be installed on the system.",
+          "updated_at": "2026-03-24T10:28:50.328835+00:00"
+        },
+        {
+          "id": "subtask-1-4",
+          "description": "Create gradle.properties with Android/Kotlin configuration",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "gradle.properties"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "none"
+          },
+          "status": "completed",
+          "notes": "Successfully created gradle.properties with standard Android/Kotlin configuration including: AndroidX support, Kotlin official code style, parallel builds, configuration cache, build cache, and optimized JVM args (2GB heap). File committed to git.",
+          "updated_at": "2026-03-24T10:30:24.155924+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-app-module",
+      "name": "App Module Structure",
+      "type": "setup",
+      "description": "Create app module directory structure and build configuration",
+      "depends_on": [
+        "phase-1-gradle-setup"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-2-1",
+          "description": "Create app module directory structure",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/",
+            "app/src/main/res/layout/",
+            "app/src/main/res/values/",
+            "app/src/main/res/drawable/",
+            "app/src/main/res/mipmap-hdpi/",
+            "app/src/main/res/mipmap-mdpi/",
+            "app/src/main/res/mipmap-xhdpi/",
+            "app/src/main/res/mipmap-xxhdpi/",
+            "app/src/main/res/mipmap-xxxhdpi/"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test -d app/src/main/java/com/inventory/app && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created all app module directories: main source (java/com/inventory/app), resource directories (layout, values, drawable), and all mipmap density variants (hdpi, mdpi, xhdpi, xxhdpi, xxxhdpi). Verification passed.",
+          "updated_at": "2026-03-24T10:32:02.619175+00:00"
+        },
+        {
+          "id": "subtask-2-2",
+          "description": "Create app/build.gradle.kts with Android application plugin and dependencies",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/build.gradle.kts"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew :app:dependencies",
+            "expected": "compileClasspath"
+          },
+          "status": "completed",
+          "notes": "Successfully created app/build.gradle.kts with Android application plugin (8.2.0), Kotlin Android plugin (1.9.20), proper Android configuration (namespace: com.inventory.app, compileSdk: 34, minSdk: 24, targetSdk: 34), build types (debug with .debug suffix, release with ProGuard), and comprehensive AndroidX dependencies including Core KTX, AppCompat, Material Design 1.11.0, ConstraintLayout, Lifecycle components, Activity/Fragment KTX, and testing libraries. File committed to git. Note: Verification with './gradlew :app:dependencies' requires Java/JDK 17+ to be installed on the system.",
+          "updated_at": "2026-03-24T10:34:12.489255+00:00"
+        },
+        {
+          "id": "subtask-2-3",
+          "description": "Create app/proguard-rules.pro",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/proguard-rules.pro"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "none"
+          },
+          "status": "completed",
+          "notes": "Successfully created app/proguard-rules.pro with comprehensive Android ProGuard configuration including: AndroidX rules, Android framework components preservation, native methods, view constructors for XML inflation, enum/Parcelable/Serializable rules, R class preservation, Material Components rules, Kotlin-specific rules, Lifecycle and ViewModel rules, and optional logging removal rules (commented out). File contains 131 lines of well-documented ProGuard rules and has been committed to git.",
+          "updated_at": "2026-03-24T10:36:06.135950+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-3-android-core",
+      "name": "Android Core Files",
+      "type": "implementation",
+      "description": "Create AndroidManifest.xml, Application class, and MainActivity",
+      "depends_on": [
+        "phase-2-app-module"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-3-1",
+          "description": "Create AndroidManifest.xml with app metadata and MainActivity declaration",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/AndroidManifest.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep -q 'MainActivity' app/src/main/AndroidManifest.xml && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created AndroidManifest.xml with app metadata, MainActivity declaration, InventoryApplication reference, LAUNCHER intent filter, required permissions (INTERNET, ACCESS_NETWORK_STATE), and theme/icon configuration. Verification passed. File committed to git.",
+          "updated_at": "2026-03-24T15:13:55.864809+00:00"
+        },
+        {
+          "id": "subtask-3-2",
+          "description": "Create InventoryApplication.kt (custom Application class)",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/InventoryApplication.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep -q 'class InventoryApplication : Application' app/src/main/java/com/inventory/app/InventoryApplication.kt && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created InventoryApplication.kt - a custom Application class that extends Android's Application class. The class is located at app/src/main/java/com/inventory/app/InventoryApplication.kt and includes proper package declaration, KDoc documentation, and an onCreate() method ready for app-wide initialization. Verification passed confirming the class signature. File committed to git.",
+          "updated_at": "2026-03-24T15:15:35.298089+00:00"
+        },
+        {
+          "id": "subtask-3-3",
+          "description": "Create MainActivity.kt with basic activity setup",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/java/com/inventory/app/MainActivity.kt"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep -q 'class MainActivity : AppCompatActivity' app/src/main/java/com/inventory/app/MainActivity.kt && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created MainActivity.kt - the main entry point activity for the Inventory app. The class extends AppCompatActivity and is located at app/src/main/java/com/inventory/app/MainActivity.kt. Includes proper package declaration, imports, KDoc documentation, and an onCreate() method ready for setting the content view (setContentView commented out for now, will be enabled when activity_main.xml is created in next subtask). Verification passed confirming the class signature. File committed to git.",
+          "updated_at": "2026-03-24T15:16:56.587580+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-4-resources",
+      "name": "Resources & Assets",
+      "type": "implementation",
+      "description": "Create layouts, strings, themes, colors, and launcher icons",
+      "depends_on": [
+        "phase-3-android-core"
+      ],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-4-1",
+          "description": "Create activity_main.xml layout",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/layout/activity_main.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test -f app/src/main/res/layout/activity_main.xml && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created activity_main.xml layout file with ConstraintLayout as the root container and a centered TextView displaying the app name. The layout uses Material Design text appearance attributes and proper constraint positioning. Verification passed confirming the file exists at app/src/main/res/layout/activity_main.xml. File committed to git.",
+          "updated_at": "2026-03-24T15:18:46.768049+00:00"
+        },
+        {
+          "id": "subtask-4-2",
+          "description": "Create values/strings.xml with app name and basic strings",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/values/strings.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep -q 'app_name' app/src/main/res/values/strings.xml && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created app/src/main/res/values/strings.xml with app_name string resource set to \"Inventory\" and a comprehensive set of basic strings including common actions (settings, search, add, edit, delete, save, cancel, ok) and common messages (loading, error states, success messages). The strings.xml file follows Android XML conventions with proper comments for organization. Verification passed confirming app_name exists in the file. File committed to git.",
+          "updated_at": "2026-03-24T15:21:18.424124+00:00"
+        },
+        {
+          "id": "subtask-4-3",
+          "description": "Create values/colors.xml with material design colors",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/values/colors.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test -f app/src/main/res/values/colors.xml && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created app/src/main/res/values/colors.xml with comprehensive Material Design 3 color palette including primary, secondary, tertiary, error, background, surface, outline colors and their variants. Also includes legacy Material Design colors for compatibility (purple, teal) and common UI colors (divider, ripple). The file contains 61 lines of well-organized color resources following Android XML conventions with clear comments for each color category. Verification passed confirming the file exists. File committed to git.",
+          "updated_at": "2026-03-25T09:32:37.414449+00:00"
+        },
+        {
+          "id": "subtask-4-4",
+          "description": "Create values/themes.xml with Material3 theme",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/values/themes.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep -q 'Theme.Material3' app/src/main/res/values/themes.xml && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created app/src/main/res/values/themes.xml with comprehensive Material3 theme configuration. The theme extends Theme.Material3.DayNight.NoActionBar and includes all Material Design 3 color mappings (primary, secondary, tertiary, error, background, surface, outline colors and their variants), status bar and navigation bar colors, and window background. The theme is properly configured for automatic light/dark mode switching. Verification passed confirming Theme.Material3 is present in the file. File committed to git with 64 lines of well-organized theme attributes.",
+          "updated_at": "2026-03-25T09:34:33.655666+00:00"
+        },
+        {
+          "id": "subtask-4-5",
+          "description": "Create launcher icon drawables and mipmaps",
+          "service": "app",
+          "files_to_modify": [],
+          "files_to_create": [
+            "app/src/main/res/drawable/ic_launcher_background.xml",
+            "app/src/main/res/drawable/ic_launcher_foreground.xml",
+            "app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test -f app/src/main/res/drawable/ic_launcher_background.xml && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "completed",
+          "notes": "Successfully created launcher icon drawables and mipmaps for Android 8.0+ (API 26+). Created three files: ic_launcher_background.xml (background layer with primary color), ic_launcher_foreground.xml (foreground layer with simple 'I' letter for Inventory), and ic_launcher.xml (adaptive icon configuration in mipmap-anydpi-v26). All files follow Android XML conventions with proper comments. Verification passed confirming all files exist. Files committed to git.",
+          "updated_at": "2026-03-25T09:36:14.791718+00:00"
+        }
+      ]
+    },
+    {
+      "id": "phase-5-gitignore",
+      "name": "Git Configuration",
+      "type": "setup",
+      "description": "Create Android-specific .gitignore",
+      "depends_on": [],
+      "parallel_safe": true,
+      "subtasks": [
+        {
+          "id": "subtask-5-1",
+          "description": "Update .gitignore with Android/Gradle patterns",
+          "service": "app",
+          "files_to_modify": [
+            ".gitignore"
+          ],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "grep -q 'build/' .gitignore && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": "phase-6-verification",
+      "name": "Build Verification",
+      "type": "integration",
+      "description": "Verify the project compiles and builds successfully",
+      "depends_on": [
+        "phase-3-android-core",
+        "phase-4-resources"
+      ],
+      "parallel_safe": false,
+      "subtasks": [
+        {
+          "id": "subtask-6-1",
+          "description": "Run Gradle sync and verify project structure",
+          "service": "app",
+          "all_services": false,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew tasks",
+            "expected": "Build tasks visible"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-6-2",
+          "description": "Build debug APK to verify compilation",
+          "service": "app",
+          "all_services": false,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "./gradlew assembleDebug",
+            "expected": "BUILD SUCCESSFUL"
+          },
+          "status": "pending"
+        },
+        {
+          "id": "subtask-6-3",
+          "description": "Verify APK artifact exists",
+          "service": "app",
+          "all_services": false,
+          "files_to_modify": [],
+          "files_to_create": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "command": "test -f app/build/outputs/apk/debug/app-debug.apk && echo 'OK'",
+            "expected": "OK"
+          },
+          "status": "pending"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "total_phases": 6,
+    "total_subtasks": 18,
+    "services_involved": [
+      "app"
+    ],
+    "parallelism": {
+      "max_parallel_phases": 2,
+      "parallel_groups": [
+        {
+          "phases": [
+            "phase-1-gradle-setup",
+            "phase-5-gitignore"
+          ],
+          "reason": "Both have no dependencies and modify different file sets"
+        },
+        {
+          "phases": [
+            "phase-4-resources"
+          ],
+          "reason": "Resources phase is parallel-safe but depends on phase-3"
+        }
+      ],
+      "recommended_workers": 1,
+      "speedup_estimate": "Minimal - most phases are sequential due to dependencies"
+    },
+    "startup_command": "source auto-claude/.venv/bin/activate && python auto-claude/run.py --spec 001 --parallel 1"
+  },
+  "verification_strategy": {
+    "risk_level": "low",
+    "skip_validation": false,
+    "test_creation_phase": "post_implementation",
+    "test_types_required": [
+      "build"
+    ],
+    "security_scanning_required": false,
+    "staging_deployment_required": false,
+    "acceptance_criteria": [
+      "Project structure follows standard Android conventions",
+      "Gradle build completes successfully",
+      "Debug APK can be built",
+      "All required files are present and correctly configured"
+    ],
+    "verification_steps": [
+      {
+        "name": "Gradle Build",
+        "command": "./gradlew assembleDebug",
+        "expected_outcome": "BUILD SUCCESSFUL",
+        "type": "build",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Verify APK Output",
+        "command": "test -f app/build/outputs/apk/debug/app-debug.apk && echo 'APK exists'",
+        "expected_outcome": "APK exists",
+        "type": "build",
+        "required": true,
+        "blocking": true
+      },
+      {
+        "name": "Lint Check",
+        "command": "./gradlew lint",
+        "expected_outcome": "No critical issues",
+        "type": "test",
+        "required": false,
+        "blocking": false
+      }
+    ],
+    "reasoning": "Low risk scaffolding task - only build verification needed, no unit tests required for initial structure"
+  },
+  "qa_acceptance": {
+    "unit_tests": {
+      "required": false,
+      "commands": [],
+      "minimum_coverage": null
+    },
+    "integration_tests": {
+      "required": false,
+      "commands": [],
+      "services_to_test": []
+    },
+    "e2e_tests": {
+      "required": false,
+      "commands": [],
+      "flows": []
+    },
+    "browser_verification": {
+      "required": false,
+      "pages": []
+    },
+    "database_verification": {
+      "required": false,
+      "checks": []
+    },
+    "build_verification": {
+      "required": true,
+      "checks": [
+        "gradle-wrapper-exists",
+        "build-files-valid",
+        "manifest-valid",
+        "apk-builds-successfully"
+      ]
+    }
+  },
+  "qa_signoff": null,
+  "created_at": "2026-03-24T10:16:57.497Z",
+  "updated_at": "2026-03-27T12:37:23.314Z",
+  "status": "done",
+  "planStatus": "completed",
+  "spec_file": "spec.md",
+  "xstateState": "done",
+  "executionPhase": "complete",
+  "last_updated": "2026-03-25T09:36:14.792718+00:00",
+  "recoveryNote": "Task recovered from stuck state at 2026-03-25T09:29:46.814Z"
+}

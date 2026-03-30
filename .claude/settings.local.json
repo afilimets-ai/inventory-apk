@@ -3,7 +3,12 @@
     "allow": [
       "Skill(update-config)",
       "Bash(claude mcp:*)",
-      "Bash(npx -y @modelcontextprotocol/server-sequential-thinking --version)"
+      "Bash(npx -y @modelcontextprotocol/server-sequential-thinking --version)",
+      "Bash(ls:*)",
+      "Bash(git push:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo:*)",
+      "Bash(git rm:*)"
     ]
   }
 }

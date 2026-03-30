@@ -1,0 +1,33 @@
+{
+  "project_type": "single",
+  "services": {
+    "android-app": {
+      "path": "app",
+      "tech_stack": ["kotlin", "android", "hilt", "jetpack-compose", "room"],
+      "build_command": "./gradlew assembleDebug",
+      "test_command": "./gradlew test",
+      "dev_command": "Open in Android Studio and run",
+      "notes": "Android inventory management app for MT90 device with barcode scanner"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "room-sqlite",
+    "target_device": "Newland MT90 (Android 7.0+ / API 24+)"
+  },
+  "conventions": {
+    "language": "kotlin",
+    "architecture": "MVVM",
+    "di": "hilt",
+    "ui": "jetpack-compose",
+    "testing": "junit4-junit5-espresso",
+    "package_structure": "feature-based modules"
+  },
+  "scanner_integration": {
+    "device": "Newland MT90",
+    "sdk": "Newland Scanner SDK (nlscan)",
+    "broadcast_action": "nlscan.action.SCANNER_RESULT",
+    "trigger_action": "nlscan.action.SCANNER_TRIG",
+    "hardware_key": "KEYCODE_F6"
+  }
+}

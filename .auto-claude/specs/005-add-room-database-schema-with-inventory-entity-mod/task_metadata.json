@@ -1,0 +1,7 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "code_improvements",
+  "ideaId": "code-imp-005",
+  "rationale": "An inventory management app is fundamentally data-driven. Establishing the data model and persistence layer early provides the foundation for all UI and business logic features.",
+  "category": "feature"
+}

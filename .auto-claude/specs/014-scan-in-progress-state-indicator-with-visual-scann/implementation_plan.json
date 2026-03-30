@@ -1,0 +1,13 @@
+{
+  "feature": "Scan-in-progress state indicator with visual scanner-active animation",
+  "description": "Show a clear visual indicator when the barcode scanner is active and awaiting a scan, including a pulsing animation, countdown timer (matching SCAN_TIMEOUT), and instruction text. The POC fires the scan intent but provides zero feedback that the scanner is active.",
+  "created_at": "2026-03-24T10:18:00.610Z",
+  "updated_at": "2026-03-24T10:18:00.610Z",
+  "status": "backlog",
+  "planStatus": "pending",
+  "phases": [],
+  "workflow_type": "development",
+  "services_involved": [],
+  "final_acceptance": [],
+  "spec_file": "spec.md"
+}

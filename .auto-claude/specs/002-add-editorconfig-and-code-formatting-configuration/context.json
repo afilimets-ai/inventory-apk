@@ -1,0 +1,33 @@
+{
+  "task_type": "configuration",
+  "workflow_type": "simple",
+  "rationale": "This is a simple configuration task that creates standard files without complex dependencies",
+  "files_to_create": [
+    ".editorconfig"
+  ],
+  "files_to_modify": [],
+  "files_to_reference": [],
+  "patterns": {
+    "editorconfig_standard": "Use industry-standard EditorConfig for Kotlin/Android projects with 4-space indentation, UTF-8 encoding, and LF line endings",
+    "ktlint_integration": "Configure ktlint via .editorconfig properties following Kotlin official style guide",
+    "android_conventions": "Follow Android Studio and Kotlin style guide conventions"
+  },
+  "existing_implementations": {
+    "description": "No existing implementations - this is a greenfield setup",
+    "relevant_files": []
+  },
+  "dependencies": {
+    "blocked_by": [],
+    "blocks": ["003-configure-ci-pipeline-with-build-and-lint-checks"],
+    "note": "Task 001 (project scaffolding) and this task can proceed independently"
+  },
+  "technology_choices": {
+    "formatter": "ktlint",
+    "rationale": "ktlint is the de facto standard for Kotlin formatting, integrates well with Gradle, and uses .editorconfig for configuration"
+  },
+  "verification_approach": {
+    "editorconfig": "Verify file exists with correct properties",
+    "ktlint_config": "Verify ktlint-specific properties are present in .editorconfig",
+    "future_integration": "Will be integrated with Gradle build in task 001 or later build configuration"
+  }
+}

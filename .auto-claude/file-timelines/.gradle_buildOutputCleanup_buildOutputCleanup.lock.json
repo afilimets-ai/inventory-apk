@@ -1,0 +1,28 @@
+{
+  "file_path": ".gradle/buildOutputCleanup/buildOutputCleanup.lock",
+  "main_branch_history": [],
+  "task_views": {
+    "019-newlandscannermanager-with-lifecycle-management": {
+      "task_id": "019-newlandscannermanager-with-lifecycle-management",
+      "branch_point": {
+        "commit_hash": "75ce4655e062afe77db7d6029cdf0a7fe64d8865",
+        "content": "",
+        "timestamp": "2026-03-27T11:11:06.788459"
+      },
+      "worktree_state": {
+        "content": "\u0003\ufffd\u007f\ufffd\ufffd\ufffd\ufffd\u0001\ufffd\u0000\u0000\u0000\u0000\u0000\u00007\ufffd",
+        "last_modified": "2026-03-27T11:11:09.154101"
+      },
+      "task_intent": {
+        "title": "019-newlandscannermanager-with-lifecycle-management",
+        "description": "",
+        "from_plan": false
+      },
+      "commits_behind_main": 18,
+      "status": "active",
+      "merged_at": null
+    }
+  },
+  "created_at": "2026-03-27T11:11:06.788459",
+  "last_updated": "2026-03-27T11:11:08.828387"
+}

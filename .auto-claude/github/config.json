@@ -1,0 +1,9 @@
+{
+  "auto_fix_enabled": true,
+  "auto_fix_labels": [
+    "auto-fix"
+  ],
+  "require_human_approval": true,
+  "model": "claude-sonnet-4-5-20250929",
+  "thinking_level": "medium"
+}

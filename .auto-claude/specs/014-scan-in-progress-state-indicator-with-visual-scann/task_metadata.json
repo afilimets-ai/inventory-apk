@@ -1,0 +1,15 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-003",
+  "rationale": "The POC sends the nlscan.action.SCANNER_TRIG broadcast (with SCAN_TIMEOUT=4 seconds) but provides no visual feedback that the scanner laser is active. Users press the hardware button or tap 'Scan' and see nothing change — they don't know if the scanner activated, if it's still waiting, or if the timeout expired. This creates a pattern of repeated button-pressing and frustration, especially for new users unfamiliar with the MT90 hardware.",
+  "category": "ui_ux",
+  "uiuxCategory": "usability",
+  "affectedFiles": [
+    "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+    "app/src/main/java/ui/components/ScannerActiveOverlay.kt (to be created)",
+    "app/src/main/java/scanner/NewlandScannerManager.kt (to be created)",
+    "app/src/main/java/ui/screens/ScanScreen.kt (to be created)"
+  ],
+  "problemSolved": "POC MainActivity.java lines 33-38 and 74-78: sendBroadcast(nlscan.action.SCANNER_TRIG) is fired on button click and F6 key press, but no UI state change occurs. The isScanFromButton boolean is set but never read or used to update UI. There is no scanning state, no timeout countdown, and no visual difference between 'idle' and 'scanning' modes. When the 4-second timeout expires silently, the user has no way to know."
+}

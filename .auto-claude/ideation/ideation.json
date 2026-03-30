@@ -1,0 +1,351 @@
+{
+  "id": "ideation-20260324-121645",
+  "project_id": "C:\\Users\\user\\Documents\\proj\\inventory-apk",
+  "config": {
+    "enabled_types": [
+      "code_improvements"
+    ],
+    "include_roadmap_context": true,
+    "include_kanban_context": true,
+    "max_ideas_per_type": 5
+  },
+  "ideas": [
+    {
+      "id": "uiux-001",
+      "type": "ui_ux_improvements",
+      "title": "Industrial-grade touch targets and spacing for glove-friendly operation",
+      "description": "Enforce minimum 60dp touch targets (80dp near screen edges) across all interactive Jetpack Compose components, with generous padding (16\u201324dp) between tap zones. The POC reference app uses wrap_content buttons and only 10dp padding \u2014 completely unsuitable for warehouse workers in gloves on the MT90 terminal's 5-inch display.",
+      "rationale": "CLAUDE.md explicitly mandates 60dp minimum / 80dp near-edge touch targets for glove operation. The existing POC's 10dp padding and wrap_content button creates a 48dp-height Button that violates this requirement. Industrial terminals are operated one-handed while the other hand holds product \u2014 mis-taps waste time and cause frustration. This is the single most impactful UX requirement for the target hardware.",
+      "category": "usability",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/res/layout/activity_main.xml",
+        "app/src/main/java/ui/theme/Dimensions.kt (to be created)",
+        "app/src/main/java/ui/components/IndustrialButton.kt (to be created)",
+        "app/src/main/java/ui/components/ScanResultCard.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "POC activity_main.xml uses LinearLayout with 10dp padding, a Button with wrap_content (default ~48dp height), and no minimum size constraints on any touch target. Text labels use default font sizes. The layout has no consideration for one-handed glove operation on a 5-inch industrial terminal.",
+      "proposed_change": "In the new Jetpack Compose UI: (1) Create a Dimensions.kt design tokens file defining IndustrialMinTouchTarget = 60.dp, EdgeMinTouchTarget = 80.dp, ContentPadding = 16.dp, SectionSpacing = 24.dp; (2) Build an IndustrialButton composable that enforces Modifier.defaultMinSize(minWidth = 60.dp, minHeight = 60.dp) with increased padding (horizontal = 24.dp, vertical = 16.dp); (3) Apply Modifier.padding(horizontal = 16.dp) to all screen content; (4) Use Modifier.defaultMinSize(80.dp) for any interactive elements within 48dp of screen edges (back buttons, nav items); (5) Set minimum text size to 16sp for body, 20sp for scan results, 14sp for labels. All values should be defined as Compose dimension tokens for white-label override per product flavor.",
+      "user_benefit": "Warehouse workers wearing work gloves can reliably tap buttons and interact with the app on the first try, without needing to remove gloves. Reduces mis-taps by an estimated 70-80% compared to standard 48dp Android touch targets.",
+      "status": "archived",
+      "created_at": "2026-03-24T11:45:00.000Z",
+      "linked_task_id": "012-industrial-grade-touch-targets-and-spacing-for-glo"
+    },
+    {
+      "id": "uiux-002",
+      "type": "ui_ux_improvements",
+      "title": "Multimodal scan feedback system: sound + vibration + visual confirmation",
+      "description": "Implement a three-channel feedback system for every scan event (success, failure, duplicate) using simultaneous sound, haptic vibration, and visual animation. The POC only updates text on success and shows a Toast on failure \u2014 entirely insufficient for noisy warehouse environments.",
+      "rationale": "CLAUDE.md explicitly requires '\u0437\u0432\u0443\u043a + \u0432\u0456\u0431\u0440\u0430\u0446\u0456\u044f + \u0432\u0456\u0437\u0443\u0430\u043b (\u0448\u0443\u043c\u043d\u0435 \u0441\u0435\u0440\u0435\u0434\u043e\u0432\u0438\u0449\u0435)' \u2014 sound + vibration + visual for noisy environments. The current POC provides zero haptic feedback, zero audio feedback, and only a text change on success (no color change, no animation). In a warehouse with forklifts, conveyor belts, and radio chatter, a silent text change is effectively invisible. Workers need to know instantly \u2014 without looking at the screen \u2014 whether a scan succeeded.",
+      "category": "interaction",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+        "app/src/main/java/scanner/ScanFeedbackManager.kt (to be created)",
+        "app/src/main/java/ui/components/ScanResultBanner.kt (to be created)",
+        "app/src/main/res/raw/scan_success.ogg (to be added)",
+        "app/src/main/res/raw/scan_error.ogg (to be added)"
+      ],
+      "screenshots": [],
+      "current_state": "POC MainActivity.java line 51-58: on successful scan, only calls txtbarcode.setText(barcode) and txtbarcodeType.setText(barcodeType). On failure, shows Toast.makeText('Barcode Not getting.'). No vibration (no Vibrator service used). No sound (no MediaPlayer/SoundPool). No visual animation or color change. Toast messages disappear quickly and are easily missed.",
+      "proposed_change": "Create ScanFeedbackManager as a Hilt @Singleton that coordinates all three channels: (1) HAPTIC: Use VibrationEffect.createOneShot(150ms, EFFECT_HEAVY_CLICK) for success, two short pulses (100ms-pause-100ms) for error, three rapid pulses for duplicate detection; (2) AUDIO: Use SoundPool for low-latency playback \u2014 distinct tones for success (ascending two-note chime), error (descending buzz), and duplicate (single warning beep). Volume at 80% to cut through warehouse noise; (3) VISUAL: Animate a full-width ScanResultBanner composable that slides down from top \u2014 green background with checkmark + barcode value for success (auto-dismiss after 2s), red background with X icon + error message for failure (persists until next scan), amber background for duplicate. Use Compose animateColorAsState and AnimatedVisibility for smooth transitions. Banner must be readable at arm's length (24sp text, high contrast white-on-green/red).",
+      "user_benefit": "Workers instantly know scan outcome through the channel most available to them \u2014 hearing the sound over machinery noise, feeling the vibration through gloves, or glancing at the color banner. Eliminates the need to stop work and read small text to confirm a scan registered.",
+      "status": "archived",
+      "created_at": "2026-03-24T11:45:00.000Z",
+      "linked_task_id": "013-multimodal-scan-feedback-system-sound-vibration-vi"
+    },
+    {
+      "id": "uiux-003",
+      "type": "ui_ux_improvements",
+      "title": "Scan-in-progress state indicator with visual scanner-active animation",
+      "description": "Show a clear visual indicator when the barcode scanner is active and awaiting a scan, including a pulsing animation, countdown timer (matching SCAN_TIMEOUT), and instruction text. The POC fires the scan intent but provides zero feedback that the scanner is active.",
+      "rationale": "The POC sends the nlscan.action.SCANNER_TRIG broadcast (with SCAN_TIMEOUT=4 seconds) but provides no visual feedback that the scanner laser is active. Users press the hardware button or tap 'Scan' and see nothing change \u2014 they don't know if the scanner activated, if it's still waiting, or if the timeout expired. This creates a pattern of repeated button-pressing and frustration, especially for new users unfamiliar with the MT90 hardware.",
+      "category": "usability",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/java/test/com/newlandpoc/MainActivity.java",
+        "app/src/main/java/ui/components/ScannerActiveOverlay.kt (to be created)",
+        "app/src/main/java/scanner/NewlandScannerManager.kt (to be created)",
+        "app/src/main/java/ui/screens/ScanScreen.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "POC MainActivity.java lines 33-38 and 74-78: sendBroadcast(nlscan.action.SCANNER_TRIG) is fired on button click and F6 key press, but no UI state change occurs. The isScanFromButton boolean is set but never read or used to update UI. There is no scanning state, no timeout countdown, and no visual difference between 'idle' and 'scanning' modes. When the 4-second timeout expires silently, the user has no way to know.",
+      "proposed_change": "In NewlandScannerManager (the planned singleton from CLAUDE.md): (1) Expose a scannerState: StateFlow<ScannerState> with states IDLE, SCANNING, RESULT_SUCCESS, RESULT_ERROR; (2) Transition to SCANNING when trigger() is called, start an internal countdown coroutine matching the timeout; (3) In the Compose UI, create ScannerActiveOverlay composable: when state==SCANNING, show a pulsing crosshair animation (or scanner-line animation) in the center of the scan area, with a circular countdown indicator around the scan button showing remaining seconds (animated arc decreasing from 360\u00b0 to 0\u00b0), plus text 'Scanning... point at barcode' in 18sp; (4) When timeout expires without result, transition to IDLE and trigger error feedback; (5) When scan succeeds, briefly show RESULT_SUCCESS (green flash) before auto-advancing. Use Compose InfiniteTransition for the pulse animation and animateFloatAsState for the countdown arc.",
+      "user_benefit": "Workers always know whether the scanner is active or idle \u2014 no more wondering 'did it fire?' or pressing the button multiple times. The countdown shows exactly how long they have to aim at the barcode, reducing failed scans from timeout uncertainty.",
+      "status": "archived",
+      "created_at": "2026-03-24T11:45:00.000Z",
+      "linked_task_id": "014-scan-in-progress-state-indicator-with-visual-scann"
+    },
+    {
+      "id": "uiux-004",
+      "type": "ui_ux_improvements",
+      "title": "High-contrast industrial Material 3 theme with sunlight and low-light modes",
+      "description": "Design a Material 3 color scheme optimized for industrial environments \u2014 high contrast ratios (minimum 7:1 for body text, 4.5:1 for large text), distinct semantic colors for scan states, and automatic or manual switching between 'warehouse daylight' (high brightness, reduced color saturation) and 'standard' modes. Replace the POC's generic green/pink AppCompat theme.",
+      "rationale": "The POC uses default AppCompat theme with colorPrimary=#008577 (teal green) and colorAccent=#D81B60 (pink) \u2014 colors chosen for aesthetics, not readability. Industrial terminals operate under fluorescent warehouse lighting, direct sunlight through loading dock doors, and dim storage areas. MT90's 5-inch screen at default brightness may be hard to read in bright sunlight. A purpose-built industrial theme ensures readability in all conditions and makes status colors (green=success, red=error, amber=warning) instantly recognizable. This also establishes the theming foundation for white-label product flavors.",
+      "category": "visual",
+      "affected_components": [
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/colors.xml",
+        "NewLand-Scanner-DeviceMT90-master/app/src/main/res/values/styles.xml",
+        "app/src/main/java/ui/theme/Color.kt (to be created)",
+        "app/src/main/java/ui/theme/Theme.kt (to be created)",
+        "app/src/main/java/ui/theme/Type.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "POC colors.xml defines only 3 colors: colorPrimary=#008577, colorPrimaryDark=#00574B, colorAccent=#D81B60. These are the Android Studio default template colors with no semantic meaning for inventory operations. The AppCompat theme provides no dark mode, no high-contrast mode, and no scan-state colors. Text sizes are all Android defaults (14sp body) which may be small on a 5-inch terminal at arm's length.",
+      "proposed_change": "Create a complete Material 3 theme in Jetpack Compose: (1) COLOR TOKENS: Define semantic inventory colors \u2014 ScanSuccess=#1B8A2F (forest green, high contrast on white), ScanError=#CC2936 (strong red), ScanWarning=#E6A817 (amber), SyncPending=#2563EB (blue), OfflineIndicator=#DC2626. Primary brand color configurable per flavor. All colors must pass WCAG AAA contrast (7:1) against their background; (2) TYPOGRAPHY: IndustrialType scale \u2014 bodyLarge=18sp, titleMedium=22sp, scanResult=28sp bold, labelSmall=14sp. Use system default sans-serif for maximum readability; (3) HIGH-CONTRAST MODE: A 'Sunlight Mode' toggle that switches to pure black text on white background, removes gradients/shadows, and increases text weight to Medium. Stored in DataStore preference; (4) DARK THEME: True dark theme for dimly lit storage areas with OLED-friendly pure black background (#000000) to save battery. Auto-switch via system setting or manual toggle; (5) White-label theming: All tokens exposed via CompositionLocal providers so product flavors can override colors without touching component code.",
+      "user_benefit": "The app is readable in any warehouse lighting condition \u2014 from bright loading docks to dim storage rooms. Workers never squint to read scan results or mistake an error color for a success. The white-label theming foundation enables client branding without UX degradation.",
+      "status": "archived",
+      "created_at": "2026-03-24T11:45:00.000Z",
+      "linked_task_id": "015-high-contrast-industrial-material-3-theme-with-sun"
+    },
+    {
+      "id": "uiux-005",
+      "type": "ui_ux_improvements",
+      "title": "Persistent offline/sync status bar with pending-operations counter",
+      "description": "Display a persistent, non-intrusive status indicator showing network connectivity state and sync queue depth. When offline, show an amber bar with 'Offline \u2014 N changes pending sync'. When syncing, show a blue bar with progress animation. When online and synced, collapse to a small green dot. The POC has zero connectivity awareness.",
+      "rationale": "CLAUDE.md defines an offline-first architecture with outbox pattern and WorkManager sync. Users working in warehouses frequently move between areas with good WiFi, spotty coverage, and dead zones (metal shelving, cold rooms). Without visible sync status, workers don't know if their scans are being saved only locally, if they need to move to a better coverage area before shift end, or if a sync error is silently losing data. This is a trust and data-integrity issue \u2014 workers must trust that their scans are captured even without network.",
+      "category": "usability",
+      "affected_components": [
+        "app/src/main/java/ui/components/SyncStatusBar.kt (to be created)",
+        "app/src/main/java/sync/SyncStatusRepository.kt (to be created)",
+        "app/src/main/java/data/outbox/OutboxDao.kt (to be created)",
+        "app/src/main/java/ui/screens/MainScreen.kt (to be created)"
+      ],
+      "screenshots": [],
+      "current_state": "The POC has no network awareness, no sync mechanism, and no connectivity UI. The planned architecture (CLAUDE.md) describes outbox pattern with WorkManager drain, but no UI component is specified for making sync state visible to the user. Without this, the app's offline-first promise is invisible and untrusted.",
+      "proposed_change": "Create a SyncStatusBar composable anchored at the top of every screen (below the app bar): (1) OFFLINE STATE: 12dp-height amber bar showing 'Offline' icon + 'N changes pending' count (from Room outbox table COUNT query via Flow). Expanded to 32dp on first transition to offline with a slide-down animation, then collapses to 12dp after 3 seconds. Tapping expands to show list of pending operations; (2) SYNCING STATE: 12dp blue bar with indeterminate linear progress indicator + 'Syncing N items...' text. Progress becomes determinate when individual items complete; (3) ONLINE/SYNCED STATE: Collapse to invisible (or tiny 4dp green dot in the app bar) to avoid visual noise during normal operation; (4) SYNC ERROR STATE: Red bar persists until user taps 'Retry' or error resolves. Shows error count + last error time; (5) Implementation: Observe ConnectivityManager.NetworkCallback via a NetworkMonitor @Singleton, combine with outbox DAO count via Flow.combine(), expose as SyncState sealed class to the composable. Use Compose AnimatedVisibility with expandVertically/shrinkVertically transitions. The bar must never overlap or push down the scan result area \u2014 use a fixed-height slot at the top of the screen scaffold.",
+      "user_benefit": "Workers always know their data is safe \u2014 they can see at a glance that scans are being synced, or that they have pending changes that need connectivity. Shift supervisors can confirm all terminal data synced before end-of-day reporting. Eliminates anxiety about 'did my scans save?' in dead zones.",
+      "status": "archived",
+      "created_at": "2026-03-24T11:45:00.000Z",
+      "linked_task_id": "010-persistent-offline-sync-status-bar-with-pending-op"
+    },
+    {
+      "id": "doc-001",
+      "type": "documentation_gaps",
+      "title": "Create README.md with project overview, goals, and quick start",
+      "description": "The project has no README.md file \u2014 the standard entry point for any repository. Currently the only documentation is CLAUDE.md, which is an AI-assistant guidance file and not a human-facing project overview. A README.md should introduce the inventory-apk project, explain its purpose (APK inventory/management), outline the target platform (Android), and provide a quick start for developers cloning the repo.",
+      "rationale": "README.md is the first file any developer, contributor, or stakeholder sees. Without it, there is zero discoverability of what the project does, how to run it, or how to contribute. This is the single highest-impact documentation gap for any repository, especially a greenfield project where onboarding clarity sets the trajectory for all future development.",
+      "category": "readme",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "README.md (to be created at project root)"
+      ],
+      "currentDocumentation": "Only CLAUDE.md exists, which serves as AI-agent guidance and mentions the project is in early initialization with no source code.",
+      "proposedContent": "Create a README.md containing: project name and badge placeholders, one-paragraph project description and goals, target platform and tech stack (once decided), prerequisites and installation instructions (placeholder sections), usage/build instructions, project structure overview, contributing link, and license information.",
+      "priority": "high",
+      "estimatedEffort": "low",
+      "status": "archived",
+      "linked_task_id": "006-create-readme-md-with-project-overview-goals-and-q"
+    },
+    {
+      "id": "doc-002",
+      "type": "documentation_gaps",
+      "title": "Create ARCHITECTURE.md documenting system design and tech stack decisions",
+      "description": "There is no architecture or design documentation anywhere in the project. The project name 'inventory-apk' implies an Android application for inventory management, but there is no document explaining the target platform (native Android/Kotlin, React Native, Flutter, etc.), high-level component architecture, data storage approach, or key design decisions. The .auto-claude/specs/ directory exists but is completely empty.",
+      "rationale": "Architecture documentation is critical at the start of a greenfield project \u2014 it captures foundational decisions that shape all future development. Without it, multiple developers (or AI agents) may make conflicting assumptions about the tech stack, patterns, and module boundaries. Documenting these decisions early prevents costly rework and ensures alignment across all contributors.",
+      "category": "architecture",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "ARCHITECTURE.md (to be created at project root)",
+        ".auto-claude/specs/ (currently empty)"
+      ],
+      "currentDocumentation": "No architecture documentation exists. CLAUDE.md only states 'named inventory-apk, suggesting an Android APK inventory/management application' without confirming tech choices.",
+      "proposedContent": "Create ARCHITECTURE.md covering: chosen tech stack and rationale, high-level system architecture diagram (text-based), core modules/components and their responsibilities, data model overview (inventory items, categories, storage), navigation/screen flow, state management approach, API/backend integration strategy (if any), and key design patterns to follow.",
+      "priority": "high",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "007-create-architecture-md-documenting-system-design-a"
+    },
+    {
+      "id": "doc-003",
+      "type": "documentation_gaps",
+      "title": "Create CONTRIBUTING.md with development workflow and code standards",
+      "description": "There are no contributing guidelines, code style standards, or development workflow documentation. The project uses Git (with 2 commits on master branch) but has no branch strategy, commit convention, PR process, or code review guidelines documented. The .gitignore covers Auto Claude files but there is no guidance for human or AI contributors on how to participate in development.",
+      "rationale": "As an AI-assisted development project using the Auto Claude framework, clear contributing guidelines are especially important \u2014 both human developers and AI agents need to understand the expected workflow, naming conventions, and quality gates. Establishing these norms early prevents inconsistent patterns from being set during the critical first implementations.",
+      "category": "readme",
+      "targetAudience": "contributors",
+      "affectedAreas": [
+        "CONTRIBUTING.md (to be created at project root)"
+      ],
+      "currentDocumentation": "No contributing documentation exists. .claude_settings.json configures tool permissions but does not define development standards.",
+      "proposedContent": "Create CONTRIBUTING.md covering: development environment setup prerequisites, Git branching strategy (e.g., feature branches off main), commit message conventions, PR process and review expectations, code style and linting standards, testing requirements before merge, directory/file naming conventions, and how Auto Claude agents interact with the development workflow.",
+      "priority": "medium",
+      "estimatedEffort": "low",
+      "status": "archived",
+      "linked_task_id": "008-create-contributing-md-with-development-workflow-a"
+    },
+    {
+      "id": "doc-004",
+      "type": "documentation_gaps",
+      "title": "Create a development environment setup guide",
+      "description": "There are no instructions for setting up a development environment. The project has no package.json, build.gradle, or any dependency manifest file, and no documentation explaining what tools, SDKs, or runtimes are needed. A new developer cloning this repo would find an empty project with no guidance on how to bootstrap development \u2014 what IDE to use, what SDK versions are required, or how to create the initial project scaffold.",
+      "rationale": "Developer onboarding friction is the biggest early-project risk. Without setup documentation, each new contributor wastes time figuring out prerequisites independently. For an Android/APK project, setup is particularly important due to Android SDK versioning, emulator configuration, and build tool requirements. This documentation should be created alongside or immediately after tech stack decisions.",
+      "category": "examples",
+      "targetAudience": "developers",
+      "affectedAreas": [
+        "docs/setup.md (to be created)",
+        "README.md (setup section)"
+      ],
+      "currentDocumentation": "No setup documentation exists. The .auto-claude/.env references Ollama and MCP tools but these are for the AI framework, not the application itself.",
+      "proposedContent": "Create docs/setup.md (or a dedicated section in README.md) covering: required software and versions (e.g., Android Studio, JDK, Node.js depending on tech stack), step-by-step environment setup instructions, how to clone and initialize the project, how to run the app locally (emulator or device), how to run tests, common setup issues and their solutions, and IDE-specific configuration recommendations.",
+      "priority": "medium",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "009-create-a-development-environment-setup-guide"
+    },
+    {
+      "id": "doc-005",
+      "type": "documentation_gaps",
+      "title": "Document project roadmap and feature specifications in version-controlled files",
+      "description": "The project's planning artifacts are entirely within the gitignored .auto-claude/ directory \u2014 meaning the roadmap (.auto-claude/roadmap/), specifications (.auto-claude/specs/), and insights (.auto-claude/insights/) are not version-controlled and invisible to collaborators. Furthermore, all these directories are currently empty. There is no version-controlled document describing what features the inventory-apk application will include, what the MVP scope is, or what the development milestones are.",
+      "rationale": "Planning artifacts stored only in gitignored directories are invisible to collaborators and at risk of being lost. A version-controlled roadmap ensures all contributors understand project direction and priorities. For a greenfield project, clearly defining the MVP feature set prevents scope creep and gives developers concrete targets. The ideation_context.json confirms planned_features is an empty array, meaning no features have been formally planned yet.",
+      "category": "architecture",
+      "targetAudience": "maintainers",
+      "affectedAreas": [
+        "ROADMAP.md (to be created at project root)",
+        "docs/features/ (to be created)"
+      ],
+      "currentDocumentation": "ideation_context.json has empty arrays for existing_features, tech_stack, and planned_features. The .auto-claude/roadmap/ and .auto-claude/specs/ directories exist but contain only .gitkeep files.",
+      "proposedContent": "Create ROADMAP.md with: project vision statement, MVP feature list (e.g., inventory CRUD, search/filter, barcode scanning, export), development phases with milestones, current status and next steps. Optionally create docs/features/ with individual feature specification files describing user stories, acceptance criteria, and technical notes for each major feature.",
+      "priority": "high",
+      "estimatedEffort": "medium",
+      "status": "archived",
+      "linked_task_id": "011-document-project-roadmap-and-feature-specification"
+    },
+    {
+      "id": "code-imp-001",
+      "type": "code_improvements",
+      "title": "Initialize project scaffolding with standard Android/Kotlin structure",
+      "description": "The repository has no application source code yet. Scaffold a standard Android project structure with Gradle build files, an Application class, a main Activity, and a manifest. This establishes the foundational code patterns that all future features will build upon and ensures the project can compile and run from the start.",
+      "effort": "medium",
+      "priority": "high",
+      "tags": [
+        "scaffolding",
+        "android",
+        "project-setup"
+      ],
+      "rationale": "Without a compilable project skeleton, no other code improvements or features can be developed or tested. This is the critical first step."
+    },
+    {
+      "id": "code-imp-002",
+      "type": "code_improvements",
+      "title": "Add EditorConfig and code formatting configuration",
+      "description": "Add an .editorconfig file and configure ktlint or detekt for consistent Kotlin code style across the project. Establishing formatting rules before any application code is written prevents style drift and reduces future reformatting churn.",
+      "effort": "trivial",
+      "priority": "medium",
+      "tags": [
+        "code-quality",
+        "linting",
+        "kotlin"
+      ],
+      "rationale": "Setting up code style enforcement early ensures all future contributions follow a consistent pattern from day one."
+    },
+    {
+      "id": "code-imp-003",
+      "type": "code_improvements",
+      "title": "Configure CI pipeline with build and lint checks",
+      "description": "Add a GitHub Actions workflow that runs the Gradle build, lint checks, and unit tests on every push and pull request. This provides immediate feedback on code quality and prevents broken code from being merged.",
+      "effort": "small",
+      "priority": "medium",
+      "tags": [
+        "ci-cd",
+        "automation",
+        "quality-gates"
+      ],
+      "rationale": "Early CI setup catches issues before they accumulate and establishes a quality-first development workflow."
+    },
+    {
+      "id": "code-imp-004",
+      "type": "code_improvements",
+      "title": "Set up dependency injection framework",
+      "description": "Integrate Hilt (or Koin) for dependency injection from the start. Structuring the app with DI from the beginning avoids costly refactoring later and makes the codebase inherently testable with clear separation of concerns.",
+      "effort": "medium",
+      "priority": "high",
+      "tags": [
+        "architecture",
+        "dependency-injection",
+        "testability"
+      ],
+      "rationale": "Retrofitting dependency injection into an existing codebase is significantly harder than starting with it. This enables clean architecture patterns for the inventory management features."
+    },
+    {
+      "id": "code-imp-005",
+      "type": "code_improvements",
+      "title": "Add Room database schema with inventory entity models",
+      "description": "Define the core data layer using Room persistence library with entity classes for inventory items, categories, and locations. Include database migrations strategy and a repository pattern for data access.",
+      "effort": "medium",
+      "priority": "high",
+      "tags": [
+        "data-layer",
+        "room",
+        "database",
+        "architecture"
+      ],
+      "rationale": "An inventory management app is fundamentally data-driven. Establishing the data model and persistence layer early provides the foundation for all UI and business logic features."
+    }
+  ],
+  "project_context": {
+    "existing_features": [],
+    "tech_stack": [],
+    "target_audience": "Warehouse operators and logistics workers on the floor of Ukrainian industrial facilities using Newland MT90 handheld terminals \u2014 typically wearing gloves, working in noisy environments with intermittent connectivity",
+    "planned_features": [
+      "ERP Integration REST APIs",
+      "Add Room database schema with inventory entity models",
+      "Add EditorConfig and code formatting configuration",
+      "Operational Analytics & Reporting",
+      "Per-Client Feature Flags System",
+      "Industrial-Grade Compose UI Design System",
+      "Persistent offline/sync status bar with pending-operations counter",
+      "Create CONTRIBUTING.md with development workflow and code standards",
+      "Document project roadmap and feature specifications in version-controlled files",
+      "AI-Powered Inventory Intelligence",
+      "Ndevor Zero-Touch Provisioning Integration",
+      "Configure CI pipeline with build and lint checks",
+      "API Client & Networking Layer",
+      "Reliable Background Sync Engine",
+      "Industrial-grade touch targets and spacing for glove-friendly operation",
+      "Product Flavors White-Label Architecture",
+      "Comprehensive Automated Test Suite",
+      "Physical Inventory Count & Audit",
+      "Initialize project scaffolding with standard Android/Kotlin structure",
+      "Device Health Monitoring",
+      "Room Database with Core Inventory Schema",
+      "Offline-First Data Persistence with Outbox Pattern",
+      "Set up dependency injection framework",
+      "Modern Android Project Scaffolding",
+      "Supervisor Remote Monitoring Dashboard",
+      "CI/CD Pipeline with GitHub Actions & Fastlane",
+      "Core Scan-to-Record Inventory Workflow",
+      "Scan-in-progress state indicator with visual scanner-active animation",
+      "Offline Sync Status Indicator",
+      "Create a development environment setup guide",
+      "Create ARCHITECTURE.md documenting system design and tech stack decisions",
+      "Inventory Transfer Between Locations",
+      "Inventory Shipment Operation",
+      "Multimodal Scan Feedback System",
+      "Inventory Receiving Operation",
+      "Create README.md with project overview, goals, and quick start",
+      "High-contrast industrial Material 3 theme with sunlight and low-light modes",
+      "NewlandScannerManager with Lifecycle Management",
+      "Dependency Injection with Hilt",
+      "Multi-Device Hardware Support",
+      "Stable Per-Device Licensing Model",
+      "Multimodal scan feedback system: sound + vibration + visual confirmation",
+      "Branded Client Onboarding Flow",
+      "Full Ukrainian Localization",
+      "Voice-Guided Warehouse Workflows"
+    ]
+  },
+  "summary": {
+    "total_ideas": 15,
+    "by_type": {
+      "ui_ux_improvements": 5,
+      "documentation_gaps": 5,
+      "code_improvements": 5
+    },
+    "by_status": {
+      "archived": 10,
+      "draft": 5
+    }
+  },
+  "generated_at": "2026-03-24T12:16:45.593985",
+  "updated_at": "2026-03-25T11:08:07.574365"
+}

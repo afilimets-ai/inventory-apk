@@ -1,0 +1,15 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-001",
+  "rationale": "CLAUDE.md explicitly mandates 60dp minimum / 80dp near-edge touch targets for glove operation. The existing POC's 10dp padding and wrap_content button creates a 48dp-height Button that violates this requirement. Industrial terminals are operated one-handed while the other hand holds product — mis-taps waste time and cause frustration. This is the single most impactful UX requirement for the target hardware.",
+  "category": "ui_ux",
+  "uiuxCategory": "usability",
+  "affectedFiles": [
+    "NewLand-Scanner-DeviceMT90-master/app/src/main/res/layout/activity_main.xml",
+    "app/src/main/java/ui/theme/Dimensions.kt (to be created)",
+    "app/src/main/java/ui/components/IndustrialButton.kt (to be created)",
+    "app/src/main/java/ui/components/ScanResultCard.kt (to be created)"
+  ],
+  "problemSolved": "POC activity_main.xml uses LinearLayout with 10dp padding, a Button with wrap_content (default ~48dp height), and no minimum size constraints on any touch target. Text labels use default font sizes. The layout has no consideration for one-handed glove operation on a 5-inch industrial terminal."
+}

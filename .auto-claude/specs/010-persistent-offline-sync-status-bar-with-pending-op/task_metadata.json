@@ -1,0 +1,34 @@
+{
+  "sourceType": "ideation",
+  "ideationType": "ui_ux_improvements",
+  "ideaId": "uiux-005",
+  "rationale": "CLAUDE.md defines an offline-first architecture with outbox pattern and WorkManager sync. Users working in warehouses frequently move between areas with good WiFi, spotty coverage, and dead zones (metal shelving, cold rooms). Without visible sync status, workers don't know if their scans are being saved only locally, if they need to move to a better coverage area before shift end, or if a sync error is silently losing data. This is a trust and data-integrity issue — workers must trust that their scans are captured even without network.",
+  "category": "ui_ux",
+  "uiuxCategory": "usability",
+  "affectedFiles": [
+    "app/src/main/java/ui/components/SyncStatusBar.kt (to be created)",
+    "app/src/main/java/sync/SyncStatusRepository.kt (to be created)",
+    "app/src/main/java/data/outbox/OutboxDao.kt (to be created)",
+    "app/src/main/java/ui/screens/MainScreen.kt (to be created)"
+  ],
+  "problemSolved": "The POC has no network awareness, no sync mechanism, and no connectivity UI. The planned architecture (CLAUDE.md) describes outbox pattern with WorkManager drain, but no UI component is specified for making sync state visible to the user. Without this, the app's offline-first promise is invisible and untrusted.",
+  "prUrl": "https://github.com/afilimets-ai/inventory-apk/pull/2",
+  "model": "opus",
+  "thinkingLevel": "high",
+  "isAutoProfile": true,
+  "phaseModels": {
+    "spec": "opus",
+    "planning": "opus",
+    "coding": "opus",
+    "qa": "opus"
+  },
+  "phaseThinking": {
+    "spec": "high",
+    "planning": "high",
+    "coding": "low",
+    "qa": "low"
+  },
+  "attachedImages": [],
+  "requireReviewBeforeCoding": false,
+  "fastMode": false
+}

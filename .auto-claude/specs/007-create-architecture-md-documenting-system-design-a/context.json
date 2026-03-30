@@ -1,0 +1,41 @@
+{
+  "files_to_create": {
+    "documentation": ["docs/ARCHITECTURE.md"]
+  },
+  "files_to_reference": {
+    "documentation": ["README.md"]
+  },
+  "patterns": {
+    "documentation_style": "The README.md uses clear sections with emoji headers, detailed explanations, and practical examples",
+    "architecture_decisions": "Need to document tech stack choices mentioned in README: Kotlin, MVVM, Room, Hilt, Jetpack Compose",
+    "target_audience": "Developers and AI agents who will build features for this project"
+  },
+  "existing_implementations": {
+    "description": "This is a greenfield project with no source code yet. Only README.md exists with high-level technology choices.",
+    "relevant_files": ["README.md"],
+    "documented_stack": {
+      "language": "Kotlin",
+      "architecture": "MVVM",
+      "database": "Room (SQLite)",
+      "di": "Hilt/Dagger",
+      "ui": "Jetpack Compose / Material Design 3",
+      "barcode": "ML Kit or ZXing",
+      "min_sdk": "API 24 (Android 7.0)"
+    }
+  },
+  "documentation_requirements": {
+    "sections_needed": [
+      "System Overview",
+      "Architecture Pattern (MVVM)",
+      "Technology Stack Decisions",
+      "Data Layer (Room/SQLite)",
+      "UI Layer (Jetpack Compose)",
+      "Dependency Injection (Hilt)",
+      "Module Structure",
+      "Key Design Principles",
+      "Future Considerations"
+    ],
+    "style": "Technical but accessible, explaining WHY decisions were made",
+    "format": "Markdown with diagrams (if possible)"
+  }
+}

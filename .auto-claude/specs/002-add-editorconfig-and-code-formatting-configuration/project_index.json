@@ -1,0 +1,34 @@
+{
+  "project_type": "single",
+  "project_name": "inventory-apk",
+  "description": "Android inventory management application",
+  "services": {
+    "android_app": {
+      "path": ".",
+      "tech_stack": ["kotlin", "android", "gradle"],
+      "port": null,
+      "dev_command": "./gradlew assembleDebug",
+      "test_command": "./gradlew test",
+      "build_tool": "gradle"
+    }
+  },
+  "infrastructure": {
+    "docker": false,
+    "database": "sqlite",
+    "vcs": "git"
+  },
+  "conventions": {
+    "linter": "ktlint",
+    "formatter": "ktlint",
+    "testing": "junit",
+    "code_style": "kotlin-official"
+  },
+  "build_files": {
+    "root": ["build.gradle.kts", "settings.gradle.kts"],
+    "app": ["app/build.gradle.kts"]
+  },
+  "config_files": {
+    "editorconfig": ".editorconfig",
+    "ktlint": ".editorconfig"
+  }
+}
