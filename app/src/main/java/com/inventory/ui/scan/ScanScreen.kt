@@ -51,7 +51,8 @@ fun ScanScreen(
     viewModel: ScanViewModel = hiltViewModel(),
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     onThemeToggle: () -> Unit = {},
-    onSyncSettingsClick: () -> Unit = {}
+    onSyncSettingsClick: () -> Unit = {},
+    onReceivingClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -109,7 +110,8 @@ fun ScanScreen(
                 when (val state = uiState) {
                     is ScanUiState.Idle -> IdleScreen(
                         onTriggerScan = viewModel::triggerScan,
-                        onManualEntry = viewModel::onManualBarcodeEntered
+                        onManualEntry = viewModel::onManualBarcodeEntered,
+                        onReceivingClick = onReceivingClick
                     )
                     is ScanUiState.ItemFound -> ItemFoundScreen(
                         state = state,
@@ -137,7 +139,11 @@ fun ScanScreen(
 }
 
 @Composable
-private fun IdleScreen(onTriggerScan: () -> Unit, onManualEntry: (String) -> Unit) {
+private fun IdleScreen(
+    onTriggerScan: () -> Unit,
+    onManualEntry: (String) -> Unit,
+    onReceivingClick: () -> Unit = {}
+) {
     var manualBarcode by remember { mutableStateOf("") }
     var showManualInput by remember { mutableStateOf(false) }
 
@@ -172,6 +178,16 @@ private fun IdleScreen(onTriggerScan: () -> Unit, onManualEntry: (String) -> Uni
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        IndustrialButton(
+            text = "ПРИЙОМ ТОВАРУ",
+            onClick = onReceivingClick,
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.tertiary
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         IndustrialOutlinedButton(
             text = "Ввести штрихкод вручну",
