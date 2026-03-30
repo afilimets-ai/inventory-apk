@@ -300,6 +300,7 @@
         "As a developer, I want a well-structured database schema so that inventory operations can be built on a solid data foundation"
       ],
       "linked_spec_id": "018-room-database-with-core-inventory-schema",
+      "task_outcome": "completed",
       "competitor_insight_ids": [
         "pain-4-4",
         "pain-5-3"
@@ -335,7 +336,7 @@
       ],
       "linked_spec_id": "019-newlandscannermanager-with-lifecycle-management",
       "task_outcome": "completed",
-      "previous_status": "planned",
+      "previous_status": "under_review",
       "competitor_insight_ids": [
         "pain-1-2",
         "pain-2-1"
@@ -353,7 +354,7 @@
       "dependencies": [
         "feature-1"
       ],
-      "status": "planned",
+      "status": "under_review",
       "acceptance_criteria": [
         "All interactive elements meet minimum 60dp touch target size",
         "Elements near screen edges (< 40dp from edge) are at least 80dp",
@@ -387,7 +388,7 @@
       "dependencies": [
         "feature-4"
       ],
-      "status": "planned",
+      "status": "under_review",
       "acceptance_criteria": [
         "Successful scan triggers: audible beep + short vibration + green visual flash",
         "Failed/unrecognized scan triggers: error tone + double vibration + red visual flash",
@@ -419,7 +420,7 @@
         "feature-5",
         "feature-6"
       ],
-      "status": "planned",
+      "status": "under_review",
       "acceptance_criteria": [
         "Scanning a known barcode auto-navigates to the operation detail screen",
         "Item details (name, current quantity, location) displayed immediately after scan",
@@ -454,7 +455,7 @@
       "dependencies": [
         "feature-3"
       ],
-      "status": "planned",
+      "status": "under_review",
       "acceptance_criteria": [
         "Business record + outbox entry written in single Room @Transaction",
         "Transaction is ACID — partial write is impossible",
@@ -489,7 +490,7 @@
         "feature-1",
         "feature-2"
       ],
-      "status": "planned",
+      "status": "under_review",
       "acceptance_criteria": [
         "Retrofit client configured with OkHttp, JSON converter, and coroutine call adapter",
         "Base URL configurable per build flavor (BuildConfig field)",
@@ -509,9 +510,9 @@
     },
     {
       "id": "feature-10",
-      "title": "Reliable Background Sync Engine",
-      "description": "Build the sync engine using WorkManager: periodic connectivity-aware drain of the outbox queue, delta sync with sync_token for efficient catalog downloads (only changes since last sync), exponential backoff with jitter on failures, and idempotency key headers for duplicate-safe retries. The sync engine is the bridge between offline operations and server state.",
-      "rationale": "WorkManager guarantees sync execution even after app restart or device reboot. Delta sync with sync_token prevents re-downloading the entire catalog on every sync (bandwidth matters in warehouses with poor connectivity). Exponential backoff with jitter prevents thundering herd when 50-200 devices reconnect simultaneously. Idempotency keys ensure no duplicate operations on retry. This addresses the core reliability gap that competitors like Sortly (pain-5-3) and RFgen (pain-6-3) struggle with.",
+      "title": "Multi-Provider Background Sync Engine",
+      "description": "Build a pluggable sync engine using WorkManager + Strategy Pattern. Client independently selects import and export providers. Providers: Local Folder, HTTP API, FTP, WebDAV (Nextcloud/NAS), OneDrive, Google Drive, Email (SMTP), Telegram Bot, 1C HTTP. Export formats: CSV, JSON, Excel (client choice). Per-provider settings screens. Exponential backoff with jitter, idempotency keys, battery constraints.",
+      "rationale": "Ukrainian B2B clients lack a unified backend — they use 1C, NAS, shared folders, FTP. Single HTTP API provider covers only 10% of real deployments. Multi-provider architecture with independent import/export selection covers all realistic integration scenarios without requiring a dedicated server.",
       "priority": "must",
       "complexity": "high",
       "impact": "high",
@@ -520,18 +521,25 @@
         "feature-8",
         "feature-9"
       ],
-      "status": "planned",
+      "status": "in_progress",
       "acceptance_criteria": [
-        "WorkManager worker drains outbox entries in FIFO order when connectivity available",
-        "Each outbox entry sends idempotency_key header to prevent server-side duplicates",
-        "Successful sync updates outbox entry status to 'synced'",
-        "Failed sync increments retry_count, applies exponential backoff (base 2s, max 5min) with jitter",
-        "Delta sync downloads catalog changes using sync_token (server returns only records modified since token)",
-        "sync_token persisted in SharedPreferences/DataStore between sessions",
-        "Sync works after app restart and device reboot (WorkManager persistence)",
-        "Sync respects battery constraints (no sync below 15% battery)",
-        "Sync progress observable via Flow for UI status indicator",
-        "95%+ success rate for sync operations under normal connectivity"
+        "SyncProvider interface: push(outbox), pullCatalog(), testConnection(), configure(settings)",
+        "Independent import provider and export provider selection (different providers allowed)",
+        "Export formats: CSV, JSON, Excel — client selects in settings",
+        "Local Folder provider: read/write CSV/JSON/Excel to Downloads or custom path",
+        "FTP provider: upload/download via Apache Commons Net, configurable host/port/user/pass/path",
+        "WebDAV provider: OkHttp-based PROPFIND/PUT/GET, supports Nextcloud/ownCloud/NAS",
+        "HTTP API provider: existing Retrofit client, idempotency keys, delta sync_token",
+        "OneDrive provider: OAuth2 + Microsoft Graph API (stub in Phase 1, full in Phase 2)",
+        "Google Drive provider: OAuth2 + Drive API (stub in Phase 1, full in Phase 2)",
+        "Email provider: SMTP with CSV/Excel attachment (JavaMail or SMTP via OkHttp)",
+        "Telegram Bot provider: Bot API sendDocument with file attachment",
+        "1C HTTP provider: 1C REST HTTP-service endpoint for bidirectional sync",
+        "Settings screen: IMP/EKSP columns with radio buttons per provider (like reference UX)",
+        "Per-provider settings screen: URL, credentials, path, format selector",
+        "WorkManager SyncWorker: FIFO drain, exponential backoff base 2s max 5min with jitter",
+        "Sync respects battery constraints (no sync below 15%)",
+        "Sync progress observable via Flow<SyncState> for UI status indicator"
       ],
       "user_stories": [
         "As a warehouse worker, I want my pending operations to sync automatically when I walk back into WiFi range so that I don't have to remember to sync manually",
@@ -1169,7 +1177,7 @@
   ],
   "metadata": {
     "created_at": "2026-03-24T12:00:00Z",
-    "updated_at": "2026-03-27T13:06:05.177Z",
+    "updated_at": "2026-03-30T12:16:22.282Z",
     "generated_by": "roadmap_features agent",
     "prioritization_framework": "MoSCoW",
     "competitor_analysis_used": true,
@@ -1181,6 +1189,46 @@
       "project_index.json",
       "competitor_analysis.json",
       "CLAUDE.md"
+    ]
+  },
+  "kanban": {
+    "columns": [
+      {
+        "id": "backlog",
+        "name": "Backlog",
+        "feature_ids": [
+          "feature-11",
+          "feature-12",
+          "feature-13",
+          "feature-14"
+        ]
+      },
+      {
+        "id": "in_progress",
+        "name": "In Progress",
+        "feature_ids": []
+      },
+      {
+        "id": "ai_review",
+        "name": "AI Review",
+        "feature_ids": [
+          "feature-1",
+          "feature-2",
+          "feature-3",
+          "feature-4",
+          "feature-5",
+          "feature-6",
+          "feature-7",
+          "feature-8",
+          "feature-9",
+          "feature-10"
+        ]
+      },
+      {
+        "id": "done",
+        "name": "Done",
+        "feature_ids": []
+      }
     ]
   }
 }
