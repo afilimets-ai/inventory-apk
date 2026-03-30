@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.OperationType
+import com.inventory.data.entity.OutboxEntry
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.feedback.ScanFeedbackManager
 import com.inventory.scanner.NewlandScannerManager
@@ -77,16 +78,25 @@ class ScanViewModel @Inject constructor(
                 operationType = currentOperationType.name,
                 quantity = current.quantity
             )
-            repository.insertOperation(operation)
-            repository.updateItemQuantity(
-                id = current.item.id,
-                quantity = current.item.quantity + current.quantity
+            val outboxEntry = OutboxEntry(
+                operationType = currentOperationType.name,
+                payload = buildPayload(current.item.id, current.item.barcode, current.quantity, currentOperationType)
             )
+            // ACID транзакція: залишок + операція + outbox entry
+            repository.recordOperationWithOutbox(operation, outboxEntry)
             _uiState.value = ScanUiState.Success
             delay(800)
             _uiState.value = ScanUiState.Idle
         }
     }
+
+    private fun buildPayload(
+        itemId: Long,
+        barcode: String,
+        quantity: Double,
+        operationType: OperationType
+    ): String =
+        """{"itemId":$itemId,"barcode":"$barcode","quantity":$quantity,"operationType":"${operationType.name}","timestamp":${System.currentTimeMillis()}}"""
 
     fun onDismiss() {
         _uiState.value = ScanUiState.Idle

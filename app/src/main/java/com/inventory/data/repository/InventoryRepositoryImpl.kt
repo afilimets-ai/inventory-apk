@@ -1,21 +1,27 @@
 package com.inventory.data.repository
 
+import androidx.room.withTransaction
+import com.inventory.data.db.InventoryDatabase
 import com.inventory.data.db.dao.CategoryDao
 import com.inventory.data.db.dao.InventoryItemDao
 import com.inventory.data.db.dao.InventoryOperationDao
 import com.inventory.data.db.dao.LocationDao
+import com.inventory.data.db.dao.OutboxEntryDao
 import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
+import com.inventory.data.entity.OutboxEntry
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class InventoryRepositoryImpl @Inject constructor(
+    private val db: InventoryDatabase,
     private val categoryDao: CategoryDao,
     private val locationDao: LocationDao,
     private val inventoryItemDao: InventoryItemDao,
-    private val inventoryOperationDao: InventoryOperationDao
+    private val inventoryOperationDao: InventoryOperationDao,
+    private val outboxEntryDao: OutboxEntryDao
 ) : InventoryRepository {
 
     // Categories
@@ -51,4 +57,34 @@ class InventoryRepositoryImpl @Inject constructor(
     override suspend fun getPendingSyncOperations(): List<InventoryOperation> = inventoryOperationDao.getPendingSync()
     override suspend fun insertOperation(operation: InventoryOperation): Long = inventoryOperationDao.insert(operation)
     override suspend fun updateOperationSyncStatus(id: Long, status: String) = inventoryOperationDao.updateSyncStatus(id, status)
+
+    // Outbox
+    override fun getPendingOutboxCount(): Flow<Int> = outboxEntryDao.getPendingCount()
+    override suspend fun getPendingOutbox(): List<OutboxEntry> = outboxEntryDao.getPending()
+    override suspend fun getFailedOutboxForRetry(maxRetries: Int): List<OutboxEntry> = outboxEntryDao.getFailedForRetry(maxRetries)
+    override suspend fun updateOutboxStatus(id: Long, status: String) = outboxEntryDao.updateStatus(id, status)
+    override suspend fun markOutboxFailed(id: Long, errorMessage: String) = outboxEntryDao.markFailed(id, errorMessage)
+    override suspend fun deleteSyncedOutbox() = outboxEntryDao.deleteSynced()
+
+    // ACID транзакція: оновлення залишку + запис операції + запис у outbox
+    override suspend fun recordOperationWithOutbox(
+        operation: InventoryOperation,
+        outboxEntry: OutboxEntry
+    ): Long = db.withTransaction {
+        // 1. Оновлюємо залишок товару
+        operation.itemId?.let { itemId ->
+            val current = inventoryItemDao.getById(itemId)
+            if (current != null) {
+                inventoryItemDao.updateQuantity(
+                    id = itemId,
+                    quantity = current.quantity + operation.quantity
+                )
+            }
+        }
+        // 2. Записуємо бізнес-операцію
+        val operationId = inventoryOperationDao.insert(operation)
+        // 3. Записуємо в outbox для синхронізації
+        outboxEntryDao.insert(outboxEntry)
+        operationId
+    }
 }

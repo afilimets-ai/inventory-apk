@@ -4,6 +4,7 @@ import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
+import com.inventory.data.entity.OutboxEntry
 import kotlinx.coroutines.flow.Flow
 
 interface InventoryRepository {
@@ -40,4 +41,18 @@ interface InventoryRepository {
     suspend fun getPendingSyncOperations(): List<InventoryOperation>
     suspend fun insertOperation(operation: InventoryOperation): Long
     suspend fun updateOperationSyncStatus(id: Long, status: String)
+
+    // Outbox
+    fun getPendingOutboxCount(): Flow<Int>
+    suspend fun getPendingOutbox(): List<OutboxEntry>
+    suspend fun getFailedOutboxForRetry(maxRetries: Int = 5): List<OutboxEntry>
+    suspend fun updateOutboxStatus(id: Long, status: String)
+    suspend fun markOutboxFailed(id: Long, errorMessage: String)
+    suspend fun deleteSyncedOutbox()
+
+    // ACID транзакція: операція + outbox entry одночасно
+    suspend fun recordOperationWithOutbox(
+        operation: InventoryOperation,
+        outboxEntry: OutboxEntry
+    ): Long
 }

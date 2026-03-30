@@ -8,19 +8,22 @@ import com.inventory.data.db.dao.CategoryDao
 import com.inventory.data.db.dao.InventoryItemDao
 import com.inventory.data.db.dao.InventoryOperationDao
 import com.inventory.data.db.dao.LocationDao
+import com.inventory.data.db.dao.OutboxEntryDao
 import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
+import com.inventory.data.entity.OutboxEntry
 
 @Database(
     entities = [
         Category::class,
         Location::class,
         InventoryItem::class,
-        InventoryOperation::class
+        InventoryOperation::class,
+        OutboxEntry::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class InventoryDatabase : RoomDatabase() {
@@ -29,9 +32,30 @@ abstract class InventoryDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
     abstract fun inventoryItemDao(): InventoryItemDao
     abstract fun inventoryOperationDao(): InventoryOperationDao
+    abstract fun outboxEntryDao(): OutboxEntryDao
 
     companion object {
         const val DATABASE_NAME = "inventory.db"
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `outbox_entries` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `idempotency_key` TEXT NOT NULL,
+                        `operation_type` TEXT NOT NULL,
+                        `payload` TEXT NOT NULL,
+                        `status` TEXT NOT NULL,
+                        `retry_count` INTEGER NOT NULL DEFAULT 0,
+                        `error_message` TEXT NOT NULL DEFAULT '',
+                        `created_at` INTEGER NOT NULL,
+                        `last_attempt_at` INTEGER
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_outbox_entries_idempotency_key` ON `outbox_entries` (`idempotency_key`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_outbox_entries_status` ON `outbox_entries` (`status`)")
+            }
+        }
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(db: SupportSQLiteDatabase) {
