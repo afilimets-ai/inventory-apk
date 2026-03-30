@@ -2,6 +2,7 @@ package com.inventory.data.repository
 
 import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
+import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
 import kotlinx.coroutines.flow.Flow
 
@@ -32,4 +33,11 @@ interface InventoryRepository {
     suspend fun updateItem(item: InventoryItem)
     suspend fun deleteItem(item: InventoryItem)
     suspend fun updateItemQuantity(id: Long, quantity: Double)
+
+    // Operations
+    fun getRecentOperations(limit: Int = 20): Flow<List<InventoryOperation>>
+    fun getOperationsByItem(itemId: Long): Flow<List<InventoryOperation>>
+    suspend fun getPendingSyncOperations(): List<InventoryOperation>
+    suspend fun insertOperation(operation: InventoryOperation): Long
+    suspend fun updateOperationSyncStatus(id: Long, status: String)
 }

@@ -2,9 +2,11 @@ package com.inventory.data.repository
 
 import com.inventory.data.db.dao.CategoryDao
 import com.inventory.data.db.dao.InventoryItemDao
+import com.inventory.data.db.dao.InventoryOperationDao
 import com.inventory.data.db.dao.LocationDao
 import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
+import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -12,7 +14,8 @@ import javax.inject.Inject
 class InventoryRepositoryImpl @Inject constructor(
     private val categoryDao: CategoryDao,
     private val locationDao: LocationDao,
-    private val inventoryItemDao: InventoryItemDao
+    private val inventoryItemDao: InventoryItemDao,
+    private val inventoryOperationDao: InventoryOperationDao
 ) : InventoryRepository {
 
     // Categories
@@ -41,4 +44,11 @@ class InventoryRepositoryImpl @Inject constructor(
     override suspend fun updateItem(item: InventoryItem) = inventoryItemDao.update(item)
     override suspend fun deleteItem(item: InventoryItem) = inventoryItemDao.delete(item)
     override suspend fun updateItemQuantity(id: Long, quantity: Double) = inventoryItemDao.updateQuantity(id, quantity)
+
+    // Operations
+    override fun getRecentOperations(limit: Int): Flow<List<InventoryOperation>> = inventoryOperationDao.getRecent(limit)
+    override fun getOperationsByItem(itemId: Long): Flow<List<InventoryOperation>> = inventoryOperationDao.getByItem(itemId)
+    override suspend fun getPendingSyncOperations(): List<InventoryOperation> = inventoryOperationDao.getPendingSync()
+    override suspend fun insertOperation(operation: InventoryOperation): Long = inventoryOperationDao.insert(operation)
+    override suspend fun updateOperationSyncStatus(id: Long, status: String) = inventoryOperationDao.updateSyncStatus(id, status)
 }

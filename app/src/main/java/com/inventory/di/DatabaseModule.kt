@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.inventory.data.db.InventoryDatabase
 import com.inventory.data.db.dao.CategoryDao
 import com.inventory.data.db.dao.InventoryItemDao
+import com.inventory.data.db.dao.InventoryOperationDao
 import com.inventory.data.db.dao.LocationDao
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.data.repository.InventoryRepositoryImpl
@@ -27,7 +28,9 @@ object DatabaseModule {
             context,
             InventoryDatabase::class.java,
             InventoryDatabase.DATABASE_NAME
-        ).build()
+        )
+            .addMigrations(InventoryDatabase.MIGRATION_1_2)
+            .build()
     }
 
     @Provides
@@ -38,6 +41,9 @@ object DatabaseModule {
 
     @Provides
     fun provideInventoryItemDao(db: InventoryDatabase): InventoryItemDao = db.inventoryItemDao()
+
+    @Provides
+    fun provideInventoryOperationDao(db: InventoryDatabase): InventoryOperationDao = db.inventoryOperationDao()
 }
 
 @Module

@@ -18,7 +18,7 @@
       "name": "Foundation / MVP",
       "description": "Complete rewrite from legacy Java POC to production Kotlin/Compose stack. Establish offline-first architecture, core scan workflow, and first two inventory operations. Deploy to 5-10 pilot MT90 devices under the Newland importer brand.",
       "order": 1,
-      "status": "planned",
+      "status": "in_progress",
       "features": [
         "feature-1",
         "feature-2",
@@ -45,7 +45,7 @@
             "feature-2",
             "feature-3"
           ],
-          "status": "planned"
+          "status": "done"
         },
         {
           "id": "milestone-1-2",
@@ -55,7 +55,7 @@
             "feature-4",
             "feature-6"
           ],
-          "status": "planned"
+          "status": "in_progress"
         },
         {
           "id": "milestone-1-3",
@@ -285,7 +285,7 @@
         "feature-1",
         "feature-2"
       ],
-      "status": "planned",
+      "status": "done",
       "acceptance_criteria": [
         "Room database with InventoryItem, Location, InventoryOperation, and OutboxEntry entities",
         "DAOs expose Flow-based queries for reactive UI updates",
