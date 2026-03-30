@@ -1,0 +1,35 @@
+package com.inventory.data.repository
+
+import com.inventory.data.entity.Category
+import com.inventory.data.entity.InventoryItem
+import com.inventory.data.entity.Location
+import kotlinx.coroutines.flow.Flow
+
+interface InventoryRepository {
+    // Categories
+    fun getCategories(): Flow<List<Category>>
+    suspend fun getCategoryById(id: Long): Category?
+    suspend fun insertCategory(category: Category): Long
+    suspend fun updateCategory(category: Category)
+    suspend fun deleteCategory(category: Category)
+
+    // Locations
+    fun getLocations(): Flow<List<Location>>
+    suspend fun getLocationById(id: Long): Location?
+    suspend fun insertLocation(location: Location): Long
+    suspend fun updateLocation(location: Location)
+    suspend fun deleteLocation(location: Location)
+
+    // Inventory items
+    fun getItems(): Flow<List<InventoryItem>>
+    suspend fun getItemById(id: Long): InventoryItem?
+    suspend fun getItemByBarcode(barcode: String): InventoryItem?
+    fun getItemsByCategory(categoryId: Long): Flow<List<InventoryItem>>
+    fun getItemsByLocation(locationId: Long): Flow<List<InventoryItem>>
+    fun getLowStockItems(): Flow<List<InventoryItem>>
+    fun searchItems(query: String): Flow<List<InventoryItem>>
+    suspend fun insertItem(item: InventoryItem): Long
+    suspend fun updateItem(item: InventoryItem)
+    suspend fun deleteItem(item: InventoryItem)
+    suspend fun updateItemQuantity(id: Long, quantity: Double)
+}
