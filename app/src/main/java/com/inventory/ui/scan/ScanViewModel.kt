@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.OperationType
 import com.inventory.data.repository.InventoryRepository
+import com.inventory.feedback.ScanFeedbackManager
 import com.inventory.scanner.NewlandScannerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class ScanViewModel @Inject constructor(
     private val scannerManager: NewlandScannerManager,
     private val repository: InventoryRepository,
+    private val feedbackManager: ScanFeedbackManager,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -49,10 +51,12 @@ class ScanViewModel @Inject constructor(
         if (_uiState.value !is ScanUiState.Idle) return
         viewModelScope.launch {
             val item = repository.getItemByBarcode(barcode)
-            _uiState.value = if (item != null) {
-                ScanUiState.ItemFound(item = item, quantity = 1.0)
+            if (item != null) {
+                feedbackManager.onScanSuccess()
+                _uiState.value = ScanUiState.ItemFound(item = item, quantity = 1.0)
             } else {
-                ScanUiState.UnknownBarcode(barcode = barcode)
+                feedbackManager.onScanError()
+                _uiState.value = ScanUiState.UnknownBarcode(barcode = barcode)
             }
         }
     }

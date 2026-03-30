@@ -1,5 +1,7 @@
 package com.inventory.ui.scan
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,14 +20,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,25 +35,55 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun ScanScreen(viewModel: ScanViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-        when (val state = uiState) {
-            is ScanUiState.Idle -> IdleScreen(onTriggerScan = viewModel::triggerScan, onManualEntry = viewModel::onManualBarcodeEntered)
-            is ScanUiState.ItemFound -> ItemFoundScreen(state = state, onQuantityChange = viewModel::onQuantityChanged, onConfirm = viewModel::onConfirm, onDismiss = viewModel::onDismiss)
-            is ScanUiState.UnknownBarcode -> UnknownBarcodeScreen(barcode = state.barcode, onDismiss = viewModel::onDismiss)
-            is ScanUiState.Success -> SuccessScreen()
-            is ScanUiState.Error -> ErrorScreen(message = state.message, onDismiss = viewModel::onDismiss)
+    // Визначаємо колір flash залежно від стану
+    var flashColor by remember { mutableStateOf(Color.Transparent) }
+    val animatedFlash by animateColorAsState(
+        targetValue = flashColor,
+        animationSpec = tween(durationMillis = 150),
+        label = "flash"
+    )
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is ScanUiState.ItemFound -> {
+                flashColor = Color(0x6600C853) // зелений flash при успішному скані
+                delay(300)
+                flashColor = Color.Transparent
+            }
+            is ScanUiState.UnknownBarcode -> {
+                flashColor = Color(0x66D32F2F) // червоний flash при помилці
+                delay(300)
+                flashColor = Color.Transparent
+            }
+            else -> {}
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            when (val state = uiState) {
+                is ScanUiState.Idle -> IdleScreen(onTriggerScan = viewModel::triggerScan, onManualEntry = viewModel::onManualBarcodeEntered)
+                is ScanUiState.ItemFound -> ItemFoundScreen(state = state, onQuantityChange = viewModel::onQuantityChanged, onConfirm = viewModel::onConfirm, onDismiss = viewModel::onDismiss)
+                is ScanUiState.UnknownBarcode -> UnknownBarcodeScreen(barcode = state.barcode, onDismiss = viewModel::onDismiss)
+                is ScanUiState.Success -> SuccessScreen()
+                is ScanUiState.Error -> ErrorScreen(message = state.message, onDismiss = viewModel::onDismiss)
+            }
+        }
+        // Overlay flash поверх всього екрану
+        if (animatedFlash != Color.Transparent) {
+            Box(modifier = Modifier.fillMaxSize().background(animatedFlash))
         }
     }
 }
