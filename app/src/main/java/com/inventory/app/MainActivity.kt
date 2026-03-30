@@ -7,8 +7,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.inventory.scanner.NewlandScannerManager
+import com.inventory.sync.SyncProviderType
 import com.inventory.ui.scan.ScanScreen
+import com.inventory.ui.settings.ProviderSettingsScreen
+import com.inventory.ui.settings.SyncSettingsScreen
 import com.inventory.ui.theme.IndustrialTheme
 import com.inventory.ui.theme.ThemePreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,10 +34,35 @@ class MainActivity : ComponentActivity() {
             val themeMode by themePreferenceManager.themeMode.collectAsState()
             IndustrialTheme(themeMode = themeMode) {
                 Surface {
-                    ScanScreen(
-                        themeMode = themeMode,
-                        onThemeToggle = { themePreferenceManager.cycleTheme() }
-                    )
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "scan") {
+                        composable("scan") {
+                            ScanScreen(
+                                themeMode = themeMode,
+                                onThemeToggle = { themePreferenceManager.cycleTheme() },
+                                onSyncSettingsClick = { navController.navigate("sync_settings") }
+                            )
+                        }
+                        composable("sync_settings") {
+                            SyncSettingsScreen(
+                                onBack = { navController.popBackStack() },
+                                onProviderSettingsClick = { type ->
+                                    navController.navigate("provider_settings/${type.name}")
+                                }
+                            )
+                        }
+                        composable(
+                            "provider_settings/{providerType}",
+                            arguments = listOf(navArgument("providerType") { type = NavType.StringType })
+                        ) { backStackEntry ->
+                            val typeName = backStackEntry.arguments?.getString("providerType") ?: return@composable
+                            val providerType = SyncProviderType.valueOf(typeName)
+                            ProviderSettingsScreen(
+                                providerType = providerType,
+                                onBack = { navController.popBackStack() }
+                            )
+                        }
+                    }
                 }
             }
         }

@@ -32,6 +32,7 @@ fun ScanStatusBar(
     label: String,
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     onThemeToggle: (() -> Unit)? = null,
+    onSyncSettingsClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val (bgColor, indicatorColor) = when (status) {
@@ -62,6 +63,14 @@ fun ScanStatusBar(
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.weight(1f)
         )
+        if (onSyncSettingsClick != null) {
+            IconButton(
+                onClick = onSyncSettingsClick,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Text(text = "⇅", style = MaterialTheme.typography.titleMedium)
+            }
+        }
         if (onThemeToggle != null) {
             IconButton(
                 onClick = onThemeToggle,

@@ -1,21 +1,20 @@
 package com.inventory
 
 import android.app.Application
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
-/**
- * Main Application class for the Inventory app.
- * Annotated with @HiltAndroidApp to enable Hilt dependency injection.
- *
- * This triggers Hilt's code generation including a base class for the application
- * that serves as the application-level dependency container.
- */
 @HiltAndroidApp
-class InventoryApplication : Application() {
+class InventoryApplication : Application(), Configuration.Provider {
+
+    @Inject
+    lateinit var wmConfiguration: Configuration
+
+    override val workManagerConfiguration: Configuration
+        get() = wmConfiguration
 
     override fun onCreate() {
         super.onCreate()
-        // Application-level initialization will go here
-        // Scanner manager lifecycle will be handled in activities/fragments
     }
 }

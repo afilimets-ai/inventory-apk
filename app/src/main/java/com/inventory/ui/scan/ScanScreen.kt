@@ -50,7 +50,8 @@ import kotlinx.coroutines.delay
 fun ScanScreen(
     viewModel: ScanViewModel = hiltViewModel(),
     themeMode: ThemeMode = ThemeMode.SYSTEM,
-    onThemeToggle: () -> Unit = {}
+    onThemeToggle: () -> Unit = {},
+    onSyncSettingsClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -96,7 +97,8 @@ fun ScanScreen(
                         is ScanUiState.Error -> "Помилка"
                     },
                     themeMode = themeMode,
-                    onThemeToggle = onThemeToggle
+                    onThemeToggle = onThemeToggle,
+                    onSyncSettingsClick = onSyncSettingsClick
                 )
             }
         ) { innerPadding ->
