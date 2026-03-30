@@ -43,10 +43,15 @@ import com.inventory.ui.components.IndustrialSuccessButton
 import com.inventory.ui.components.ScanResultCard
 import com.inventory.ui.components.ScanStatus
 import com.inventory.ui.components.ScanStatusBar
+import com.inventory.ui.theme.ThemeMode
 import kotlinx.coroutines.delay
 
 @Composable
-fun ScanScreen(viewModel: ScanViewModel = hiltViewModel()) {
+fun ScanScreen(
+    viewModel: ScanViewModel = hiltViewModel(),
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
+    onThemeToggle: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     var flashColor by remember { mutableStateOf(Color.Transparent) }
@@ -89,7 +94,9 @@ fun ScanScreen(viewModel: ScanViewModel = hiltViewModel()) {
                         is ScanUiState.UnknownBarcode -> "Невідомий штрихкод"
                         is ScanUiState.Success -> "Записано"
                         is ScanUiState.Error -> "Помилка"
-                    }
+                    },
+                    themeMode = themeMode,
+                    onThemeToggle = onThemeToggle
                 )
             }
         ) { innerPadding ->

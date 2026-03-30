@@ -6,9 +6,15 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun IndustrialTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
     content: @Composable () -> Unit
 ) {
+    val darkTheme = when (themeMode) {
+        ThemeMode.LIGHT  -> false
+        ThemeMode.DARK   -> true
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+    }
+
     MaterialTheme(
         colorScheme = if (darkTheme) IndustrialDarkColorScheme else IndustrialLightColorScheme,
         typography = IndustrialTypography,

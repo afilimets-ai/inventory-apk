@@ -7,19 +7,22 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.inventory.ui.theme.ScanColors
+import com.inventory.ui.theme.ThemeMode
 
 enum class ScanStatus { IDLE, SCANNING, SUCCESS, ERROR }
 
@@ -27,27 +30,27 @@ enum class ScanStatus { IDLE, SCANNING, SUCCESS, ERROR }
 fun ScanStatusBar(
     status: ScanStatus,
     label: String,
+    themeMode: ThemeMode = ThemeMode.SYSTEM,
+    onThemeToggle: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val (bgColor, indicatorColor) = when (status) {
-        ScanStatus.IDLE -> MaterialTheme.colorScheme.surfaceVariant to ScanColors.Idle
+        ScanStatus.IDLE     -> MaterialTheme.colorScheme.surfaceVariant to ScanColors.Idle
         ScanStatus.SCANNING -> MaterialTheme.colorScheme.surfaceVariant to ScanColors.Warning
-        ScanStatus.SUCCESS -> ScanColors.SuccessContainer to ScanColors.Success
-        ScanStatus.ERROR -> ScanColors.ErrorContainer to ScanColors.Error
+        ScanStatus.SUCCESS  -> ScanColors.SuccessContainer to ScanColors.Success
+        ScanStatus.ERROR    -> ScanColors.ErrorContainer to ScanColors.Error
     }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(bgColor)
-            .padding(horizontal = 20.dp, vertical = 12.dp),
+            .padding(horizontal = 20.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Кольоровий індикатор-крапка
         Box(
             modifier = Modifier
-                .width(12.dp)
-                .height(12.dp)
+                .size(12.dp)
                 .clip(CircleShape)
                 .background(indicatorColor)
         )
@@ -56,7 +59,23 @@ fun ScanStatusBar(
             text = label,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.weight(1f)
         )
+        if (onThemeToggle != null) {
+            IconButton(
+                onClick = onThemeToggle,
+                modifier = Modifier.size(40.dp)
+            ) {
+                Text(
+                    text = when (themeMode) {
+                        ThemeMode.SYSTEM -> "⚙"
+                        ThemeMode.LIGHT  -> "☀"
+                        ThemeMode.DARK   -> "🌙"
+                    },
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        }
     }
 }
