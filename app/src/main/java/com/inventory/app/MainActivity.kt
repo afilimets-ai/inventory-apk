@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.inventory.scanner.NewlandScannerManager
 import com.inventory.sync.SyncProviderType
+import com.inventory.ui.audit.AuditScreen
 import com.inventory.ui.receiving.ReceivingScreen
 import com.inventory.ui.scan.ScanScreen
 import com.inventory.ui.settings.ProviderSettingsScreen
@@ -42,11 +43,17 @@ class MainActivity : ComponentActivity() {
                                 themeMode = themeMode,
                                 onThemeToggle = { themePreferenceManager.cycleTheme() },
                                 onSyncSettingsClick = { navController.navigate("sync_settings") },
-                                onReceivingClick = { navController.navigate("receiving") }
+                                onReceivingClick = { navController.navigate("receiving") },
+                                onAuditClick = { navController.navigate("audit") }
                             )
                         }
                         composable("receiving") {
                             ReceivingScreen(
+                                onBack = { navController.popBackStack() }
+                            )
+                        }
+                        composable("audit") {
+                            AuditScreen(
                                 onBack = { navController.popBackStack() }
                             )
                         }

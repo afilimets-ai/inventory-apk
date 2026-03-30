@@ -52,7 +52,8 @@ fun ScanScreen(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     onThemeToggle: () -> Unit = {},
     onSyncSettingsClick: () -> Unit = {},
-    onReceivingClick: () -> Unit = {}
+    onReceivingClick: () -> Unit = {},
+    onAuditClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -111,7 +112,8 @@ fun ScanScreen(
                     is ScanUiState.Idle -> IdleScreen(
                         onTriggerScan = viewModel::triggerScan,
                         onManualEntry = viewModel::onManualBarcodeEntered,
-                        onReceivingClick = onReceivingClick
+                        onReceivingClick = onReceivingClick,
+                        onAuditClick = onAuditClick
                     )
                     is ScanUiState.ItemFound -> ItemFoundScreen(
                         state = state,
@@ -142,7 +144,8 @@ fun ScanScreen(
 private fun IdleScreen(
     onTriggerScan: () -> Unit,
     onManualEntry: (String) -> Unit,
-    onReceivingClick: () -> Unit = {}
+    onReceivingClick: () -> Unit = {},
+    onAuditClick: () -> Unit = {}
 ) {
     var manualBarcode by remember { mutableStateOf("") }
     var showManualInput by remember { mutableStateOf(false) }
@@ -184,6 +187,16 @@ private fun IdleScreen(
             onClick = onReceivingClick,
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        IndustrialButton(
+            text = "ІНВЕНТАРИЗАЦІЯ",
+            onClick = onAuditClick,
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondary
             )
         )
 
