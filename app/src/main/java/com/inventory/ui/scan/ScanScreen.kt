@@ -12,17 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,13 +36,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.inventory.ui.components.IndustrialButton
+import com.inventory.ui.components.IndustrialOutlinedButton
+import com.inventory.ui.components.IndustrialQuantityButton
+import com.inventory.ui.components.IndustrialSuccessButton
+import com.inventory.ui.components.ScanResultCard
+import com.inventory.ui.components.ScanStatus
+import com.inventory.ui.components.ScanStatusBar
 import kotlinx.coroutines.delay
 
 @Composable
 fun ScanScreen(viewModel: ScanViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
-    // Визначаємо колір flash залежно від стану
     var flashColor by remember { mutableStateOf(Color.Transparent) }
     val animatedFlash by animateColorAsState(
         targetValue = flashColor,
@@ -58,12 +59,12 @@ fun ScanScreen(viewModel: ScanViewModel = hiltViewModel()) {
     LaunchedEffect(uiState) {
         when (uiState) {
             is ScanUiState.ItemFound -> {
-                flashColor = Color(0x6600C853) // зелений flash при успішному скані
+                flashColor = Color(0x5500C853)
                 delay(300)
                 flashColor = Color.Transparent
             }
             is ScanUiState.UnknownBarcode -> {
-                flashColor = Color(0x66D32F2F) // червоний flash при помилці
+                flashColor = Color(0x55D32F2F)
                 delay(300)
                 flashColor = Color.Transparent
             }
@@ -72,16 +73,54 @@ fun ScanScreen(viewModel: ScanViewModel = hiltViewModel()) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            when (val state = uiState) {
-                is ScanUiState.Idle -> IdleScreen(onTriggerScan = viewModel::triggerScan, onManualEntry = viewModel::onManualBarcodeEntered)
-                is ScanUiState.ItemFound -> ItemFoundScreen(state = state, onQuantityChange = viewModel::onQuantityChanged, onConfirm = viewModel::onConfirm, onDismiss = viewModel::onDismiss)
-                is ScanUiState.UnknownBarcode -> UnknownBarcodeScreen(barcode = state.barcode, onDismiss = viewModel::onDismiss)
-                is ScanUiState.Success -> SuccessScreen()
-                is ScanUiState.Error -> ErrorScreen(message = state.message, onDismiss = viewModel::onDismiss)
+        Scaffold(
+            topBar = {
+                ScanStatusBar(
+                    status = when (uiState) {
+                        is ScanUiState.Idle -> ScanStatus.IDLE
+                        is ScanUiState.ItemFound -> ScanStatus.SUCCESS
+                        is ScanUiState.UnknownBarcode -> ScanStatus.ERROR
+                        is ScanUiState.Success -> ScanStatus.SUCCESS
+                        is ScanUiState.Error -> ScanStatus.ERROR
+                    },
+                    label = when (uiState) {
+                        is ScanUiState.Idle -> "Очікування сканування"
+                        is ScanUiState.ItemFound -> "Товар знайдено"
+                        is ScanUiState.UnknownBarcode -> "Невідомий штрихкод"
+                        is ScanUiState.Success -> "Записано"
+                        is ScanUiState.Error -> "Помилка"
+                    }
+                )
+            }
+        ) { innerPadding ->
+            Surface(
+                modifier = Modifier.fillMaxSize().padding(innerPadding),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                when (val state = uiState) {
+                    is ScanUiState.Idle -> IdleScreen(
+                        onTriggerScan = viewModel::triggerScan,
+                        onManualEntry = viewModel::onManualBarcodeEntered
+                    )
+                    is ScanUiState.ItemFound -> ItemFoundScreen(
+                        state = state,
+                        onQuantityChange = viewModel::onQuantityChanged,
+                        onConfirm = viewModel::onConfirm,
+                        onDismiss = viewModel::onDismiss
+                    )
+                    is ScanUiState.UnknownBarcode -> UnknownBarcodeScreen(
+                        barcode = state.barcode,
+                        onDismiss = viewModel::onDismiss
+                    )
+                    is ScanUiState.Success -> SuccessScreen()
+                    is ScanUiState.Error -> ErrorScreen(
+                        message = state.message,
+                        onDismiss = viewModel::onDismiss
+                    )
+                }
             }
         }
-        // Overlay flash поверх всього екрану
+
         if (animatedFlash != Color.Transparent) {
             Box(modifier = Modifier.fillMaxSize().background(animatedFlash))
         }
@@ -94,32 +133,41 @@ private fun IdleScreen(onTriggerScan: () -> Unit, onManualEntry: (String) -> Uni
     var showManualInput by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Готовий до сканування", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Text(
+            "СКАНЕР ГОТОВИЙ",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Натисніть кнопку сканера або кнопку нижче", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            "Натисніть кнопку сканера або кнопку нижче",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Button(
+        // Основна кнопка — 80dp (biля нижнього краю)
+        IndustrialButton(
+            text = "СКАНУВАТИ",
             onClick = onTriggerScan,
-            modifier = Modifier.fillMaxWidth().height(72.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
-        ) {
-            Text("СКАНУВАТИ", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        }
+            edgeTarget = true,
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedButton(
-            onClick = { showManualInput = !showManualInput },
-            modifier = Modifier.fillMaxWidth().height(56.dp)
-        ) {
-            Text("Ввести штрихкод вручну", fontSize = 16.sp)
-        }
+        IndustrialOutlinedButton(
+            text = "Ввести штрихкод вручну",
+            onClick = { showManualInput = !showManualInput }
+        )
 
         if (showManualInput) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -129,7 +177,11 @@ private fun IdleScreen(onTriggerScan: () -> Unit, onManualEntry: (String) -> Uni
                 label = { Text("Штрихкод") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
+                textStyle = MaterialTheme.typography.bodyLarge,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Search
+                ),
                 keyboardActions = KeyboardActions(onSearch = {
                     onManualEntry(manualBarcode)
                     manualBarcode = ""
@@ -148,102 +200,108 @@ private fun ItemFoundScreen(
     onDismiss: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
-        Text("Товар знайдено", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+        ScanResultCard(item = state.item)
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Text(
+            "Кількість для прийому:",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Column(modifier = Modifier.padding(20.dp)) {
-                Text(state.item.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Штрихкод: ${state.item.barcode}", style = MaterialTheme.typography.bodyMedium)
-                Text("Поточна кількість: ${state.item.quantity} ${state.item.unit}", style = MaterialTheme.typography.bodyMedium)
-                if (state.item.description.isNotBlank()) {
-                    Text(state.item.description, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-        Text("Кількість:", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-            Button(
-                onClick = { onQuantityChange((state.quantity - 1).coerceAtLeast(0.0)) },
-                modifier = Modifier.size(64.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-            ) {
-                Text("−", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-            }
-            Spacer(modifier = Modifier.width(24.dp))
-            Text(
-                text = state.quantity.let { if (it % 1.0 == 0.0) it.toInt().toString() else it.toString() },
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold
+            IndustrialQuantityButton(
+                label = "−",
+                onClick = { onQuantityChange((state.quantity - 1).coerceAtLeast(0.0)) }
             )
-            Spacer(modifier = Modifier.width(24.dp))
-            Button(
-                onClick = { onQuantityChange(state.quantity + 1) },
-                modifier = Modifier.size(64.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-            ) {
-                Text("+", fontSize = 28.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.width(28.dp))
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = formatQty(state.quantity),
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = state.item.unit,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
+            Spacer(modifier = Modifier.width(28.dp))
+            IndustrialQuantityButton(
+                label = "+",
+                onClick = { onQuantityChange(state.quantity + 1) }
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
-            onClick = onConfirm,
-            modifier = Modifier.fillMaxWidth().height(72.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
-        ) {
-            Text("ПІДТВЕРДИТИ", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        }
+        IndustrialSuccessButton(text = "✓  ПІДТВЕРДИТИ", onClick = onConfirm)
         Spacer(modifier = Modifier.height(12.dp))
-        OutlinedButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth().height(56.dp)) {
-            Text("Скасувати", fontSize = 16.sp)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
+        IndustrialOutlinedButton(text = "Скасувати", onClick = onDismiss)
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
 @Composable
 private fun UnknownBarcodeScreen(barcode: String, onDismiss: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Товар не знайдено", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
-        Spacer(modifier = Modifier.height(16.dp))
-        Text("Штрихкод: $barcode", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            "ТОВАР НЕ ЗНАЙДЕНО",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            barcode,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        Text("Цей товар відсутній у базі даних.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            "Цей штрихкод відсутній у базі даних.",
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(modifier = Modifier.height(48.dp))
-        Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth().height(64.dp)) {
-            Text("Назад до сканування", fontSize = 18.sp)
-        }
+        IndustrialButton(text = "← Назад до сканування", onClick = onDismiss)
     }
 }
 
 @Composable
 private fun SuccessScreen() {
     Box(
-        modifier = Modifier.fillMaxSize().background(Color(0xFF2E7D32)),
+        modifier = Modifier.fillMaxSize().background(com.inventory.ui.theme.ScanColors.Success),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("✓", fontSize = 80.sp, color = Color.White)
+            Text("✓", fontSize = 96.sp, color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(16.dp))
-            Text("ЗАПИСАНО", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Text(
+                "ЗАПИСАНО",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                letterSpacing = 2.sp
+            )
         }
     }
 }
@@ -251,16 +309,22 @@ private fun SuccessScreen() {
 @Composable
 private fun ErrorScreen(message: String, onDismiss: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Помилка", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.error)
+        Text(
+            "ПОМИЛКА",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.error
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Text(message, style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = onDismiss, modifier = Modifier.fillMaxWidth().height(64.dp)) {
-            Text("Закрити", fontSize = 18.sp)
-        }
+        IndustrialButton(text = "Закрити", onClick = onDismiss)
     }
 }
+
+private fun formatQty(qty: Double): String =
+    if (qty % 1.0 == 0.0) qty.toInt().toString() else qty.toString()

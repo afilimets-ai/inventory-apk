@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import com.inventory.scanner.NewlandScannerManager
 import com.inventory.ui.scan.ScanScreen
+import com.inventory.ui.theme.IndustrialTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
+            IndustrialTheme {
                 Surface {
                     ScanScreen()
                 }
