@@ -1,5 +1,7 @@
 # Inventory APK
 
+[![CI](https://github.com/afilimets-ai/inventory-apk/actions/workflows/ci.yml/badge.svg)](https://github.com/afilimets-ai/inventory-apk/actions/workflows/ci.yml)
+
 An Android application for efficient inventory management and tracking.
 
 ## 📋 Overview
