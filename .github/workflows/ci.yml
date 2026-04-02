@@ -33,8 +33,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Clean build cache
+        run: ./gradlew clean --no-build-cache
+
       - name: Compile debug
-        run: ./gradlew compileDebugKotlin
+        run: ./gradlew compileDebugKotlin --no-build-cache
 
       - name: Run lint
         run: ./gradlew lintDebug
