@@ -4,152 +4,193 @@
   "tech_stack": {
     "primary_language": "Kotlin",
     "frameworks": [
-      "Jetpack Compose",
-      "Android SDK (API 28+ targeting Android 10/11)",
-      "Room + SQLite",
-      "Hilt (Dependency Injection)",
-      "WorkManager",
-      "Retrofit + OkHttp"
+      "Jetpack Compose (Material Design 3)",
+      "Android Jetpack (Room, WorkManager, Navigation, Lifecycle, Hilt)",
+      "MVVM Architecture Pattern",
+      "Kotlin Coroutines + Flow"
     ],
     "key_dependencies": [
-      "Kotlin Coroutines + Flow",
-      "Jetpack Compose Material 3",
-      "Room (local database)",
-      "Hilt (DI framework)",
-      "WorkManager (background sync)",
-      "Retrofit + OkHttp (HTTP client)",
-      "Ndevor MDM (built-in device management)",
-      "GitHub Actions + Fastlane (CI/CD)",
-      "Newland Scanner Broadcast API (nlscan intents)"
+      "Hilt/Dagger 2.48 (Dependency Injection)",
+      "Room 2.6.1 (SQLite ORM / offline-first database)",
+      "Retrofit 2.9.0 + OkHttp 4.12.0 (HTTP API client)",
+      "WorkManager 2.9.0 (background sync)",
+      "Jetpack Compose BOM 2023.10.01 (UI framework)",
+      "Navigation Compose 2.7.5 (screen navigation)",
+      "Commons Net 3.10.0 (FTP sync provider)",
+      "FastExcel 0.15.3 (Excel export/import)",
+      "Gson 2.10.1 (JSON serialization)",
+      "Kotlin Coroutines 1.7.3 (async programming)",
+      "Newland Scanner Broadcast API (nlscan.action.*) — Hardware scanner integration",
+      "Turbine 1.0.0 (Flow testing)",
+      "Mockito 5.7.0 (unit test mocking)"
     ]
   },
   "target_audience": {
-    "primary_persona": "Warehouse operators and logistics workers on the floor of Ukrainian industrial facilities (factories, distribution centers, retail warehouses) using Newland MT90 handheld terminals to manage inventory via barcode scanning — typically wearing gloves, working in noisy environments, often in areas with intermittent or no network connectivity",
+    "primary_persona": "Warehouse operators and logistics floor workers in Ukrainian industrial facilities (factories, distribution centers, retail warehouses) using Newland MT90 handheld terminals — gloved operation, noisy environments, intermittent or no network connectivity",
     "secondary_personas": [
-      "Warehouse supervisors/managers who monitor inventory operations and review sync status remotely",
-      "IT administrators at client companies responsible for deploying and managing the app fleet via Ndevor MDM",
-      "Artem (project owner) as the Newland AIDC importer/reseller who deploys branded app variants to different B2B clients",
-      "B2B client companies who receive white-labeled APK builds branded to their organization"
+      "Warehouse managers and supervisors needing inventory oversight, audit results review, and sync status monitoring across locations",
+      "IT administrators responsible for deploying and managing fleets of 50-200 handheld devices via Ndevor MDM",
+      "Ukrainian SMB business owners seeking affordable post-1C inventory management replacement",
+      "Newland AIDC Ukrainian importers and channel partners requiring white-label B2B solutions for their warehouse clients"
     ],
     "pain_points": [
-      "Existing inventory systems require constant internet connectivity, failing in warehouses with poor WiFi/cellular coverage",
-      "Generic inventory apps are not optimized for industrial barcode scanners and require excessive manual touchscreen input",
-      "Workers in gloves struggle with small touch targets in standard Android apps",
-      "No affordable white-label solution exists for the Ukrainian market that ties hardware (Newland MT90) + software + MDM into a single offering",
-      "Onboarding new devices is slow without zero-touch provisioning workflows",
-      "Duplicate data entry and lost scans when connectivity drops mid-operation",
-      "Each client requires separate branding, API endpoints, and feature configuration — managing multiple codebases is unsustainable"
+      "Prohibitive total cost of ownership for enterprise warehouse mobility (Zebra/Honeywell: $1,500-2,800/device + $3-5/device/month MDM — a 50-device fleet exceeds $150K in year one)",
+      "Universally terrible mobile UX on industrial handhelds — SAP EWM requires pinch-zoom (3+ companies exist just to fix it), Honeywell SwiftDecoder fails scans, Zebra DataWedge causes software conflicts",
+      "No true offline-first operation — most solutions are cloud-first and fail in cold storage, underground, or RF-interference zones",
+      "Scanner software conflicts and complex configuration (DataWedge exclusive hardware control, SwiftDecoder scan failures, CT60 camera-vs-scanner confusion)",
+      "Post-1C migration urgency in Ukraine — banned Russian software since 2017 with no viable local mobile-first warehouse management alternative",
+      "Complex device fleet deployment requiring IT specialists and expensive MDM subscriptions that don't scale for SMBs",
+      "SaaS pricing instability (Sortly: documented 10x price increases, 257% hikes over 2 years) — unpredictable costs destroying budget planning",
+      "Steep training requirements for legacy warehouse systems (SAP EWM transaction codes) causing high onboarding cost and seasonal worker turnover"
     ],
     "goals": [
-      "Scan barcodes reliably and record inventory changes even when fully offline",
-      "Automatically sync all pending operations when connectivity is restored without data loss or duplication",
-      "Complete inventory workflows quickly with minimal touchscreen interaction (scan-driven auto-advance)",
-      "Deploy and manage 50-200+ devices across multiple B2B clients with minimal IT overhead",
-      "Provide each client a branded, customized app variant from a single codebase"
+      "Scan barcodes and update inventory in real-time with sub-2-second scan-to-confirmation",
+      "Work reliably without internet connectivity — zero data loss during offline periods",
+      "Receive goods, conduct physical inventory audits, and transfer stock between locations using simple scan-driven workflows",
+      "Deploy and manage entire device fleets within minutes via zero-touch QR provisioning",
+      "Export inventory data to CSV/Excel for reporting and integration with existing business systems",
+      "Achieve sub-1-hour onboarding for new floor workers with intuitive Ukrainian-language interface",
+      "Replace banned 1C warehouse module with modern, affordable, mobile-first alternative"
     ],
-    "usage_context": "Used during warehouse shifts (8-12 hours), primarily through the MT90's built-in barcode scanner hardware button. Workers scan items to record receipts, transfers, audits, and shipments. The app must survive full offline periods (cold storage areas, underground warehouses) and sync transparently when back online. Devices are deployed in fleets via Ndevor MDM with QR-code zero-touch provisioning (~5 min setup per device)."
+    "usage_context": "Industrial warehouse floor operations in Ukrainian SMB facilities — used during receiving shifts, stock audits, and transfers. Operators hold Newland MT90 handheld terminals in one hand while wearing gloves, scanning barcodes on pallets, shelves, and incoming shipments in noisy environments with intermittent or no Wi-Fi/cellular connectivity. Sessions range from 15-minute spot checks to 8-hour full inventory audits. Devices are fleet-managed via Ndevor MDM with QR-code zero-touch provisioning."
   },
   "product_vision": {
-    "one_liner": "Offline-first inventory management app for Newland MT90 industrial terminals, white-labeled for Ukrainian B2B clients",
-    "problem_statement": "Ukrainian warehouses and distribution centers using Newland MT90 terminals need a reliable, offline-capable inventory app that works in harsh industrial conditions (gloves, noise, poor connectivity). No existing solution combines hardware-native scanner integration, offline-first architecture, white-label multi-client support, and free MDM deployment — all from a single codebase.",
-    "value_proposition": "The only inventory solution purpose-built for Newland MT90 hardware with native scanner integration, ACID-compliant offline sync (outbox pattern + delta sync), glove-friendly industrial UX, and white-label Product Flavors — backed by Artem's exclusive Newland AIDC partnership in Ukraine, including free Ndevor MDM and direct access to SDK/firmware/support.",
+    "one_liner": "An affordable, offline-first Android inventory management app purpose-built for Newland MT90 industrial handheld terminals, targeting Ukrainian warehouse workers migrating from banned 1C software",
+    "problem_statement": "Ukrainian SMB warehouses need mobile inventory management but face an impossible choice: enterprise solutions (Zebra/Honeywell/SAP) are prohibitively expensive at $150K+ for a 50-device fleet, consumer apps (Sortly) lack industrial capabilities and have unpredictable SaaS pricing, and the previously dominant 1C software is banned in Ukraine since 2017. No affordable mobile-first solution exists that combines rugged hardware scanner integration, true offline-first operation, zero-touch fleet provisioning, and Ukrainian language support.",
+    "value_proposition": "Vertically-integrated warehouse digitization bundle — Newland MT90 hardware + purpose-built inventory app + free Ndevor MDM — delivering 50%+ TCO reduction vs enterprise alternatives with industrial-grade UX (scan-driven auto-advance, 60-80dp gloved touch targets, multimodal feedback) and true offline-first ACID architecture that guarantees zero data loss in any connectivity environment. Works standalone without ERP dependency and scales to multiple B2B clients via white-label Product Flavors from a single codebase.",
     "success_metrics": [
-      "Zero data loss during offline-to-online sync cycles (outbox pattern + idempotency keys)",
-      "< 5 minutes from unboxing a new MT90 to fully operational (Ndevor zero-touch provisioning)",
-      "< 2 second scan-to-confirmation feedback loop (scan → auto-advance → multimodal feedback)",
-      "50-200 devices deployed across 2-3 B2B clients within first 6 months",
-      "95%+ uptime for sync operations (exponential backoff with jitter)",
-      "Successful white-label deployment for 2-3 distinct client brands from single codebase",
-      "Worker satisfaction: reduced manual input by 80%+ vs. previous touchscreen-heavy solutions"
+      "Sub-2-second scan-to-confirmation latency for barcode operations on MT90 hardware",
+      "Zero data loss during offline operation and sync recovery (outbox pattern + idempotency keys)",
+      "Sub-1-hour onboarding time for new warehouse floor workers",
+      "5-minute device provisioning from unboxing to operational via Ndevor MDM QR enrollment",
+      "50%+ TCO reduction vs Zebra/Honeywell enterprise solutions for 50-device fleet deployments",
+      "Successful deployment across 5+ Ukrainian SMB warehouse clients within first year",
+      "Support for 10,000+ inventory items per location with smooth UI performance",
+      "95%+ uptime for sync operations with exponential backoff and jitter resilience"
     ]
   },
   "current_state": {
-    "maturity": "idea",
+    "maturity": "prototype",
     "existing_features": [
-      "Basic Newland barcode scanner integration POC (Java, BroadcastReceiver for nlscan intents)",
-      "Hardware scan button support (F6 KeyEvent handling)",
-      "Software-triggered scan via on-screen button",
-      "Barcode result display (barcode value + type)",
-      "Comprehensive CLAUDE.md with full architecture specification and scan integration docs",
-      "Auto-Claude planning framework with 15 feature specs generated (scaffolding, CI, DI, Room, UX, theme, docs)",
-      "Newland SDK handbooks (3 reference documents: scanning SDK, API, symbologies configuration)"
+      "Newland MT90 hardware scanner integration (NewlandScannerManager singleton with BroadcastReceiver, F6 hardware button handler, 300ms debounce, SharedFlow<ScanResult>, programmatic trigger)",
+      "Room database with 5 entities: InventoryItem, Category, Location, InventoryOperation, OutboxEntry — with complete DAO layer",
+      "Repository pattern (InventoryRepository interface + InventoryRepositoryImpl)",
+      "Offline-first outbox pattern for guaranteed sync delivery with ACID compliance and idempotency keys",
+      "Multi-provider sync engine: SyncEngine + SyncWorker (WorkManager) + SyncProviderFactory + SyncSettings/SyncSettingsManager",
+      "4 sync providers implemented: HTTP API (Retrofit), FTP (commons-net), WebDAV, Local Folder",
+      "5 sync providers stubbed for Phase 3: OneDrive, Google Drive, Email/SMTP, Telegram Bot, 1C HTTP",
+      "3 sync serializers: CSV, Excel (FastExcel), JSON",
+      "Core scan-to-record workflow (ScanScreen + ScanViewModel + ScanUiState)",
+      "Goods receiving operation (ReceivingScreen + ReceivingViewModel + ReceivingUiState)",
+      "Physical inventory count/audit operation (AuditScreen + AuditViewModel + AuditUiState)",
+      "Industrial Design System (IndustrialTheme, IndustrialColors, IndustrialTypography with 60-80dp touch targets)",
+      "Multimodal scan feedback (sound + vibration + visual via ScanFeedbackManager)",
+      "Manual theme switching (System/Light/Dark via ThemePreferenceManager)",
+      "Reusable UI components (IndustrialButton, ScanResultCard, ScanStatusBar)",
+      "Sync settings UI (SyncSettingsScreen + ProviderSettingsScreen + SyncSettingsViewModel)",
+      "Network layer (Retrofit InventoryApiService, AuthInterceptor, AuthTokenProvider, IdempotencyInterceptor, NetworkMonitor, ApiResult sealed class)",
+      "Hilt DI modules (DatabaseModule, NetworkModule, ScannerModule, SyncModule)",
+      "GitHub Actions CI pipeline (ci.yml)",
+      "Architecture documentation (docs/ARCHITECTURE.md)"
     ],
     "known_gaps": [
-      "No Kotlin code — entire codebase is legacy Java (Android Support Library v28)",
-      "No modern Android architecture (no ViewModel, no MVVM/MVI, no Compose)",
-      "No Room database or any local persistence",
-      "No Hilt or any dependency injection",
-      "No Retrofit/OkHttp or any networking layer",
-      "No WorkManager or background sync capability",
-      "No offline-first implementation (no outbox pattern, no delta sync, no idempotency)",
-      "No Product Flavors or white-label support",
-      "No Jetpack Compose UI — still uses XML layouts with deprecated Support Library",
-      "No multimodal feedback (no sound, no vibration on scan)",
-      "No industrial-grade UX (small touch targets, no glove-mode sizing)",
-      "No CI/CD pipeline (GitHub Actions / Fastlane not configured)",
-      "No NewlandScannerManager singleton (scanner lifecycle not managed properly — BroadcastReceiver never unregistered in onDestroy)",
-      "Gradle Plugin 3.2.1 and compileSdk 28 are severely outdated (need AGP 8.x, compileSdk 34+)",
-      "No tests (only placeholder stubs)",
-      "No README.md at project root"
+      "No automated tests (zero unit tests, zero UI tests, zero integration tests — test dependencies declared but no test files exist)",
+      "No item management CRUD UI (add/edit/delete inventory items screen)",
+      "No search and filter functionality for inventory items",
+      "No category management UI",
+      "No stock transfer between locations operation screen",
+      "No low-stock alert system or notifications",
+      "No reporting and analytics dashboard",
+      "No multi-location/warehouse management UI",
+      "No supplier management",
+      "No stock movement history / audit trail viewer UI",
+      "No data export UI (serializers exist but no user-facing export screen)",
+      "No multi-user access or role-based permissions",
+      "No cloud sync / multi-device synchronization beyond sync engine",
+      "No Ukrainian language localization (strings appear to be in mixed Ukrainian/English without formal i18n)",
+      "No white-label Product Flavors architecture (planned as key differentiator, build.gradle has placeholder comment only)",
+      "No Ndevor MDM integration or zero-touch provisioning setup documented",
+      "OneDrive, Google Drive, Email/SMTP, Telegram Bot, and 1C HTTP sync providers are stubs only (TODO Phase 3)",
+      "No complete navigation graph connecting all screens",
+      "No batch scanning mode",
+      "No error handling/retry UI for failed sync operations",
+      "No app icon or splash screen (using defaults)"
     ],
     "technical_debt": [
-      "Legacy Java codebase with Android Support Library needs complete rewrite in Kotlin + AndroidX",
-      "Gradle build system (AGP 3.2.1, compileSdk 28) needs upgrade to AGP 8.x + compileSdk 34+",
-      "BroadcastReceiver registered in onCreate but never unregistered in onDestroy — memory leak",
-      "Package name 'test.com.newlandpoc' is a POC/test placeholder — needs proper applicationId",
-      "No ProGuard/R8 configuration for release builds",
-      "No .editorconfig or code formatting standards",
-      "Entire project structure under 'NewLand-Scanner-DeviceMT90-master/' subfolder — likely an extracted ZIP, needs restructuring"
+      "Duplicate InventoryApplication.kt files in two packages (com.inventory.app.InventoryApplication AND com.inventory.InventoryApplication)",
+      "Zero test coverage across 63 Kotlin source files and 5,315 lines of code — high regression risk",
+      "KAPT Java 17 workaround in build.gradle.kts with extensive --add-opens flags for 10+ JDK modules (fragile, breaks on JDK updates)",
+      "Kotlin 1.9.22 and Compose BOM 2023.10.01 are outdated — newer stable versions available (Kotlin 2.x, Compose BOM 2024+)",
+      "No database migration strategy — schema version 1 with no migration path for future changes",
+      "Stub sync providers throw NotImplementedError at runtime — needs graceful handling or feature flags to prevent user-facing crashes",
+      "BuildConfig API_BASE_URL points to placeholder example.com domain",
+      "build.log file committed to repository root — should be gitignored",
+      "Mixed Ukrainian/English code comments and UI strings without consistent i18n/l10n framework",
+      "No .editorconfig or code formatting standards enforced",
+      "Should consider KAPT → KSP migration for faster annotation processing and better Kotlin 2.x compatibility",
+      "No ProGuard/R8 rules for third-party libraries (fastexcel, commons-net) beyond Android defaults"
     ]
   },
   "competitive_context": {
     "alternatives": [
-      "Zebra DataWedge + custom enterprise apps (Zebra-locked ecosystem, expensive hardware)",
-      "Honeywell Mobility Edge apps (Honeywell-locked, higher cost in UA market)",
-      "SAP Warehouse Management mobile module (expensive license, complex integration, overkill for SMBs)",
-      "Generic Android inventory apps (Inventory Manager, Stock Control) — no industrial scanner integration",
-      "Custom one-off apps built per-client by local Ukrainian dev shops (no white-label reuse, no offline-first)",
-      "1C:Enterprise Warehouse module (popular in CIS region but desktop-first, poor mobile UX)"
+      "Zebra Technologies (DataWedge + TC5x/MC Series) — market leader, ~$2,820/device + $3-5/device/month MDM, DataWedge scanner conflicts and vendor lock-in",
+      "Honeywell Mobility Edge (CT45/CT60/CK65 Series) — premium tier, SwiftDecoder scan failures, $1,500-2,800/device, hardware reliability issues",
+      "SAP Extended Warehouse Management (EWM) Mobile — enterprise-only, terrible mobile UX requiring pinch-zoom, $500K+ implementation, no offline mode",
+      "1C:Enterprise Warehouse Module — banned in Ukraine since 2017, desktop-first, no mobile capability, cybersecurity risk",
+      "Sortly (Generic Consumer Inventory Apps) — consumer-grade, no industrial scanner support, extreme SaaS price hikes (documented 10x increases), unreliable sync",
+      "RFgen Mobile WMS — requires existing ERP (SAP/Oracle/Dynamics), ~$4,500 starting price, not standalone, no Eastern European focus",
+      "Torgsoft (Ukrainian Trade Automation) — local Ukrainian alternative, desktop-first, no industrial scanner support, no offline mobile capability"
     ],
     "differentiators": [
-      "Purpose-built for Newland MT90 hardware with native broadcast scanner integration (no SDK dependency)",
-      "Exclusive Newland AIDC partnership in Ukraine — direct access to firmware, SDK, tech support",
-      "Free Ndevor MDM built into every device — zero additional MDM licensing cost",
-      "Offline-first ACID architecture (outbox + delta sync + idempotency) — not a retrofit, designed from ground up",
-      "White-label Product Flavors from single codebase — scalable multi-client delivery",
-      "Industrial UX: 60-80dp touch targets, scan-driven auto-advance, multimodal feedback for noisy environments",
-      "Zero-touch provisioning in ~5 minutes via QR code — dramatically lower per-device deployment cost",
-      "Ukrainian-market focused — local language, local support, competitive pricing vs. Zebra/Honeywell"
+      "50%+ TCO reduction through vertically-integrated Newland MT90 + custom app + free Ndevor MDM bundle — eliminates both hardware premium and MDM subscription costs",
+      "Industrial UX excellence: scan-driven auto-advance, 60-80dp gloved touch targets, multimodal feedback (sound+vibration+visual) — purpose-built for one-handed warehouse operation",
+      "True offline-first ACID architecture with outbox pattern and idempotency keys — designed from ground up for disconnected warehouse environments, not bolted on as afterthought",
+      "Zero-touch QR provisioning via free Ndevor MDM (5 min unboxing to operational) — no expensive MDM subscription required",
+      "Ukrainian-market-first positioning with local language, local support, competitive UAH pricing, and direct post-1C migration path",
+      "Standalone operation without ERP prerequisite — works immediately with local Room database, integrates progressively via multi-provider sync engine",
+      "White-label Product Flavors for scalable B2B delivery — single codebase producing distinct branded APKs per warehouse client (planned)"
     ],
-    "market_position": "Niche B2B play targeting Ukrainian warehouses and logistics companies as a vertically integrated hardware+software+MDM solution. Competes on total cost of ownership (affordable Newland hardware + free Ndevor MDM + white-labeled app) against more expensive Zebra/Honeywell ecosystems and inflexible generic apps. First-mover advantage as the exclusive Newland partner in Ukraine.",
-    "competitor_pain_points": [],
-    "competitor_analysis_available": false
+    "market_position": "First-mover as the only mobile-first Ukrainian warehouse scanning solution targeting the massive post-1C migration market. Positioned in the underserved gap between prohibitively expensive enterprise solutions (Zebra/Honeywell/SAP at $1,500-2,800/device + MDM subscriptions) and inadequate consumer apps (Sortly). Leverages exclusive partnership with Newland AIDC Ukrainian importer for vertically-integrated hardware + software + MDM bundle at 50%+ cost reduction. Eastern European e-commerce growth (15%+ annually) driving warehouse automation demand in historically underserved markets creates favorable timing.",
+    "competitor_pain_points": [
+      "Prohibitive total cost of ownership for enterprise warehouse mobility — $1,500-2,800/device + $3-5/device/month MDM subscriptions + annual support contracts. A 50-device fleet exceeds $150K in year one.",
+      "Universally terrible mobile UX on industrial handhelds — SAP EWM requires pinch-zoom (3+ companies exist just to fix it), Honeywell SwiftDecoder fails to scan, Zebra DataWedge causes software conflicts",
+      "Unreliable offline-to-online sync and data loss in warehouse connectivity dead zones — most solutions are cloud-first with offline as afterthought, not designed for cold storage or underground facilities",
+      "Scanner software conflicts and configuration complexity — DataWedge exclusive hardware control locks out other apps, SwiftDecoder fails to scan 'any barcode', CT60 activates camera instead of scanner",
+      "Complex device deployment requiring IT specialists and expensive MDM — manual provisioning 'extremely time-consuming' and 'does not scale' for growing device fleets",
+      "SaaS pricing instability exemplified by Sortly — documented 10x price increases, 257% hikes over 2 years, account cancellation difficulties, charges without notification",
+      "Post-1C vacuum in Ukraine — banned Russian software leaving no viable local mobile-first warehouse management alternative for mass-migrating businesses",
+      "ERP dependency blocking SMB adoption — RFgen and SAP EWM require existing enterprise backend that most Ukrainian SMBs do not have"
+    ],
+    "competitor_analysis_available": true
   },
   "constraints": {
     "technical": [
-      "Target device runs Android 10/11 — must support API 29-30 minimum (some devices lack GMS)",
-      "Newland scanner integration via broadcast intents only — no emulator testing possible, requires physical MT90",
-      "Hardware scan button KeyCode may vary between MT90 models — must verify on each device variant",
-      "Offline-first requires careful ACID transaction design for outbox pattern",
-      "White-label Product Flavors add build complexity — each flavor needs separate signing, resources, and API config",
-      "No GMS variant exists — cannot depend on Google Play Services for push notifications or maps",
-      "Battery-sensitive background sync (WorkManager) must respect 4500/6500 mAh battery constraints"
+      "Must run on Android 7.0+ (API 24 minSdk) to support full range of Newland MT90 device variants",
+      "Newland-specific broadcast intent API (nlscan.action.*) for scanner integration — not portable to other scanner brands without abstraction layer",
+      "KAPT annotation processing required for Hilt/Room — slower builds, Java 17 module access workarounds needed",
+      "Offline-first architecture requires careful conflict resolution strategy for concurrent edits across devices during sync",
+      "Must operate reliably in environments with intermittent connectivity, cold storage, underground areas, and RF interference from metal shelving",
+      "Industrial UI must support 60-80dp touch targets for gloved operation on 5-inch MT90 display",
+      "Room database migrations needed for every schema change — no versioning/migration strategy in place yet",
+      "Scanner integration cannot be tested in emulator — requires physical Newland MT90 device for end-to-end testing",
+      "No Google Play Store distribution — deployed via Ndevor MDM sideloading or direct APK install"
     ],
     "resources": [
-      "Solo developer/owner (Artem Filimets) — single contributor in git history",
-      "First wave targets 50-200 devices — limited scale but requires production-quality reliability",
-      "3-phase roadmap: MVP (6-8 weeks) → White-label (4-6 weeks) → Scale (ongoing)",
-      "Pilot deployment planned for 5-10 devices before full rollout",
-      "CI/CD planned with GitHub Actions + Fastlane but not yet configured"
+      "Solo developer project (single contributor: Artem Filimets, 64 commits)",
+      "Heavily AI-assisted development (auto-claude automated build pipeline for feature implementation)",
+      "No dedicated QA, UX designer, or testing resource — zero test coverage currently",
+      "Hardware testing requires physical Newland MT90 devices — limited by device availability",
+      "Ukrainian market focus limits initial addressable market but reduces competition significantly"
     ],
     "dependencies": [
-      "Newland MT90 Orca / Orca Pro physical devices for testing scanner integration",
-      "Ndevor MDM platform for device management and zero-touch provisioning",
-      "Backend API server (not yet specified/built) for sync endpoint",
-      "Newland AIDC SDK/firmware updates — dependent on Newland's release cycle",
-      "Client-specific API endpoints and branding assets for each white-label flavor",
-      "GitHub repository infrastructure for CI/CD pipeline"
+      "Newland AIDC hardware partnership for MT90 device supply, SDK, and firmware support",
+      "Newland broadcast intent API (nlscan.action.SCANNER_RESULT) stability across firmware versions",
+      "Ndevor MDM platform for zero-touch fleet provisioning and OTA app updates (free, bundled with Newland devices)",
+      "Backend API server for multi-device sync (currently placeholder URL: api.inventory.example.com — needs to be built or integrated per client)",
+      "FTP/WebDAV servers at client sites for alternative sync provider support",
+      "Android SDK and build toolchain (AGP 8.13.2, Kotlin 1.9.22, JDK 17)",
+      "Client-specific branding assets and API endpoints for each white-label Product Flavor"
     ]
   },
-  "created_at": "2026-03-24T10:25:00Z"
+  "created_at": "2026-04-01T08:00:00Z"
 }

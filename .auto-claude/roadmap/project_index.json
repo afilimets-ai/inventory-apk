@@ -1,8 +1,13 @@
 {
-  "project_root": "C:\\Users\\user\\Documents\\proj\\inventory-apk",
+  "project_root": "C:\\Users\\user\\.claude\\apk-build\\inventory-apk",
   "project_type": "single",
   "services": {},
-  "infrastructure": {},
+  "infrastructure": {
+    "ci": "GitHub Actions",
+    "ci_workflows": [
+      "ci.yml"
+    ]
+  },
   "conventions": {},
   "dependency_locations": []
 }

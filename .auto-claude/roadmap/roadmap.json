@@ -18,7 +18,7 @@
       "name": "Foundation / MVP",
       "description": "Complete rewrite from legacy Java POC to production Kotlin/Compose stack. Establish offline-first architecture, core scan workflow, and first two inventory operations. Deploy to 5-10 pilot MT90 devices under the Newland importer brand.",
       "order": 1,
-      "status": "done",
+      "status": "in_progress",
       "features": [
         "feature-1",
         "feature-2",
@@ -55,7 +55,7 @@
             "feature-4",
             "feature-6"
           ],
-          "status": "done"
+          "status": "in_progress"
         },
         {
           "id": "milestone-1-3",
@@ -67,7 +67,7 @@
             "feature-11",
             "feature-12"
           ],
-          "status": "done"
+          "status": "planned"
         },
         {
           "id": "milestone-1-4",
@@ -79,7 +79,7 @@
             "feature-10",
             "feature-14"
           ],
-          "status": "done"
+          "status": "planned"
         },
         {
           "id": "milestone-1-5",
@@ -88,7 +88,7 @@
           "features": [
             "feature-13"
           ],
-          "status": "done"
+          "status": "planned"
         }
       ]
     },
@@ -521,7 +521,7 @@
         "feature-8",
         "feature-9"
       ],
-      "status": "in_progress",
+      "status": "under_review",
       "acceptance_criteria": [
         "SyncProvider interface: push(outbox), pullCatalog(), testConnection(), configure(settings)",
         "Independent import provider and export provider selection (different providers allowed)",
@@ -546,6 +546,8 @@
         "As an IT administrator, I want the sync to handle network failures gracefully so that devices don't create duplicate entries or lose data"
       ],
       "linked_spec_id": "025-reliable-background-sync-engine",
+      "task_outcome": "completed",
+      "previous_status": "in_progress",
       "competitor_insight_ids": [
         "pain-5-3",
         "pain-6-3"
@@ -580,6 +582,8 @@
         "As a warehouse worker, I want to see a running total of items I've received so that I can verify against the delivery manifest"
       ],
       "linked_spec_id": "026-inventory-receiving-operation",
+      "task_outcome": "completed",
+      "previous_status": "planned",
       "competitor_insight_ids": [
         "pain-5-4"
       ]
@@ -614,6 +618,8 @@
         "As a warehouse supervisor, I want to see variances between expected and counted quantities so that I can investigate discrepancies"
       ],
       "linked_spec_id": "027-physical-inventory-count-audit",
+      "task_outcome": "completed",
+      "previous_status": "planned",
       "competitor_insight_ids": []
     },
     {
@@ -628,7 +634,7 @@
       "dependencies": [
         "feature-1"
       ],
-      "status": "done",
+      "status": "planned",
       "acceptance_criteria": [
         "GitHub Actions workflow triggers on push to main and on PR creation",
         "Workflow runs: compile, lint (ktlint or detekt), unit tests",
@@ -647,7 +653,7 @@
     },
     {
       "id": "feature-14",
-      "title": "Offline Sync Status Indicator (Persistent Bar)",
+      "title": "Offline Sync Status Indicator",
       "description": "Display a persistent, non-intrusive status bar showing: connectivity state (online/offline), pending outbox operations count, last successful sync timestamp, and active sync progress. Color-coded: amber when offline with pending changes, blue when actively syncing, green when fully synced, red on sync error. Collapsible to minimal indicator when synced.",
       "rationale": "Workers moving between areas with WiFi and dead zones need to trust that their scans are being captured. Without visible sync status, they can't tell if data is local-only, syncing, or fully backed up. This is a trust and data-integrity signal. Sortly users complain about having to restart the app to resolve sync issues (pain-5-3) — proactive status prevents this anxiety.",
       "priority": "should",
@@ -657,7 +663,7 @@
       "dependencies": [
         "feature-10"
       ],
-      "status": "done",
+      "status": "planned",
       "acceptance_criteria": [
         "Status bar visible at top of every screen",
         "Shows 'Offline — N changes pending' in amber when offline with queued operations",
@@ -1177,7 +1183,7 @@
   ],
   "metadata": {
     "created_at": "2026-03-24T12:00:00Z",
-    "updated_at": "2026-03-31T15:30:00.000Z",
+    "updated_at": "2026-04-01T12:48:15.157Z",
     "generated_by": "roadmap_features agent",
     "prioritization_framework": "MoSCoW",
     "competitor_analysis_used": true,
@@ -1196,7 +1202,12 @@
       {
         "id": "backlog",
         "name": "Backlog",
-        "feature_ids": []
+        "feature_ids": [
+          "feature-11",
+          "feature-12",
+          "feature-13",
+          "feature-14"
+        ]
       },
       {
         "id": "in_progress",
@@ -1206,11 +1217,6 @@
       {
         "id": "ai_review",
         "name": "AI Review",
-        "feature_ids": []
-      },
-      {
-        "id": "done",
-        "name": "Done",
         "feature_ids": [
           "feature-1",
           "feature-2",
@@ -1221,12 +1227,13 @@
           "feature-7",
           "feature-8",
           "feature-9",
-          "feature-10",
-          "feature-11",
-          "feature-12",
-          "feature-13",
-          "feature-14"
+          "feature-10"
         ]
+      },
+      {
+        "id": "done",
+        "name": "Done",
+        "feature_ids": []
       }
     ]
   }
