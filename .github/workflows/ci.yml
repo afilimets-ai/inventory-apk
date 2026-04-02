@@ -37,7 +37,7 @@ jobs:
         run: ./gradlew clean --no-build-cache
 
       - name: Compile debug
-        run: ./gradlew compileDebugKotlin --no-build-cache
+        run: ./gradlew compileDebugKotlin --no-build-cache --stacktrace
 
       - name: Run lint
         run: ./gradlew lintDebug

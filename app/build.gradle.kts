@@ -92,9 +92,9 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
     // Room Database
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-runtime:2.7.0")
+    implementation("androidx.room:room-ktx:2.7.0")
+    kapt("androidx.room:room-compiler:2.7.0")
 
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.9.0")
