@@ -28,7 +28,7 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
         val headers = parseCsvLine(lines[0])
         return lines.drop(1).map { line ->
             val values = parseCsvLine(line)
-            headers.zip(values).toMap()
+            headers.indices.associate { i -> headers[i] to values.getOrNull(i) }
         }
     }
 

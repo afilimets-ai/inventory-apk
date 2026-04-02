@@ -86,6 +86,11 @@ class SyncEngine @Inject constructor(
                 }
             }
         }
+
+        // Жоден провайдер не підтримує імпорт — скидаємо Running → Idle
+        if (_state.value == SyncState.Running) {
+            _state.value = SyncState.Idle
+        }
     }
 
     private suspend fun applyImport(rows: List<Map<String, Any?>>) {
