@@ -19,6 +19,9 @@ Thumbs.db
 # Credentials / secrets
 *.env
 .env.*
+*.jks
+*.keystore
+keystore_b64.txt
 
 # Auto Claude generated files
 .auto-claude/
