@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
+import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -158,7 +159,7 @@ class NewlandScannerManager @Inject constructor(
         }
 
         val filter = android.content.IntentFilter(ACTION_SCANNER_RESULT)
-        context.registerReceiver(scanReceiver, filter)
+        ContextCompat.registerReceiver(context, scanReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         isRegistered = true
         Log.d(TAG, "Scanner receiver registered")
     }
