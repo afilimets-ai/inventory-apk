@@ -8,7 +8,15 @@
       "Bash(git push:*)",
       "Bash(gh auth:*)",
       "Bash(gh repo:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(gh run:*)",
+      "Bash(grep -v \"^$\")",
+      "WebSearch",
+      "Bash(./gradlew testDebugUnitTest --tests \"com.inventory.sync.serializer.CsvSerializerTest\" --tests \"com.inventory.sync.SyncEngineTest\" --no-build-cache --info)",
+      "Bash(JAVA_HOME=\"C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\" ./gradlew testDebugUnitTest --tests \"com.inventory.sync.serializer.CsvSerializerTest\" --tests \"com.inventory.sync.SyncEngineTest\" --no-build-cache)",
+      "Bash(JAVA_HOME=\"C:\\\\Program Files\\\\Android\\\\Android Studio\\\\jbr\" ./gradlew testDebugUnitTest --no-build-cache)",
+      "Bash(xargs grep:*)",
+      "Bash(grep \"failures=\" \"C:/Users/user/.claude/apk-build/inventory-apk/app/build/test-results/testDebugUnitTest/\"*.xml)"
     ]
   }
 }
