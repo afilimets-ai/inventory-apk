@@ -4,6 +4,8 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -47,6 +49,10 @@ class ScanFeedbackManager @Inject constructor(
         try {
             val toneGen = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 90)
             toneGen.startTone(toneType, durationMs)
+            Handler(Looper.getMainLooper()).postDelayed(
+                { toneGen.release() },
+                durationMs.toLong() + 50L
+            )
         } catch (_: Exception) {
             // ToneGenerator може не спрацювати на деяких пристроях — ігноруємо
         }

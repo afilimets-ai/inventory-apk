@@ -45,12 +45,13 @@ class SyncWorker @AssistedInject constructor(
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            // Jitter: 15..30хв щоб не всі пристрої синхронізувались одночасно
-            val jitterMinutes = Random.nextLong(15, 31)
+            val basePeriodMinutes = 30L
+            val jitterMinutes = Random.nextLong(0, 16)
 
             val request = PeriodicWorkRequestBuilder<SyncWorker>(
-                jitterMinutes, TimeUnit.MINUTES
+                basePeriodMinutes, TimeUnit.MINUTES
             )
+                .setInitialDelay(jitterMinutes, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .setBackoffCriteria(
                     BackoffPolicy.EXPONENTIAL,

@@ -13,7 +13,10 @@ import org.apache.commons.net.ftp.FTPClient
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
-class FtpProvider(private val settings: SyncSettings) : SyncProvider {
+class FtpProvider(
+    private val settings: SyncSettings,
+    private val ftpClientFactory: () -> FTPClient = { FTPClient() }
+) : SyncProvider {
 
     override val type = SyncProviderType.FTP
     override val supportsExport = true
@@ -21,10 +24,13 @@ class FtpProvider(private val settings: SyncSettings) : SyncProvider {
 
     override suspend fun export(data: ByteArray, format: SyncFormat, fileName: String): SyncResult =
         withContext(Dispatchers.IO) {
-            val ftp = FTPClient()
+            val ftp = ftpClientFactory()
             try {
                 ftp.connect(settings.host, if (settings.port > 0) settings.port else 21)
-                ftp.login(settings.username, settings.password)
+                val loginSuccess = ftp.login(settings.username, settings.password)
+                if (!loginSuccess) {
+                    return@withContext SyncResult.Failure("FTP login failed: ${ftp.replyString}")
+                }
                 ftp.enterLocalPassiveMode()
                 ftp.setFileType(FTP.BINARY_FILE_TYPE)
 
@@ -41,10 +47,13 @@ class FtpProvider(private val settings: SyncSettings) : SyncProvider {
 
     override suspend fun import(format: SyncFormat, fileName: String): SyncImportResult =
         withContext(Dispatchers.IO) {
-            val ftp = FTPClient()
+            val ftp = ftpClientFactory()
             try {
                 ftp.connect(settings.host, if (settings.port > 0) settings.port else 21)
-                ftp.login(settings.username, settings.password)
+                val loginSuccess = ftp.login(settings.username, settings.password)
+                if (!loginSuccess) {
+                    return@withContext SyncImportResult.Failure("FTP login failed: ${ftp.replyString}")
+                }
                 ftp.enterLocalPassiveMode()
                 ftp.setFileType(FTP.BINARY_FILE_TYPE)
 

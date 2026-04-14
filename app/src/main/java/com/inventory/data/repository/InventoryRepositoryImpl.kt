@@ -65,6 +65,27 @@ class InventoryRepositoryImpl @Inject constructor(
     override suspend fun updateOutboxStatus(id: Long, status: String) = outboxEntryDao.updateStatus(id, status)
     override suspend fun markOutboxFailed(id: Long, errorMessage: String) = outboxEntryDao.markFailed(id, errorMessage)
     override suspend fun deleteSyncedOutbox() = outboxEntryDao.deleteSynced()
+    override suspend fun importItems(rows: List<Map<String, Any?>>) = db.withTransaction {
+        for (row in rows) {
+            val barcode = row["barcode"]?.toString() ?: continue
+            val name = row["name"]?.toString() ?: continue
+            val quantity = row["quantity"]?.toString()?.toDoubleOrNull() ?: 0.0
+            val existing = inventoryItemDao.getByBarcode(barcode)
+            if (existing != null) {
+                inventoryItemDao.updateQuantity(existing.id, quantity)
+            } else {
+                inventoryItemDao.insert(
+                    InventoryItem(
+                        barcode = barcode,
+                        name = name,
+                        quantity = quantity,
+                        unit = row["unit"]?.toString() ?: "шт",
+                        description = row["description"]?.toString() ?: ""
+                    )
+                )
+            }
+        }
+    }
 
     // ACID транзакція: оновлення залишку + запис операції + запис у outbox
     override suspend fun recordOperationWithOutbox(

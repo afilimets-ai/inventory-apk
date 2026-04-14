@@ -62,7 +62,16 @@ sealed class SyncResult {
 
 /** Результат операції імпорту */
 sealed class SyncImportResult {
-    data class Success(val data: ByteArray) : SyncImportResult()
+    data class Success(val data: ByteArray) : SyncImportResult() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Success) return false
+            return data.contentEquals(other.data)
+        }
+
+        override fun hashCode(): Int = data.contentHashCode()
+    }
+
     data class Failure(val message: String, val cause: Throwable? = null) : SyncImportResult()
 }
 

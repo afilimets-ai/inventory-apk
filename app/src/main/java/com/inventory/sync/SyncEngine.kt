@@ -34,28 +34,31 @@ class SyncEngine @Inject constructor(
 
         _state.value = SyncState.Running
 
-        val items = repository.getItems().first()
+        try {
+            val items = repository.getItems().first()
+            val errors = mutableListOf<String>()
 
-        val errors = mutableListOf<String>()
+            for (settings in exportProviders) {
+                val provider = providerFactory.create(settings.providerType)
+                if (!provider.supportsExport) continue
 
-        for (settings in exportProviders) {
-            val provider = providerFactory.create(settings.providerType)
-            if (!provider.supportsExport) continue
+                val serializer = getSerializer(settings.format)
+                val rows = items.map { it.toExportRow() }
+                val data = serializer.serialize(rows)
 
-            val serializer = getSerializer(settings.format)
-            val rows = items.map { it.toExportRow() }
-            val data = serializer.serialize(rows)
-
-            when (val result = provider.export(data, settings.format, EXPORT_FILE_NAME)) {
-                is SyncResult.Success -> { /* ok */ }
-                is SyncResult.Failure -> errors.add("[${settings.providerType.displayName}] ${result.message}")
+                when (val result = provider.export(data, settings.format, EXPORT_FILE_NAME)) {
+                    is SyncResult.Success -> { /* ok */ }
+                    is SyncResult.Failure -> errors.add("[${settings.providerType.displayName}] ${result.message}")
+                }
             }
-        }
 
-        _state.value = if (errors.isEmpty()) {
-            SyncState.Success(System.currentTimeMillis())
-        } else {
-            SyncState.Error(errors.joinToString("\n"))
+            _state.value = if (errors.isEmpty()) {
+                SyncState.Success(System.currentTimeMillis())
+            } else {
+                SyncState.Error(errors.joinToString("\n"))
+            }
+        } catch (e: Exception) {
+            _state.value = SyncState.Error("Export failed: ${e.message}")
         }
     }
 
@@ -65,54 +68,38 @@ class SyncEngine @Inject constructor(
         if (importProviders.isEmpty()) return
 
         _state.value = SyncState.Running
+        try {
+            for (settings in importProviders) {
+                val provider = providerFactory.create(settings.providerType)
+                if (!provider.supportsImport) continue
 
-        for (settings in importProviders) {
-            val provider = providerFactory.create(settings.providerType)
-            if (!provider.supportsImport) continue
-
-            when (val importResult = provider.import(settings.format, IMPORT_FILE_NAME)) {
-                is SyncImportResult.Success -> {
-                    val serializer = getSerializer(settings.format)
-                    val rows = serializer.deserialize(importResult.data)
-                    applyImport(rows)
-                    _state.value = SyncState.Success(System.currentTimeMillis())
-                    return
-                }
-                is SyncImportResult.Failure -> {
-                    _state.value = SyncState.Error(
-                        "[${settings.providerType.displayName}] ${importResult.message}"
-                    )
-                    return
+                when (val importResult = provider.import(settings.format, IMPORT_FILE_NAME)) {
+                    is SyncImportResult.Success -> {
+                        val serializer = getSerializer(settings.format)
+                        val rows = serializer.deserialize(importResult.data)
+                        applyImport(rows)
+                        _state.value = SyncState.Success(System.currentTimeMillis())
+                        return
+                    }
+                    is SyncImportResult.Failure -> {
+                        _state.value = SyncState.Error(
+                            "[${settings.providerType.displayName}] ${importResult.message}"
+                        )
+                        return
+                    }
                 }
             }
-        }
 
-        // Жоден провайдер не підтримує імпорт — скидаємо Running → Idle
-        if (_state.value == SyncState.Running) {
-            _state.value = SyncState.Idle
+            if (_state.value == SyncState.Running) {
+                _state.value = SyncState.Idle
+            }
+        } catch (e: Exception) {
+            _state.value = SyncState.Error("Import failed: ${e.message}")
         }
     }
 
     private suspend fun applyImport(rows: List<Map<String, Any?>>) {
-        for (row in rows) {
-            val barcode = row["barcode"]?.toString() ?: continue
-            val name = row["name"]?.toString() ?: continue
-            val quantity = row["quantity"]?.toString()?.toDoubleOrNull() ?: 0.0
-            val existing = repository.getItemByBarcode(barcode)
-            if (existing != null) {
-                repository.updateItemQuantity(existing.id, quantity)
-            } else {
-                repository.insertItem(
-                    InventoryItem(
-                        barcode = barcode,
-                        name = name,
-                        quantity = quantity,
-                        unit = row["unit"]?.toString() ?: "шт",
-                        description = row["description"]?.toString() ?: ""
-                    )
-                )
-            }
-        }
+        repository.importItems(rows)
     }
 
     private fun getSerializer(format: SyncFormat): SyncSerializer = when (format) {

@@ -12,19 +12,15 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.concurrent.TimeUnit
 
-class HttpApiProvider(private val settings: SyncSettings) : SyncProvider {
+class HttpApiProvider(
+    private val settings: SyncSettings,
+    private val client: OkHttpClient
+) : SyncProvider {
 
     override val type = SyncProviderType.HTTP_API
     override val supportsExport = true
     override val supportsImport = true
-
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .writeTimeout(60, TimeUnit.SECONDS)
-        .build()
 
     override suspend fun export(data: ByteArray, format: SyncFormat, fileName: String): SyncResult =
         withContext(Dispatchers.IO) {

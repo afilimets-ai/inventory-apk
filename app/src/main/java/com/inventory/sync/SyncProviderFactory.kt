@@ -9,18 +9,20 @@ import com.inventory.sync.provider.OneCProvider
 import com.inventory.sync.provider.OneDriveProvider
 import com.inventory.sync.provider.TelegramProvider
 import com.inventory.sync.provider.WebDavProvider
+import okhttp3.OkHttpClient
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SyncProviderFactory @Inject constructor(
-    private val settingsManager: SyncSettingsManager
+    private val settingsManager: SyncSettingsManager,
+    private val okHttpClient: OkHttpClient
 ) {
     fun create(type: SyncProviderType): SyncProvider {
         val settings = settingsManager.getSettings(type)
         return when (type) {
             SyncProviderType.LOCAL_FOLDER -> LocalFolderProvider(settings)
-            SyncProviderType.HTTP_API -> HttpApiProvider(settings)
+            SyncProviderType.HTTP_API -> HttpApiProvider(settings, okHttpClient)
             SyncProviderType.FTP -> FtpProvider(settings)
             SyncProviderType.WEBDAV -> WebDavProvider(settings)
             SyncProviderType.ONEDRIVE -> OneDriveProvider(settings)

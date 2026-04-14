@@ -3,17 +3,21 @@ package com.inventory.scanner
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -56,13 +60,14 @@ class NewlandScannerManager @Inject constructor(
      * Tracks whether the BroadcastReceiver is currently registered.
      * Prevents double registration/unregistration.
      */
+    @Volatile
     private var isRegistered = false
 
     /**
      * Timestamp of the last processed scan in milliseconds (System.currentTimeMillis()).
      * Used for debounce protection to prevent duplicate scans within 300ms.
      */
-    private var lastScanTimestamp = 0L
+    private val lastScanTimestamp = AtomicLong(0L)
 
     /**
      * CoroutineScope for emitting scan events to SharedFlow.
@@ -77,7 +82,8 @@ class NewlandScannerManager @Inject constructor(
      */
     private val _scanEvents = MutableSharedFlow<ScanResult>(
         replay = 0,
-        extraBufferCapacity = 1
+        extraBufferCapacity = 64,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
     /**
@@ -109,38 +115,10 @@ class NewlandScannerManager @Inject constructor(
                 return
             }
 
-            val barcode = intent.getStringExtra(EXTRA_BARCODE_DATA)
-            val barcodeType = intent.getStringExtra(EXTRA_BARCODE_TYPE)
-
-            if (barcode.isNullOrBlank()) {
-                Log.w(TAG, "Received scan result with empty barcode")
-                return
-            }
-
-            val scanResult = ScanResult(
-                barcode = barcode,
-                barcodeType = barcodeType ?: "UNKNOWN"
+            handleScanPayload(
+                barcode = intent.getStringExtra(EXTRA_BARCODE_DATA),
+                barcodeType = intent.getStringExtra(EXTRA_BARCODE_TYPE)
             )
-
-            Log.d(TAG, "Scan received: ${scanResult.barcode} (${scanResult.barcodeType})")
-
-            // Debounce protection: ignore scans within 300ms of the previous scan
-            val currentTime = System.currentTimeMillis()
-            val timeSinceLastScan = currentTime - lastScanTimestamp
-
-            if (timeSinceLastScan < DEBOUNCE_DELAY_MS) {
-                Log.d(TAG, "Scan ignored (debounce): ${timeSinceLastScan}ms since last scan")
-                return
-            }
-
-            // Update timestamp before emitting to prevent race conditions
-            lastScanTimestamp = currentTime
-
-            // Emit scan result to SharedFlow for reactive consumption
-            scannerScope.launch {
-                _scanEvents.emit(scanResult)
-                Log.d(TAG, "Scan event emitted to SharedFlow")
-            }
         }
     }
 
@@ -158,8 +136,8 @@ class NewlandScannerManager @Inject constructor(
             return
         }
 
-        val filter = android.content.IntentFilter(ACTION_SCANNER_RESULT)
-        ContextCompat.registerReceiver(context, scanReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        val filter = IntentFilter(ACTION_SCANNER_RESULT)
+        ContextCompat.registerReceiver(context, scanReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
         isRegistered = true
         Log.d(TAG, "Scanner receiver registered")
     }
@@ -181,6 +159,11 @@ class NewlandScannerManager @Inject constructor(
         context.unregisterReceiver(scanReceiver)
         isRegistered = false
         Log.d(TAG, "Scanner receiver unregistered")
+    }
+
+    fun destroy() {
+        unregister()
+        scannerScope.cancel()
     }
 
     /**
@@ -236,5 +219,47 @@ class NewlandScannerManager @Inject constructor(
         val intent = Intent(ACTION_SCANNER_TRIG)
         context.sendBroadcast(intent)
         Log.d(TAG, "Scan trigger broadcast sent")
+    }
+
+    internal fun handleScanPayload(
+        barcode: String?,
+        barcodeType: String?,
+        currentTime: Long = System.currentTimeMillis()
+    ) {
+        if (barcode.isNullOrBlank()) {
+            Log.w(TAG, "Received scan result with empty barcode")
+            return
+        }
+
+        val scanResult = ScanResult(
+            barcode = barcode,
+            barcodeType = barcodeType ?: "UNKNOWN"
+        )
+
+        Log.d(TAG, "Scan received: ${scanResult.barcode} (${scanResult.barcodeType})")
+
+        if (!shouldProcessScan(currentTime)) {
+            val previousTimestamp = lastScanTimestamp.get()
+            val timeSinceLastScan = currentTime - previousTimestamp
+            Log.d(TAG, "Scan ignored (debounce): ${timeSinceLastScan}ms since last scan")
+            return
+        }
+
+        scannerScope.launch {
+            _scanEvents.emit(scanResult)
+            Log.d(TAG, "Scan event emitted to SharedFlow")
+        }
+    }
+
+    private fun shouldProcessScan(currentTime: Long): Boolean {
+        while (true) {
+            val previousTimestamp = lastScanTimestamp.get()
+            if (currentTime - previousTimestamp < DEBOUNCE_DELAY_MS) {
+                return false
+            }
+            if (lastScanTimestamp.compareAndSet(previousTimestamp, currentTime)) {
+                return true
+            }
+        }
     }
 }

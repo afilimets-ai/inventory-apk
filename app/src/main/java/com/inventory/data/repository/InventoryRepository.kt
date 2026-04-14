@@ -49,6 +49,7 @@ interface InventoryRepository {
     suspend fun updateOutboxStatus(id: Long, status: String)
     suspend fun markOutboxFailed(id: Long, errorMessage: String)
     suspend fun deleteSyncedOutbox()
+    suspend fun importItems(rows: List<Map<String, Any?>>)
 
     // ACID транзакція: операція + outbox entry одночасно
     suspend fun recordOperationWithOutbox(

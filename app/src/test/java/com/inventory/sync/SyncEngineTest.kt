@@ -5,10 +5,10 @@ import com.inventory.data.repository.InventoryRepository
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
 import com.inventory.sync.serializer.JsonSerializer
+import org.junit.Assert.assertTrue
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -69,8 +69,6 @@ class SyncEngineTest {
 
         engine.runImport()
 
-        // Bug: сьогодні залишається Running — після фіксу має бути Idle
-        assertNotEquals(SyncState.Running, engine.state.value)
         assertEquals(SyncState.Idle, engine.state.value)
     }
 
@@ -88,12 +86,11 @@ class SyncEngineTest {
             .thenReturn(SyncImportResult.Success(csvData))
         whenever(settingsManager.getImportProviders()).thenReturn(listOf(settings))
         whenever(providerFactory.create(SyncProviderType.FTP)).thenReturn(provider)
-        whenever(repository.getItemByBarcode(any())).thenReturn(null)
-        whenever(repository.insertItem(any())).thenReturn(1L)
+        whenever(repository.importItems(any())).thenReturn(Unit)
 
         engine.runImport()
 
-        assert(engine.state.value is SyncState.Success)
+        assertTrue(engine.state.value is SyncState.Success)
     }
 
     @Test
@@ -112,7 +109,7 @@ class SyncEngineTest {
 
         engine.runImport()
 
-        assert(engine.state.value is SyncState.Error)
+        assertTrue(engine.state.value is SyncState.Error)
     }
 
     // ── runExport ────────────────────────────────────────────────────────────
@@ -145,7 +142,7 @@ class SyncEngineTest {
 
         engine.runExport()
 
-        assert(engine.state.value is SyncState.Success)
+        assertTrue(engine.state.value is SyncState.Success)
     }
 
     @Test
@@ -178,9 +175,45 @@ class SyncEngineTest {
         engine.runExport()
 
         val state = engine.state.value
-        assert(state is SyncState.Error)
+        assertTrue(state is SyncState.Error)
         val errorMsg = (state as SyncState.Error).message
         assert(errorMsg.contains("FTP error")) { "Expected FTP error in: $errorMsg" }
         assert(errorMsg.contains("HTTP error")) { "Expected HTTP error in: $errorMsg" }
+    }
+
+    @Test
+    fun `runExport transitions to Error when repository throws`() = runTest {
+        val settings = SyncSettings(
+            providerType = SyncProviderType.LOCAL_FOLDER,
+            isExportEnabled = true,
+            format = SyncFormat.CSV
+        )
+        whenever(settingsManager.getExportProviders()).thenReturn(listOf(settings))
+        whenever(repository.getItems()).thenThrow(IllegalStateException("boom"))
+
+        engine.runExport()
+
+        assertEquals(SyncState.Error("Export failed: boom"), engine.state.value)
+    }
+
+    @Test
+    fun `runImport transitions to Error when import apply fails`() = runTest {
+        val csvData = "barcode,name,quantity\n123,Widget,10\n".toByteArray()
+        val settings = SyncSettings(
+            providerType = SyncProviderType.FTP,
+            isImportEnabled = true,
+            format = SyncFormat.CSV
+        )
+        val provider = mock<SyncProvider>()
+        whenever(provider.supportsImport).thenReturn(true)
+        whenever(provider.import(SyncFormat.CSV, "inventory_import"))
+            .thenReturn(SyncImportResult.Success(csvData))
+        whenever(settingsManager.getImportProviders()).thenReturn(listOf(settings))
+        whenever(providerFactory.create(SyncProviderType.FTP)).thenReturn(provider)
+        whenever(repository.importItems(any())).thenThrow(IllegalStateException("db failed"))
+
+        engine.runImport()
+
+        assertEquals(SyncState.Error("Import failed: db failed"), engine.state.value)
     }
 }
