@@ -9,7 +9,7 @@ import com.inventory.data.entity.OperationType
 import com.inventory.data.entity.OutboxEntry
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.feedback.ScanFeedbackManager
-import com.inventory.scanner.NewlandScannerManager
+import com.inventory.scanner.ScannerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuditViewModel @Inject constructor(
-    private val scannerManager: NewlandScannerManager,
+    private val scannerManager: ScannerManager,
     private val repository: InventoryRepository,
     private val feedbackManager: ScanFeedbackManager
 ) : ViewModel() {

@@ -15,7 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.inventory.scanner.NewlandScannerManager
+import com.inventory.scanner.ScannerManager
 import com.inventory.sync.SyncProviderType
 import com.inventory.ui.audit.AuditScreen
 import com.inventory.ui.components.SyncStatusIndicator
@@ -32,7 +32,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var scannerManager: NewlandScannerManager
+    @Inject lateinit var scannerManager: ScannerManager
     @Inject lateinit var themePreferenceManager: ThemePreferenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {

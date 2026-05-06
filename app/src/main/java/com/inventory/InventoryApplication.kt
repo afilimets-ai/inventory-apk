@@ -2,7 +2,7 @@ package com.inventory
 
 import android.app.Application
 import androidx.work.Configuration
-import com.inventory.scanner.NewlandScannerManager
+import com.inventory.scanner.ScannerManager
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -13,7 +13,7 @@ class InventoryApplication : Application(), Configuration.Provider {
     lateinit var wmConfiguration: Configuration
 
     @Inject
-    lateinit var scannerManager: NewlandScannerManager
+    lateinit var scannerManager: ScannerManager
 
     override val workManagerConfiguration: Configuration
         get() = wmConfiguration
