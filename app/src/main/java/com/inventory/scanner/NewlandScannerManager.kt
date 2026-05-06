@@ -40,7 +40,7 @@ import javax.inject.Singleton
 @Singleton
 class NewlandScannerManager @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+) : ScannerManager {
     companion object {
         private const val TAG = "NewlandScannerManager"
 
@@ -101,7 +101,7 @@ class NewlandScannerManager @Inject constructor(
      * }
      * ```
      */
-    val scanEvents: SharedFlow<ScanResult> = _scanEvents.asSharedFlow()
+    override val scanEvents: SharedFlow<ScanResult> = _scanEvents.asSharedFlow()
 
     /**
      * BroadcastReceiver for handling scan results from the Newland MT90 scanner.
@@ -130,7 +130,7 @@ class NewlandScannerManager @Inject constructor(
      *
      * Safe to call multiple times - will not double-register.
      */
-    fun register() {
+    override fun register() {
         if (isRegistered) {
             Log.d(TAG, "Scanner receiver already registered, skipping")
             return
@@ -150,7 +150,7 @@ class NewlandScannerManager @Inject constructor(
      *
      * Safe to call multiple times - will not crash if already unregistered.
      */
-    fun unregister() {
+    override fun unregister() {
         if (!isRegistered) {
             Log.d(TAG, "Scanner receiver not registered, skipping unregister")
             return
@@ -161,7 +161,7 @@ class NewlandScannerManager @Inject constructor(
         Log.d(TAG, "Scanner receiver unregistered")
     }
 
-    fun destroy() {
+    override fun destroy() {
         unregister()
         scannerScope.cancel()
     }
@@ -187,7 +187,7 @@ class NewlandScannerManager @Inject constructor(
      * @param event The KeyEvent object
      * @return true if the key event was handled (F6 key pressed), false otherwise
      */
-    fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_F6 && event.action == KeyEvent.ACTION_DOWN) {
             Log.d(TAG, "Hardware scan button (F6) pressed")
             triggerScan()
@@ -215,7 +215,7 @@ class NewlandScannerManager @Inject constructor(
      * Note: The BroadcastReceiver must be registered (via register()) before calling
      * this method, otherwise scan results will not be received.
      */
-    fun triggerScan() {
+    override fun triggerScan() {
         val intent = Intent(ACTION_SCANNER_TRIG)
         context.sendBroadcast(intent)
         Log.d(TAG, "Scan trigger broadcast sent")
