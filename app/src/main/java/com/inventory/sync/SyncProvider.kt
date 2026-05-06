@@ -13,7 +13,8 @@ enum class SyncProviderType(val displayName: String) {
     GOOGLE_DRIVE("Google Drive"),
     EMAIL("Електронна пошта"),
     TELEGRAM("Telegram Bot"),
-    ONE_C("1C HTTP")
+    ONE_C("1C HTTP"),
+    SFTP("SFTP")
 }
 
 /**
