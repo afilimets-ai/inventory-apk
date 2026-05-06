@@ -4,6 +4,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcel;
+import android.os.RemoteException;
 
 /* JADX INFO: loaded from: classes3.dex */
 public interface IExecutor extends IInterface {
@@ -26,7 +27,7 @@ public interface IExecutor extends IInterface {
             }
 
             @Override // com.honeywell.IExecutor
-            public Message execute(Message message) {
+            public Message execute(Message message) throws RemoteException {
                 Parcel parcelObtain = Parcel.obtain();
                 Parcel parcelObtain2 = Parcel.obtain();
                 try {
@@ -51,7 +52,7 @@ public interface IExecutor extends IInterface {
             }
 
             @Override // com.honeywell.IExecutor
-            public void executeAsync(Message message, IExecutor iExecutor) {
+            public void executeAsync(Message message, IExecutor iExecutor) throws RemoteException {
                 Parcel parcelObtain = Parcel.obtain();
                 try {
                     parcelObtain.writeInterfaceToken(Stub.DESCRIPTOR);
@@ -93,7 +94,7 @@ public interface IExecutor extends IInterface {
         }
 
         @Override // android.os.Binder
-        public boolean onTransact(int i, Parcel parcel, Parcel parcel2, int i2) {
+        public boolean onTransact(int i, Parcel parcel, Parcel parcel2, int i2) throws RemoteException {
             if (i != 1) {
                 if (i == 2) {
                     parcel.enforceInterface(DESCRIPTOR);
@@ -119,7 +120,7 @@ public interface IExecutor extends IInterface {
         }
     }
 
-    Message execute(Message message);
+    Message execute(Message message) throws RemoteException;
 
-    void executeAsync(Message message, IExecutor iExecutor);
+    void executeAsync(Message message, IExecutor iExecutor) throws RemoteException;
 }

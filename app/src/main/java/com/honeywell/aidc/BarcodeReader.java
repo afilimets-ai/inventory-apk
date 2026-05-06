@@ -576,7 +576,7 @@ public final class BarcodeReader implements Parcelable {
         return internalGetProperties(new HashSet());
     }
 
-    public boolean getBooleanProperty(String str) {
+    public boolean getBooleanProperty(String str) throws UnsupportedPropertyException {
         return ((Boolean) getTypedProperty(str, Boolean.class)).booleanValue();
     }
 
@@ -594,7 +594,7 @@ public final class BarcodeReader implements Parcelable {
         }
     }
 
-    public int getIntProperty(String str) {
+    public int getIntProperty(String str) throws UnsupportedPropertyException {
         return ((Integer) getTypedProperty(str, Integer.class)).intValue();
     }
 
@@ -659,7 +659,7 @@ public final class BarcodeReader implements Parcelable {
         }
     }
 
-    public String getStringProperty(String str) {
+    public String getStringProperty(String str) throws UnsupportedPropertyException {
         return (String) getTypedProperty(str, String.class);
     }
 

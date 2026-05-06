@@ -60,17 +60,17 @@ class JsonUtil {
             return obj;
         }
         try {
+            if (obj instanceof Collection) {
+                return collectionToJson((Collection) obj);
+            }
+            if (obj.getClass().isArray()) {
+                return arrayToJson(obj);
+            }
+            if (obj instanceof Map) {
+                return mapToJson((Map) obj);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (obj instanceof Collection) {
-            return collectionToJson((Collection) obj);
-        }
-        if (obj.getClass().isArray()) {
-            return arrayToJson(obj);
-        }
-        if (obj instanceof Map) {
-            return mapToJson((Map) obj);
         }
         if ((obj instanceof Boolean) || (obj instanceof Byte) || (obj instanceof Character) || (obj instanceof Double) || (obj instanceof Float) || (obj instanceof Integer) || (obj instanceof Long) || (obj instanceof Short) || (obj instanceof String)) {
             return obj;

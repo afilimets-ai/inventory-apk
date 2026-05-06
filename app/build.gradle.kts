@@ -70,8 +70,11 @@ android {
     }
 
     testOptions {
-        unitTests.all {
-            it.jvmArgs("-XX:+EnableDynamicAgentLoading")
+        unitTests {
+            isReturnDefaultValues = true
+            all {
+                it.jvmArgs("-XX:+EnableDynamicAgentLoading")
+            }
         }
     }
 }

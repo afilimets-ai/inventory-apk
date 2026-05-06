@@ -12,6 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class IntentBasedScannerManagerTest {
@@ -21,21 +22,34 @@ class IntentBasedScannerManagerTest {
 
     private val context = mock<Context>()
 
+    private fun makeManager() = IntentBasedScannerManager(
+        context = context,
+        scanAction = "android.intent.action.DECODE_DATA",
+        barcodeExtra = "barcode_string",
+        typeExtra = "barcode_type"
+    )
+
+    /** Creates a mock Intent with the given action and extras. */
+    private fun mockIntent(
+        action: String,
+        barcode: String? = null,
+        type: String? = null
+    ): Intent = mock<Intent>().also { intent ->
+        whenever(intent.action).thenReturn(action)
+        whenever(intent.getStringExtra("barcode_string")).thenReturn(barcode)
+        whenever(intent.getStringExtra("barcode_type")).thenReturn(type)
+    }
+
     @Test
     fun `handleIntent emits scan event for valid barcode`() = runTest(mainDispatcherRule.scheduler) {
-        val manager = IntentBasedScannerManager(
-            context = context,
-            scanAction = "android.intent.action.DECODE_DATA",
-            barcodeExtra = "barcode_string",
-            typeExtra = "barcode_type"
-        )
-
+        val manager = makeManager()
         manager.scanEvents.test {
             manager.handleIntent(
-                Intent("android.intent.action.DECODE_DATA").apply {
-                    putExtra("barcode_string", "ABC123")
-                    putExtra("barcode_type", "CODE39")
-                }
+                mockIntent(
+                    action = "android.intent.action.DECODE_DATA",
+                    barcode = "ABC123",
+                    type = "CODE39"
+                )
             )
             advanceUntilIdle()
             val event = awaitItem()
@@ -47,18 +61,13 @@ class IntentBasedScannerManagerTest {
 
     @Test
     fun `handleIntent ignores empty barcode`() = runTest(mainDispatcherRule.scheduler) {
-        val manager = IntentBasedScannerManager(
-            context = context,
-            scanAction = "android.intent.action.DECODE_DATA",
-            barcodeExtra = "barcode_string",
-            typeExtra = "barcode_type"
-        )
-
+        val manager = makeManager()
         manager.scanEvents.test {
             manager.handleIntent(
-                Intent("android.intent.action.DECODE_DATA").apply {
-                    putExtra("barcode_string", "")
-                }
+                mockIntent(
+                    action = "android.intent.action.DECODE_DATA",
+                    barcode = ""
+                )
             )
             advanceUntilIdle()
             expectNoEvents()
@@ -68,17 +77,14 @@ class IntentBasedScannerManagerTest {
 
     @Test
     fun `handleIntent ignores wrong action`() = runTest(mainDispatcherRule.scheduler) {
-        val manager = IntentBasedScannerManager(
-            context = context,
-            scanAction = "android.intent.action.DECODE_DATA",
-            barcodeExtra = "barcode_string",
-            typeExtra = "barcode_type"
-        )
-
+        val manager = makeManager()
         manager.scanEvents.test {
-            manager.handleIntent(Intent("some.other.action").apply {
-                putExtra("barcode_string", "ABC123")
-            })
+            manager.handleIntent(
+                mockIntent(
+                    action = "some.other.action",
+                    barcode = "ABC123"
+                )
+            )
             advanceUntilIdle()
             expectNoEvents()
             cancelAndIgnoreRemainingEvents()
@@ -87,18 +93,14 @@ class IntentBasedScannerManagerTest {
 
     @Test
     fun `handleIntent uses UNKNOWN when type extra is missing`() = runTest(mainDispatcherRule.scheduler) {
-        val manager = IntentBasedScannerManager(
-            context = context,
-            scanAction = "android.intent.action.DECODE_DATA",
-            barcodeExtra = "barcode_string",
-            typeExtra = "barcode_type"
-        )
-
+        val manager = makeManager()
         manager.scanEvents.test {
             manager.handleIntent(
-                Intent("android.intent.action.DECODE_DATA").apply {
-                    putExtra("barcode_string", "XYZ789")
-                }
+                mockIntent(
+                    action = "android.intent.action.DECODE_DATA",
+                    barcode = "XYZ789",
+                    type = null  // no type extra → should default to UNKNOWN
+                )
             )
             advanceUntilIdle()
             val event = awaitItem()

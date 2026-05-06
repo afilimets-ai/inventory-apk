@@ -83,6 +83,7 @@ fun ProviderSettingsScreen(
                 SyncProviderType.LOCAL_FOLDER -> LocalFolderFields(settings) { settings = it }
                 SyncProviderType.HTTP_API -> HttpApiFields(settings) { settings = it }
                 SyncProviderType.FTP -> FtpFields(settings) { settings = it }
+                SyncProviderType.SFTP -> FtpFields(settings) { settings = it }
                 SyncProviderType.WEBDAV -> WebDavFields(settings) { settings = it }
                 SyncProviderType.EMAIL -> EmailFields(settings) { settings = it }
                 SyncProviderType.TELEGRAM -> TelegramFields(settings) { settings = it }

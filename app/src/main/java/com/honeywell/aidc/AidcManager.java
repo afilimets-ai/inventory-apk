@@ -179,11 +179,15 @@ public final class AidcManager {
         List<BarcodeReaderInfo> listListConnectedBarcodeDevices = listConnectedBarcodeDevices();
         int size = listListConnectedBarcodeDevices.size();
         for (int i = 0; i < size; i++) {
-            if (listListConnectedBarcodeDevices.get(i).getName().equals("dcs.scanner.imager")) {
-                return createBarcodeReader("dcs.scanner.imager");
-            }
-            if (listListConnectedBarcodeDevices.get(i).getName().equals("dcs.scanner.serial1")) {
-                return createBarcodeReader("dcs.scanner.serial1");
+            try {
+                if (listListConnectedBarcodeDevices.get(i).getName().equals("dcs.scanner.imager")) {
+                    return createBarcodeReader("dcs.scanner.imager");
+                }
+                if (listListConnectedBarcodeDevices.get(i).getName().equals("dcs.scanner.serial1")) {
+                    return createBarcodeReader("dcs.scanner.serial1");
+                }
+            } catch (InvalidScannerNameException e) {
+                DebugLog.d("createBarcodeReader failed: " + e.getMessage());
             }
         }
         return null;
@@ -192,7 +196,9 @@ public final class AidcManager {
     public Message execute(Message message) {
         try {
             return this.mService.execute(message);
-        } catch (RemoteException e) {
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
             throw new RuntimeException("Failed to execute request", e);
         }
     }

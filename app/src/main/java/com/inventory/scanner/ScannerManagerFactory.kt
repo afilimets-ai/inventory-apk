@@ -21,9 +21,18 @@ import javax.inject.Singleton
  */
 @Singleton
 class ScannerManagerFactory @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val manufacturerProvider: () -> String = { Build.MANUFACTURER }
+    @ApplicationContext private val context: Context
 ) {
+    internal var manufacturerProvider: () -> String = { Build.MANUFACTURER }
+
+    // Secondary constructor for unit tests — bypasses Hilt
+    constructor(
+        context: Context,
+        manufacturerProvider: () -> String
+    ) : this(context) {
+        this.manufacturerProvider = manufacturerProvider
+    }
+
     companion object {
         private const val TAG = "ScannerManagerFactory"
     }
