@@ -1,0 +1,40 @@
+package com.inventory.scanner
+
+import android.content.Context
+import org.junit.Assert.assertTrue
+import org.junit.Test
+import org.mockito.kotlin.mock
+
+class ScannerManagerFactoryTest {
+
+    private val context = mock<Context>()
+
+    @Test
+    fun `creates NewlandScannerManager for Newland manufacturer`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "Newland" })
+        val manager = factory.create()
+        assertTrue("Expected NewlandScannerManager, got ${manager::class.simpleName}",
+            manager is NewlandScannerManager)
+    }
+
+    @Test
+    fun `creates NewlandScannerManager for NEWLAND uppercase`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "NEWLAND" })
+        assertTrue(factory.create() is NewlandScannerManager)
+    }
+
+    @Test
+    fun `creates IntentBasedScannerManager for unknown manufacturer`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "SomeUnknownBrand" })
+        assertTrue(factory.create() is IntentBasedScannerManager)
+    }
+
+    @Test
+    fun `creates IntentBasedScannerManager for Urovo manufacturer`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "Urovo" })
+        val manager = factory.create()
+        assertTrue(manager is IntentBasedScannerManager)
+        val intManager = manager as IntentBasedScannerManager
+        assertTrue(intManager.scanAction.contains("DECODE_DATA", ignoreCase = true))
+    }
+}
