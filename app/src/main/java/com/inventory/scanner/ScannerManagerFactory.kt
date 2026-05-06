@@ -38,8 +38,9 @@ class ScannerManagerFactory @Inject constructor(
     }
 
     fun create(): ScannerManager {
-        val manufacturer = manufacturerProvider().lowercase()
-        Log.i(TAG, "Detecting scanner for manufacturer: ${manufacturerProvider()}")
+        val rawManufacturer = manufacturerProvider()
+        val manufacturer = rawManufacturer.lowercase()
+        Log.i(TAG, "Detecting scanner for manufacturer: $rawManufacturer")
 
         return when {
             manufacturer.contains("newland") -> {
@@ -69,7 +70,7 @@ class ScannerManagerFactory @Inject constructor(
                 )
             }
             else -> {
-                Log.w(TAG, "→ IntentBasedScannerManager (fallback/Urovo preset) for unknown: ${manufacturerProvider()}")
+                Log.w(TAG, "→ IntentBasedScannerManager (fallback/Urovo preset) for unknown: $rawManufacturer")
                 IntentBasedScannerManager(
                     context = context,
                     scanAction = "android.intent.action.DECODE_DATA",

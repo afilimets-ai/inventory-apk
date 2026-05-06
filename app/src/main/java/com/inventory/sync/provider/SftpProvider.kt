@@ -9,6 +9,8 @@ import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncResult
 import com.inventory.sync.SyncSettings
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -30,8 +32,11 @@ class SftpProvider(
     override val supportsExport = true
     override val supportsImport = true
 
+    // Serializes export and import — libSFTP.so holds one global SSH session
+    private val mutex = Mutex()
+
     override suspend fun export(data: ByteArray, format: SyncFormat, fileName: String): SyncResult =
-        withContext(Dispatchers.IO) {
+        mutex.withLock { withContext(Dispatchers.IO) {
             var tempFile: File? = null
             try {
                 if (!sftpClient.init()) {
@@ -61,10 +66,10 @@ class SftpProvider(
                 runCatching { sftpClient.disconnect() }
                 runCatching { sftpClient.free() }
             }
-        }
+        } }
 
     override suspend fun import(format: SyncFormat, fileName: String): SyncImportResult =
-        withContext(Dispatchers.IO) {
+        mutex.withLock { withContext(Dispatchers.IO) {
             var tempFile: File? = null
             try {
                 if (!sftpClient.init()) {
@@ -93,7 +98,7 @@ class SftpProvider(
                 runCatching { sftpClient.disconnect() }
                 runCatching { sftpClient.free() }
             }
-        }
+        } }
 
     private fun buildRemotePath(dir: String, file: String): String {
         val cleanDir = dir.trimEnd('/')

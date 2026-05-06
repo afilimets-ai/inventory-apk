@@ -37,4 +37,28 @@ class ScannerManagerFactoryTest {
         val intManager = manager as IntentBasedScannerManager
         assertTrue(intManager.scanAction.contains("DECODE_DATA", ignoreCase = true))
     }
+
+    @Test
+    fun `creates HoneywellScannerManager for Honeywell manufacturer`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "Honeywell" })
+        val manager = factory.create()
+        assertTrue("Expected HoneywellScannerManager, got ${manager::class.simpleName}",
+            manager is HoneywellScannerManager)
+    }
+
+    @Test
+    fun `creates HoneywellScannerManager for HONEYWELL uppercase`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "HONEYWELL" })
+        assertTrue(factory.create() is HoneywellScannerManager)
+    }
+
+    @Test
+    fun `creates IntentBasedScannerManager for iData manufacturer with correct action`() {
+        val factory = ScannerManagerFactory(context, manufacturerProvider = { "iData" })
+        val manager = factory.create()
+        assertTrue(manager is IntentBasedScannerManager)
+        val intManager = manager as IntentBasedScannerManager
+        assertTrue("Expected iData action, got: ${intManager.scanAction}",
+            intManager.scanAction == "android.intent.action.decode.data")
+    }
 }

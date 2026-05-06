@@ -52,7 +52,7 @@ class IntentBasedScannerManager(
     }
 
     @Volatile private var isRegistered = false
-    private var lastScanTime = 0L
+    @Volatile private var lastScanTime = 0L
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _scanEvents = MutableSharedFlow<ScanResult>(

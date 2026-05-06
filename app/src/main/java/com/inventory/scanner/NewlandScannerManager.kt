@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import android.util.Log
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +17,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicLong
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Singleton manager for the Newland MT90 barcode scanner.
@@ -37,9 +34,9 @@ import javax.inject.Singleton
  *
  * @property context Application context injected by Hilt
  */
-@Singleton
-class NewlandScannerManager @Inject constructor(
-    @ApplicationContext private val context: Context
+// Constructed by ScannerManagerFactory — not a direct Hilt binding
+class NewlandScannerManager(
+    private val context: Context
 ) : ScannerManager {
     companion object {
         private const val TAG = "NewlandScannerManager"

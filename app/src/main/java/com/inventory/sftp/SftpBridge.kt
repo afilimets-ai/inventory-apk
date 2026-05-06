@@ -24,6 +24,7 @@ object SftpBridge : SftpClientI {
 
     override fun listFiles(path: String, pattern: String, names: Array<String?>,
                            sizes: IntArray, count: IntArray): Boolean {
+        // timestamps param required by native API but not exposed in SftpClientI — allocated and dropped
         val timestamps = Array<String?>(names.size) { null }
         return SSHFTPClient.ListFiles(path, names, sizes, timestamps, count, pattern)
     }
