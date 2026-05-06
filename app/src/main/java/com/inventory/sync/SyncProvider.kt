@@ -8,13 +8,13 @@ enum class SyncProviderType(val displayName: String) {
     LOCAL_FOLDER("Локальна папка"),
     HTTP_API("HTTP API"),
     FTP("FTP"),
+    SFTP("SFTP (SSH)"),
     WEBDAV("WebDAV"),
     ONEDRIVE("OneDrive"),
     GOOGLE_DRIVE("Google Drive"),
     EMAIL("Електронна пошта"),
     TELEGRAM("Telegram Bot"),
-    ONE_C("1C HTTP"),
-    SFTP("SFTP")
+    ONE_C("1C HTTP")
 }
 
 /**
