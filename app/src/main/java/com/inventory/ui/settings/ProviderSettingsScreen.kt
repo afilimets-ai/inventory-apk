@@ -1,5 +1,9 @@
 package com.inventory.ui.settings
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +23,8 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,8 +36,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -137,7 +145,38 @@ private fun FormatDropdown(selected: SyncFormat, onSelect: (SyncFormat) -> Unit)
 
 @Composable
 private fun LocalFolderFields(s: SyncSettings, onChange: (SyncSettings) -> Unit) {
-    FieldText("Шлях до папки", s.path) { onChange(s.copy(path = it)) }
+    val context = LocalContext.current
+    val folderPicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocumentTree()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            // Зберігаємо persistable permission щоб доступ залишався після перезапуску
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+            onChange(s.copy(path = uri.toString()))
+        }
+    }
+
+    OutlinedButton(
+        onClick = { folderPicker.launch(null) },
+        modifier = Modifier.fillMaxWidth().height(56.dp)
+    ) {
+        Text("Вибрати папку")
+    }
+
+    if (s.path.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(8.dp))
+        val displayPath = Uri.decode(s.path).substringAfterLast(':').ifEmpty { s.path }
+        Text(
+            text = displayPath,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
 }
 
 @Composable

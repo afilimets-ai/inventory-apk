@@ -1,7 +1,6 @@
 package com.inventory.ui.settings
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,18 +16,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.inventory.sync.SyncProviderType
+import com.inventory.sync.SyncState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +52,16 @@ fun SyncSettingsScreen(
     viewModel: SyncSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val syncState by viewModel.syncState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(syncState) {
+        when (val state = syncState) {
+            is SyncState.Success -> snackbarHostState.showSnackbar("Синхронізацію завершено")
+            is SyncState.Error -> snackbarHostState.showSnackbar("Помилка: ${state.message}")
+            else -> {}
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -56,7 +73,8 @@ fun SyncSettingsScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -94,7 +112,7 @@ fun SyncSettingsScreen(
 
             Divider()
 
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f)) {
                 items(uiState.rows) { row ->
                     ProviderRow(
                         row = row,
@@ -103,6 +121,50 @@ fun SyncSettingsScreen(
                         onSettingsClick = { onProviderSettingsClick(row.type) }
                     )
                     Divider(color = MaterialTheme.colorScheme.outlineVariant)
+                }
+            }
+
+            // Кнопки імпорту / експорту
+            val isRunning = syncState is SyncState.Running
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Button(
+                    onClick = { viewModel.runImport() },
+                    enabled = !isRunning && uiState.rows.any { it.importEnabled },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    if (isRunning) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text("Імпорт", fontSize = 16.sp)
+                }
+
+                OutlinedButton(
+                    onClick = { viewModel.runExport() },
+                    enabled = !isRunning && uiState.rows.any { it.exportEnabled },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                ) {
+                    if (isRunning) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                    Text("Експорт", fontSize = 16.sp)
                 }
             }
         }

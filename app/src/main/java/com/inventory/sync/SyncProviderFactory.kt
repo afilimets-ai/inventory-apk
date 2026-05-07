@@ -25,7 +25,7 @@ class SyncProviderFactory @Inject constructor(
     fun create(type: SyncProviderType): SyncProvider {
         val settings = settingsManager.getSettings(type)
         return when (type) {
-            SyncProviderType.LOCAL_FOLDER -> LocalFolderProvider(settings)
+            SyncProviderType.LOCAL_FOLDER -> LocalFolderProvider(settings, context)
             SyncProviderType.HTTP_API -> HttpApiProvider(settings, okHttpClient)
             SyncProviderType.FTP -> FtpProvider(settings)
             SyncProviderType.SFTP -> SftpProvider(settings = settings, cacheDir = context.cacheDir)

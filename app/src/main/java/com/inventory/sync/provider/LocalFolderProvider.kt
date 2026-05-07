@@ -1,14 +1,23 @@
 package com.inventory.sync.provider
 
+import android.content.Context
+import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
 import com.inventory.sync.SyncFormat
 import com.inventory.sync.SyncImportResult
 import com.inventory.sync.SyncProvider
 import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncResult
 import com.inventory.sync.SyncSettings
-import java.io.File
 
-class LocalFolderProvider(private val settings: SyncSettings) : SyncProvider {
+/**
+ * Локальний провайдер синхронізації через SAF (Storage Access Framework).
+ * settings.path зберігає URI папки, вибраної через системний файл-менеджер.
+ */
+class LocalFolderProvider(
+    private val settings: SyncSettings,
+    private val context: Context
+) : SyncProvider {
 
     override val type = SyncProviderType.LOCAL_FOLDER
     override val supportsExport = true
@@ -16,10 +25,21 @@ class LocalFolderProvider(private val settings: SyncSettings) : SyncProvider {
 
     override suspend fun export(data: ByteArray, format: SyncFormat, fileName: String): SyncResult {
         return try {
-            val dir = File(settings.path)
-            if (!dir.exists()) dir.mkdirs()
-            val file = File(dir, "$fileName.${format.extension}")
-            file.writeBytes(data)
+            val dirUri = Uri.parse(settings.path)
+            val dir = DocumentFile.fromTreeUri(context, dirUri)
+                ?: return SyncResult.Failure("Не вдалося відкрити папку: ${settings.path}")
+
+            val fullName = "$fileName.${format.extension}"
+            // Шукаємо існуючий файл або створюємо новий
+            val existing = dir.findFile(fullName)
+            val docFile = existing ?: dir.createFile(
+                mimeForFormat(format), fullName
+            ) ?: return SyncResult.Failure("Не вдалося створити файл: $fullName")
+
+            context.contentResolver.openOutputStream(docFile.uri, "wt")?.use { out ->
+                out.write(data)
+            } ?: return SyncResult.Failure("Не вдалося записати у файл: $fullName")
+
             SyncResult.Success
         } catch (e: Exception) {
             SyncResult.Failure("Помилка запису у локальну папку: ${e.message}", e)
@@ -28,22 +48,41 @@ class LocalFolderProvider(private val settings: SyncSettings) : SyncProvider {
 
     override suspend fun import(format: SyncFormat, fileName: String): SyncImportResult {
         return try {
-            val file = File(settings.path, "$fileName.${format.extension}")
-            if (!file.exists()) {
-                return SyncImportResult.Failure("Файл не знайдено: ${file.absolutePath}")
-            }
-            SyncImportResult.Success(file.readBytes())
+            val dirUri = Uri.parse(settings.path)
+            val dir = DocumentFile.fromTreeUri(context, dirUri)
+                ?: return SyncImportResult.Failure("Не вдалося відкрити папку: ${settings.path}")
+
+            val fullName = "$fileName.${format.extension}"
+            val docFile = dir.findFile(fullName)
+                ?: return SyncImportResult.Failure("Файл не знайдено: $fullName")
+
+            val bytes = context.contentResolver.openInputStream(docFile.uri)?.use { it.readBytes() }
+                ?: return SyncImportResult.Failure("Не вдалося прочитати файл: $fullName")
+
+            SyncImportResult.Success(bytes)
         } catch (e: Exception) {
             SyncImportResult.Failure("Помилка читання з локальної папки: ${e.message}", e)
         }
     }
 
     override suspend fun discoverImportFiles(format: SyncFormat): List<String> {
-        val dir = File(settings.path)
-        if (!dir.isDirectory) return emptyList()
-        return dir.listFiles { f -> f.isFile && f.extension.equals(format.extension, ignoreCase = true) }
-            ?.sortedByDescending { it.lastModified() }
-            ?.map { it.nameWithoutExtension }
-            ?: emptyList()
+        return try {
+            val dirUri = Uri.parse(settings.path)
+            val dir = DocumentFile.fromTreeUri(context, dirUri) ?: return emptyList()
+
+            val ext = ".${format.extension}"
+            dir.listFiles()
+                .filter { it.isFile && (it.name ?: "").endsWith(ext, ignoreCase = true) }
+                .sortedByDescending { it.lastModified() }
+                .mapNotNull { it.name?.removeSuffix(ext) }
+        } catch (_: Exception) {
+            emptyList()
+        }
+    }
+
+    private fun mimeForFormat(format: SyncFormat): String = when (format) {
+        SyncFormat.CSV -> "text/csv"
+        SyncFormat.JSON -> "application/json"
+        SyncFormat.EXCEL -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     }
 }

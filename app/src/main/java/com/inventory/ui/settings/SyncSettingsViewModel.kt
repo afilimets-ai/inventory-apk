@@ -1,15 +1,18 @@
 package com.inventory.ui.settings
 
 import androidx.lifecycle.ViewModel
-import com.inventory.sync.SyncFormat
+import androidx.lifecycle.viewModelScope
+import com.inventory.sync.SyncEngine
 import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncSettings
 import com.inventory.sync.SyncSettingsManager
+import com.inventory.sync.SyncState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ProviderRowState(
@@ -26,11 +29,14 @@ data class SyncSettingsUiState(
 
 @HiltViewModel
 class SyncSettingsViewModel @Inject constructor(
-    private val settingsManager: SyncSettingsManager
+    private val settingsManager: SyncSettingsManager,
+    private val syncEngine: SyncEngine
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SyncSettingsUiState())
     val uiState: StateFlow<SyncSettingsUiState> = _uiState.asStateFlow()
+
+    val syncState: StateFlow<SyncState> = syncEngine.state
 
     init {
         loadSettings()
@@ -90,6 +96,14 @@ class SyncSettingsViewModel @Inject constructor(
             val current = settingsManager.getSettings(t)
             settingsManager.saveSettings(current.copy(isExportEnabled = false))
         }
+    }
+
+    fun runImport() {
+        viewModelScope.launch { syncEngine.runImport() }
+    }
+
+    fun runExport() {
+        viewModelScope.launch { syncEngine.runExport() }
     }
 
     fun getProviderSettings(type: SyncProviderType): SyncSettings =
