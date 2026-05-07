@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val EXPORT_FILE_NAME = "inventory_export"
-private const val IMPORT_FILE_NAME = "inventory_import"
+private const val DEFAULT_EXPORT_FILE_NAME = "inventory_export"
+private const val DEFAULT_IMPORT_FILE_NAME = "inventory_import"
 
 @Singleton
 class SyncEngine @Inject constructor(
@@ -46,7 +46,8 @@ class SyncEngine @Inject constructor(
                 val rows = items.map { it.toExportRow() }
                 val data = serializer.serialize(rows)
 
-                when (val result = provider.export(data, settings.format, EXPORT_FILE_NAME)) {
+                val exportName = settings.exportFileName.ifEmpty { DEFAULT_EXPORT_FILE_NAME }
+                when (val result = provider.export(data, settings.format, exportName)) {
                     is SyncResult.Success -> { /* ok */ }
                     is SyncResult.Failure -> errors.add("[${settings.providerType.displayName}] ${result.message}")
                 }
@@ -73,7 +74,8 @@ class SyncEngine @Inject constructor(
                 val provider = providerFactory.create(settings.providerType)
                 if (!provider.supportsImport) continue
 
-                when (val importResult = provider.import(settings.format, IMPORT_FILE_NAME)) {
+                val importName = settings.importFileName.ifEmpty { DEFAULT_IMPORT_FILE_NAME }
+                when (val importResult = provider.import(settings.format, importName)) {
                     is SyncImportResult.Success -> {
                         val serializer = getSerializer(settings.format)
                         val rows = serializer.deserialize(importResult.data)

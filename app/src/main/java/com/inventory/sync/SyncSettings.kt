@@ -36,4 +36,7 @@ data class SyncSettings(
     val cloudFolderPath: String = "",
     // WebDAV
     val webDavUrl: String = "",
+    // Ім'я файлу (без розширення) — генерується обліковою системою користувача
+    val exportFileName: String = "",
+    val importFileName: String = "",
 ) : Serializable
