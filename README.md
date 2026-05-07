@@ -19,24 +19,22 @@ Traditional inventory management often requires desktop software or complex web 
 
 ## ✨ Key Features
 
-### Core Functionality (Planned)
+### Core Functionality
 - **Item Management**: Add, edit, and delete inventory items with detailed information
-- **Barcode Scanning**: Quick item lookup and data entry using device camera
-- **Stock Tracking**: Monitor quantity levels with low-stock alerts
-- **Category Organization**: Group items by custom categories and tags
-- **Search & Filter**: Quickly find items using powerful search capabilities
-- **Offline Support**: Full functionality without internet connection
-- **Data Export**: Export inventory data to CSV/Excel formats
+- **Hardware Barcode Scanning**: Quick item lookup and data entry through Newland/Honeywell scanner integrations with a generic scanner fallback
+- **Stock Tracking**: Record receiving, audit, shipment, and transfer operations with local operation history
+- **Category and Location Organization**: Group items by category and storage location
+- **Search & Filter**: Quickly find items using barcode/name search and category/location filters
+- **Offline-first Support**: Room-backed local database and outbox queue for resilient sync
+- **Data Import/Export**: CSV, JSON, and Excel serializers for local folder, FTP/SFTP, WebDAV, and HTTP API providers
 
 ### Advanced Features (Future Roadmap)
-- **Multi-location Support**: Manage inventory across multiple warehouses or stores
 - **Supplier Management**: Track vendor information and purchase orders
-- **Stock Movement History**: Complete audit trail of inventory changes
 - **Reporting & Analytics**: Visual insights into inventory trends
-- **Cloud Sync**: Synchronize data across multiple devices
+- **Cloud Drive Integrations**: OneDrive, Google Drive, email, Telegram, and 1C providers are currently stubs
 - **Multi-user Access**: Collaborative inventory management with role-based permissions
 
-> **Note**: This project is in active development. See [ROADMAP.md](ROADMAP.md) for detailed feature timeline and MVP scope.
+> **Note**: This project is in active development. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the current architecture.
 
 ## 🚀 Getting Started
 
@@ -44,16 +42,16 @@ Traditional inventory management often requires desktop software or complex web 
 
 Before you begin, ensure you have the following installed:
 
-- **Android Studio**: Arctic Fox (2020.3.1) or later
-- **JDK**: Java Development Kit 11 or higher
-- **Android SDK**: API Level 24 (Android 7.0) minimum
+- **Android Studio**: Recent stable Android Studio release
+- **JDK**: Java Development Kit 17
+- **Android SDK**: compile SDK 34, minimum SDK 24
 - **Git**: For version control
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/inventory-apk.git
+   git clone https://github.com/afilimets-ai/inventory-apk.git
    cd inventory-apk
    ```
 
@@ -91,34 +89,33 @@ Once the app is installed:
 4. **Update Stock**: Tap any item to adjust quantity or edit details
 5. **Search Items**: Use the search bar to filter by name, SKU, or category
 
-> **Note**: As this is a greenfield project, the actual implementation is in progress. Check the [development roadmap](ROADMAP.md) for current status.
+> **Note**: Release signing uses GitHub Actions secrets. Do not commit keystores or `local.properties`. Because a release keystore was previously tracked, rotate release signing credentials before shipping production builds.
 
 ## 📚 Documentation
 
 - **[ROADMAP.md](ROADMAP.md)** - Development roadmap, MVP scope, and milestones
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Guidelines for contributing to the project
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Technical architecture and design decisions
 - **[docs/features/](docs/features/)** - Detailed feature specifications
 
 ## 🏗️ Project Status
 
-**Current Phase**: Initial Planning & Documentation
+**Current Phase**: Active Android implementation
 
-This is a greenfield project currently in the planning and specification phase. Core documentation is being established to guide development. Active development of features will begin once the MVP scope is finalized.
-
-See [ROADMAP.md](ROADMAP.md) for detailed development timeline and priorities.
+The application contains Compose screens, Room persistence, scanner integrations, sync providers, WorkManager scheduling, and unit tests. Some provider integrations remain roadmap-only and return explicit "not implemented" failures.
 
 ## 🛠️ Technology Stack
 
 **Target Platform**: Android 7.0 (API 24) and above
 
-**Planned Technologies**:
+**Technologies**:
 - **Language**: Kotlin
 - **Architecture**: MVVM (Model-View-ViewModel)
 - **Database**: Room (SQLite)
 - **Dependency Injection**: Hilt/Dagger
-- **Barcode Scanning**: ML Kit or ZXing
+- **Barcode Scanning**: Newland/Honeywell hardware SDK integrations plus scanner abstraction
 - **UI Framework**: Jetpack Compose / Material Design 3
+- **Background Work**: WorkManager
+- **Sync/Network**: Retrofit, OkHttp, FTP/SFTP/WebDAV/HTTP providers
 
 > See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed technical decisions and rationale.
 
@@ -126,11 +123,7 @@ See [ROADMAP.md](ROADMAP.md) for detailed development timeline and priorities.
 
 We welcome contributions from the community! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for:
-- Development setup instructions
-- Coding standards and conventions
-- Pull request process
-- Issue reporting guidelines
+Use focused pull requests, keep generated/local files out of commits, and run the Gradle checks before submitting changes.
 
 ## 📝 License
 
@@ -138,8 +131,8 @@ This project's license is to be determined. Check back soon for licensing inform
 
 ## 📧 Contact & Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/inventory-apk/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/inventory-apk/discussions)
+- **Issues**: [GitHub Issues](https://github.com/afilimets-ai/inventory-apk/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/afilimets-ai/inventory-apk/discussions)
 
 ## 🙏 Acknowledgments
 

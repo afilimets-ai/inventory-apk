@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <!-- Exclude scanner settings from backup -->
     <exclude domain="sharedpref" path="scanner_prefs.xml"/>
+    <exclude domain="sharedpref" path="inventory_prefs.xml"/>
+    <exclude domain="sharedpref" path="inventory_prefs_secure.xml"/>
+    <exclude domain="sharedpref" path="sync_settings.xml"/>
+    <exclude domain="sharedpref" path="sync_settings_secure.xml"/>
+    <exclude domain="sharedpref" path="__androidx_security_crypto_encrypted_prefs_key_keyset__.xml"/>
+    <exclude domain="sharedpref" path="__androidx_security_crypto_encrypted_prefs_value_keyset__.xml"/>
 </full-backup-content>

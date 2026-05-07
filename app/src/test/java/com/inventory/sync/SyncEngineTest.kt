@@ -1,6 +1,8 @@
 package com.inventory.sync
 
 import com.inventory.data.entity.InventoryItem
+import com.inventory.data.entity.OutboxEntry
+import com.inventory.data.entity.OutboxStatus
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
@@ -13,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class SyncEngineTest {
@@ -145,6 +148,42 @@ class SyncEngineTest {
         engine.runExport()
 
         assertTrue(engine.state.value is SyncState.Success)
+    }
+
+    @Test
+    fun `runExport drains pending outbox for providers that support outbox`() = runTest {
+        val items = listOf(
+            InventoryItem(id = 1, barcode = "123", name = "Widget", quantity = 5.0, unit = "шт")
+        )
+        val entry = OutboxEntry(
+            id = 7,
+            idempotencyKey = "fixed-key",
+            operationType = "RECEIVE",
+            payload = """{"barcode":"123"}"""
+        )
+        val settings = SyncSettings(
+            providerType = SyncProviderType.HTTP_API,
+            isExportEnabled = true,
+            format = SyncFormat.JSON
+        )
+        val provider = mock<SyncProvider>()
+        whenever(provider.type).thenReturn(SyncProviderType.HTTP_API)
+        whenever(provider.supportsExport).thenReturn(true)
+        whenever(provider.supportsOutbox).thenReturn(true)
+        whenever(provider.sendOutbox(entry)).thenReturn(SyncResult.Success)
+        whenever(provider.export(any(), any(), any())).thenReturn(SyncResult.Success)
+        whenever(settingsManager.getExportProviders()).thenReturn(listOf(settings))
+        whenever(providerFactory.create(SyncProviderType.HTTP_API)).thenReturn(provider)
+        whenever(repository.getItems()).thenReturn(flowOf(items))
+        whenever(repository.getPendingOutbox()).thenReturn(listOf(entry))
+        whenever(repository.getFailedOutboxForRetry()).thenReturn(emptyList())
+        whenever(jsonSerializer.serialize(any())).thenReturn(ByteArray(0))
+
+        engine.runExport()
+
+        verify(repository).updateOutboxStatus(entry.id, OutboxStatus.SYNCING.name)
+        verify(repository).updateOutboxStatus(entry.id, OutboxStatus.SYNCED.name)
+        verify(repository).deleteSyncedOutbox()
     }
 
     @Test

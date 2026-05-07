@@ -1,5 +1,6 @@
 package com.inventory.sync.provider
 
+import com.inventory.data.entity.OutboxEntry
 import com.inventory.sync.SyncFormat
 import com.inventory.sync.SyncImportResult
 import com.inventory.sync.SyncProviderType
@@ -48,6 +49,48 @@ class HttpApiProviderTest {
 
         assertEquals("Bearer secret", authHeader)
         assertTrue(result is SyncResult.Failure)
+    }
+
+    @Test
+    fun `sendOutbox posts operation with idempotency key`() {
+        var idempotencyKey: String? = null
+        var path: String? = null
+        val client = OkHttpClient.Builder()
+            .addInterceptor(
+                Interceptor { chain ->
+                    idempotencyKey = chain.request().header("Idempotency-Key")
+                    path = chain.request().url.encodedPath
+                    Response.Builder()
+                        .request(chain.request())
+                        .protocol(Protocol.HTTP_1_1)
+                        .code(200)
+                        .message("OK")
+                        .body("ok".toResponseBody())
+                        .build()
+                }
+            )
+            .build()
+        val provider = HttpApiProvider(
+            settings = SyncSettings(
+                providerType = SyncProviderType.HTTP_API,
+                apiUrl = "https://example.com/api"
+            ),
+            client = client
+        )
+
+        val result = kotlinx.coroutines.runBlocking {
+            provider.sendOutbox(
+                OutboxEntry(
+                    idempotencyKey = "fixed-key",
+                    operationType = "RECEIVE",
+                    payload = """{"barcode":"123"}"""
+                )
+            )
+        }
+
+        assertEquals(SyncResult.Success, result)
+        assertEquals("fixed-key", idempotencyKey)
+        assertEquals("/api/operations", path)
     }
 
     @Test

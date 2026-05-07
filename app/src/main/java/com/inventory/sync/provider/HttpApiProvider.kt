@@ -1,5 +1,6 @@
 package com.inventory.sync.provider
 
+import com.inventory.data.entity.OutboxEntry
 import com.inventory.sync.SyncFormat
 import com.inventory.sync.SyncImportResult
 import com.inventory.sync.SyncProvider
@@ -9,6 +10,7 @@ import com.inventory.sync.SyncSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -21,6 +23,7 @@ class HttpApiProvider(
     override val type = SyncProviderType.HTTP_API
     override val supportsExport = true
     override val supportsImport = true
+    override val supportsOutbox = true
 
     override suspend fun export(data: ByteArray, format: SyncFormat, fileName: String): SyncResult =
         withContext(Dispatchers.IO) {
@@ -39,6 +42,27 @@ class HttpApiProvider(
                 }
             } catch (e: Exception) {
                 SyncResult.Failure("HTTP помилка експорту: ${e.message}", e)
+            }
+        }
+
+    override suspend fun sendOutbox(entry: OutboxEntry): SyncResult =
+        withContext(Dispatchers.IO) {
+            try {
+                val url = buildUrl(settings.apiUrl, "operations")
+                val body = entry.payload.toRequestBody("application/json".toMediaTypeOrNull())
+                val request = Request.Builder()
+                    .url(url)
+                    .addAuthHeader(settings.apiToken)
+                    .header("Idempotency-Key", entry.idempotencyKey)
+                    .post(body)
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) SyncResult.Success
+                    else SyncResult.Failure("HTTP outbox помилка ${response.code}: ${response.message}")
+                }
+            } catch (e: Exception) {
+                SyncResult.Failure("HTTP помилка outbox: ${e.message}", e)
             }
         }
 
