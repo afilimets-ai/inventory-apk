@@ -1,5 +1,6 @@
 package com.honeywell;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class Message implements Parcelable {
     }
 
     @Override // android.os.Parcelable
+    @SuppressLint("WrongConstant") // decompiled AIDL stub — value is correct at runtime
     public int describeContents() {
         return 1;
     }

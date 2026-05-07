@@ -1,5 +1,6 @@
 package com.honeywell;
 
+import android.annotation.SuppressLint;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.IInterface;
@@ -112,6 +113,7 @@ public interface IExecutor extends IInterface {
             parcel2.writeNoException();
             if (messageExecute != null) {
                 parcel2.writeInt(1);
+                //noinspection WrongConstant — decompiled AIDL stub, value is correct at runtime
                 messageExecute.writeToParcel(parcel2, 1);
             } else {
                 parcel2.writeInt(0);
