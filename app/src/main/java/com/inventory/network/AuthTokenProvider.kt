@@ -1,6 +1,7 @@
 package com.inventory.network
 
 import android.content.Context
+import com.inventory.security.SecurePreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -9,7 +10,7 @@ import javax.inject.Singleton
 class AuthTokenProvider @Inject constructor(
     @ApplicationContext context: Context
 ) {
-    private val prefs = context.getSharedPreferences("inventory_prefs", Context.MODE_PRIVATE)
+    private val prefs = SecurePreferences.create(context, "inventory_prefs")
 
     fun getToken(): String? = prefs.getString(KEY_TOKEN, null)
 

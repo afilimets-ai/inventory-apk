@@ -1,6 +1,7 @@
 package com.inventory.sync
 
 import com.inventory.data.entity.InventoryItem
+import com.inventory.data.entity.OutboxStatus
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
@@ -42,6 +43,8 @@ class SyncEngine @Inject constructor(
                 val provider = providerFactory.create(settings.providerType)
                 if (!provider.supportsExport) continue
 
+                syncOutbox(provider, errors)
+
                 val serializer = getSerializer(settings.format)
                 val rows = items.map { it.toExportRow() }
                 val data = serializer.serialize(rows)
@@ -61,6 +64,23 @@ class SyncEngine @Inject constructor(
         } catch (e: Exception) {
             _state.value = SyncState.Error("Export failed: ${e.message}")
         }
+    }
+
+    private suspend fun syncOutbox(provider: SyncProvider, errors: MutableList<String>) {
+        if (!provider.supportsOutbox) return
+
+        val entries = repository.getPendingOutbox() + repository.getFailedOutboxForRetry()
+        for (entry in entries.distinctBy { it.id }) {
+            repository.updateOutboxStatus(entry.id, OutboxStatus.SYNCING.name)
+            when (val result = provider.sendOutbox(entry)) {
+                is SyncResult.Success -> repository.updateOutboxStatus(entry.id, OutboxStatus.SYNCED.name)
+                is SyncResult.Failure -> {
+                    repository.markOutboxFailed(entry.id, result.message)
+                    errors.add("[${provider.type.displayName}] outbox ${entry.id}: ${result.message}")
+                }
+            }
+        }
+        repository.deleteSyncedOutbox()
     }
 
     /** Запустити імпорт через перший активний import-провайдер */

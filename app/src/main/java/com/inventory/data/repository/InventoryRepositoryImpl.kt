@@ -11,6 +11,7 @@ import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
+import com.inventory.data.entity.OperationType
 import com.inventory.data.entity.OutboxEntry
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -87,25 +88,32 @@ class InventoryRepositoryImpl @Inject constructor(
         }
     }
 
-    // ACID транзакція: оновлення залишку + запис операції + запис у outbox
     override suspend fun recordOperationWithOutbox(
         operation: InventoryOperation,
         outboxEntry: OutboxEntry
     ): Long = db.withTransaction {
-        // 1. Оновлюємо залишок товару
         operation.itemId?.let { itemId ->
             val current = inventoryItemDao.getById(itemId)
             if (current != null) {
                 inventoryItemDao.updateQuantity(
                     id = itemId,
-                    quantity = current.quantity + operation.quantity
+                    quantity = current.nextQuantity(operation)
                 )
             }
         }
-        // 2. Записуємо бізнес-операцію
         val operationId = inventoryOperationDao.insert(operation)
-        // 3. Записуємо в outbox для синхронізації
         outboxEntryDao.insert(outboxEntry)
         operationId
+    }
+
+    private fun InventoryItem.nextQuantity(operation: InventoryOperation): Double {
+        val type = OperationType.entries.firstOrNull { it.name == operation.operationType }
+        return when (type) {
+            OperationType.RECEIVE -> quantity + operation.quantity
+            OperationType.AUDIT -> operation.quantity
+            OperationType.SHIPMENT,
+            OperationType.TRANSFER -> (quantity - operation.quantity).coerceAtLeast(0.0)
+            null -> quantity
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.inventory.sync
 
+import com.inventory.data.entity.OutboxEntry
+
 /**
  * Типи провайдерів синхронізації.
  * Кожен провайдер може бути вибраний для імпорту та/або експорту незалежно.
@@ -39,6 +41,9 @@ interface SyncProvider {
     /** true якщо провайдер підтримує імпорт */
     val supportsImport: Boolean
 
+    val supportsOutbox: Boolean
+        get() = false
+
     /**
      * Експортує дані у вигляді байтів (вже серіалізовано).
      * @param data байти файлу (CSV/JSON/Excel)
@@ -46,6 +51,9 @@ interface SyncProvider {
      * @param fileName ім'я файлу без розширення
      */
     suspend fun export(data: ByteArray, format: SyncFormat, fileName: String): SyncResult
+
+    suspend fun sendOutbox(entry: OutboxEntry): SyncResult =
+        SyncResult.Failure("${type.displayName}: outbox sync is not supported")
 
     /**
      * Імпортує дані, повертає байти файлу для десеріалізації.

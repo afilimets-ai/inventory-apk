@@ -2,6 +2,7 @@ package com.inventory.sync
 
 import android.content.Context
 import com.google.gson.Gson
+import com.inventory.security.SecurePreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,7 +14,7 @@ class SyncSettingsManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val gson: Gson
 ) {
-    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val prefs = SecurePreferences.create(context, PREFS_NAME)
 
     fun getSettings(type: SyncProviderType): SyncSettings {
         val json = prefs.getString(type.name, null)
