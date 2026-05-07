@@ -4,7 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.inventory.barcode.BarcodeLookupResult
+import com.inventory.barcode.BarcodeLookupService
 import com.inventory.data.entity.InventoryOperation
+import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.OperationType
 import com.inventory.data.entity.OutboxEntry
 import com.inventory.data.repository.InventoryRepository
@@ -26,6 +29,7 @@ import javax.inject.Inject
 class ScanViewModel @Inject constructor(
     private val scannerManager: ScannerManager,
     private val repository: InventoryRepository,
+    private val barcodeLookupService: BarcodeLookupService,
     private val feedbackManager: ScanFeedbackManager,
     private val savedStateHandle: SavedStateHandle,
     private val gson: Gson
@@ -116,6 +120,42 @@ class ScanViewModel @Inject constructor(
         }
     }
 
+    fun onLookupUnknownBarcode() {
+        val current = _uiState.value as? ScanUiState.UnknownBarcode ?: return
+        _uiState.value = ScanUiState.LookingUpBarcode(current.barcode)
+        viewModelScope.launch {
+            when (val result = barcodeLookupService.lookup(current.barcode)) {
+                is BarcodeLookupResult.Found -> {
+                    _uiState.value = ScanUiState.LookupCandidate(
+                        barcode = current.barcode,
+                        item = result.product.toInventoryItem(),
+                        source = result.product.source
+                    )
+                }
+                is BarcodeLookupResult.NotFound -> {
+                    _uiState.value = ScanUiState.LookupNotFound(
+                        barcode = current.barcode,
+                        message = "Глобальні бази не містять товар з цим штрихкодом."
+                    )
+                }
+                is BarcodeLookupResult.Failure -> {
+                    _uiState.value = ScanUiState.LookupNotFound(
+                        barcode = current.barcode,
+                        message = result.message
+                    )
+                }
+            }
+        }
+    }
+
+    fun onImportLookupCandidate() {
+        val current = _uiState.value as? ScanUiState.LookupCandidate ?: return
+        viewModelScope.launch {
+            val itemId = repository.insertItem(current.item)
+            _uiState.value = ScanUiState.ItemFound(current.item.copy(id = itemId), quantity = 1.0)
+        }
+    }
+
     private fun buildPayload(
         itemId: Long,
         barcode: String,
@@ -134,6 +174,15 @@ class ScanViewModel @Inject constructor(
     fun onDismiss() {
         _uiState.value = ScanUiState.Idle
     }
+
+    private fun com.inventory.barcode.BarcodeLookupProduct.toInventoryItem(): InventoryItem =
+        InventoryItem(
+            barcode = barcode,
+            name = name,
+            description = description,
+            unit = unit,
+            notes = "Джерело: $source"
+        )
 
     fun triggerScan() {
         scannerManager.triggerScan()

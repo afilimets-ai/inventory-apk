@@ -2,6 +2,10 @@ package com.inventory.ui.scan
 
 import androidx.lifecycle.SavedStateHandle
 import com.google.gson.Gson
+import com.inventory.barcode.BarcodeLookupProduct
+import com.inventory.barcode.BarcodeLookupProvider
+import com.inventory.barcode.BarcodeLookupResult
+import com.inventory.barcode.BarcodeLookupService
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.feedback.ScanFeedbackManager
@@ -41,6 +45,7 @@ class ScanViewModelTest {
         val viewModel = ScanViewModel(
             scannerManager = scannerManager,
             repository = repository,
+            barcodeLookupService = BarcodeLookupService(emptySet()),
             feedbackManager = feedbackManager,
             savedStateHandle = SavedStateHandle(),
             gson = Gson()
@@ -65,6 +70,7 @@ class ScanViewModelTest {
         val viewModel = ScanViewModel(
             scannerManager = scannerManager,
             repository = repository,
+            barcodeLookupService = BarcodeLookupService(emptySet()),
             feedbackManager = feedbackManager,
             savedStateHandle = SavedStateHandle(),
             gson = Gson()
@@ -83,5 +89,51 @@ class ScanViewModelTest {
         runCurrent()
 
         assertEquals(ScanUiState.Idle, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `unknown barcode lookup imports global product`() = runTest(mainDispatcherRule.scheduler) {
+        val scannerManager = mock<NewlandScannerManager>()
+        val repository = mock<InventoryRepository>()
+        val feedbackManager = mock<ScanFeedbackManager>()
+        val scanEvents = MutableSharedFlow<ScanResult>()
+        whenever(scannerManager.scanEvents).thenReturn(scanEvents)
+        whenever(repository.getItemByBarcode("4820000000000")).thenReturn(null)
+        whenever(repository.insertItem(org.mockito.kotlin.any())).thenReturn(42L)
+
+        val lookupProvider = object : BarcodeLookupProvider {
+            override val name = "Test provider"
+            override suspend fun lookup(barcode: String): BarcodeLookupResult =
+                BarcodeLookupResult.Found(
+                    BarcodeLookupProduct(
+                        barcode = barcode,
+                        name = "Шоколад",
+                        brand = "Brand",
+                        source = name
+                    )
+                )
+        }
+        val viewModel = ScanViewModel(
+            scannerManager = scannerManager,
+            repository = repository,
+            barcodeLookupService = BarcodeLookupService(setOf(lookupProvider)),
+            feedbackManager = feedbackManager,
+            savedStateHandle = SavedStateHandle(),
+            gson = Gson()
+        )
+
+        viewModel.processBarcode("4820000000000")
+        viewModel.onLookupUnknownBarcode()
+        runCurrent()
+
+        val candidate = viewModel.uiState.value as ScanUiState.LookupCandidate
+        assertEquals("Шоколад", candidate.item.name)
+        assertEquals("Test provider", candidate.source)
+
+        viewModel.onImportLookupCandidate()
+        runCurrent()
+
+        assertEquals(ScanUiState.ItemFound(candidate.item.copy(id = 42L), 1.0), viewModel.uiState.value)
+        verify(repository).insertItem(org.mockito.kotlin.any())
     }
 }
