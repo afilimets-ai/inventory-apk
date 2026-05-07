@@ -10,7 +10,6 @@
         <exclude domain="sharedpref" path="__androidx_security_crypto_encrypted_prefs_value_keyset__.xml"/>
     </cloud-backup>
     <device-transfer>
-        <include domain="file" path="."/>
         <exclude domain="sharedpref" path="scanner_prefs.xml"/>
         <exclude domain="sharedpref" path="inventory_prefs.xml"/>
         <exclude domain="sharedpref" path="inventory_prefs_secure.xml"/>
