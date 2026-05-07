@@ -74,7 +74,13 @@ class SyncEngine @Inject constructor(
                 val provider = providerFactory.create(settings.providerType)
                 if (!provider.supportsImport) continue
 
-                val importName = settings.importFileName.ifEmpty { DEFAULT_IMPORT_FILE_NAME }
+                // Якщо ім'я файлу не задане — шукаємо найновіший файл за форматом
+                val importName = if (settings.importFileName.isNotEmpty()) {
+                    settings.importFileName
+                } else {
+                    val discovered = provider.discoverImportFiles(settings.format)
+                    discovered.firstOrNull() ?: DEFAULT_IMPORT_FILE_NAME
+                }
                 when (val importResult = provider.import(settings.format, importName)) {
                     is SyncImportResult.Success -> {
                         val serializer = getSerializer(settings.format)

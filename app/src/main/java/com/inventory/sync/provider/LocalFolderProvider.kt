@@ -37,4 +37,13 @@ class LocalFolderProvider(private val settings: SyncSettings) : SyncProvider {
             SyncImportResult.Failure("Помилка читання з локальної папки: ${e.message}", e)
         }
     }
+
+    override suspend fun discoverImportFiles(format: SyncFormat): List<String> {
+        val dir = File(settings.path)
+        if (!dir.isDirectory) return emptyList()
+        return dir.listFiles { f -> f.isFile && f.extension.equals(format.extension, ignoreCase = true) }
+            ?.sortedByDescending { it.lastModified() }
+            ?.map { it.nameWithoutExtension }
+            ?: emptyList()
+    }
 }

@@ -100,6 +100,42 @@ class SftpProvider(
             }
         } }
 
+    override suspend fun discoverImportFiles(format: SyncFormat): List<String> =
+        mutex.withLock { withContext(Dispatchers.IO) {
+            try {
+                if (!sftpClient.init()) return@withContext emptyList()
+                val port = if (settings.port > 0) settings.port else 22
+                if (!sftpClient.connect(settings.host, port, settings.username, settings.password)) {
+                    sftpClient.free()
+                    return@withContext emptyList()
+                }
+
+                val maxFiles = 256
+                val names = arrayOfNulls<String>(maxFiles)
+                val sizes = IntArray(maxFiles)
+                val count = intArrayOf(0)
+                val dir = settings.path.trimEnd('/').ifEmpty { "." }
+                val pattern = "*.${format.extension}"
+
+                if (!sftpClient.listFiles(dir, pattern, names, sizes, count)) {
+                    return@withContext emptyList()
+                }
+
+                val ext = ".${format.extension}"
+                (0 until count[0])
+                    .mapNotNull { names[it] }
+                    .filter { it.endsWith(ext, ignoreCase = true) }
+                    .map { it.removeSuffix(ext) }
+                    // native listFiles не повертає timestamps — сортуємо за ім'ям desc
+                    .sortedDescending()
+            } catch (_: Exception) {
+                emptyList()
+            } finally {
+                runCatching { sftpClient.disconnect() }
+                runCatching { sftpClient.free() }
+            }
+        } }
+
     private fun buildRemotePath(dir: String, file: String): String {
         val cleanDir = dir.trimEnd('/')
         return if (cleanDir.isEmpty()) file else "$cleanDir/$file"

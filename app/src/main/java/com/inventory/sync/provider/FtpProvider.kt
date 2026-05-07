@@ -69,6 +69,27 @@ class FtpProvider(
             }
         }
 
+    override suspend fun discoverImportFiles(format: SyncFormat): List<String> =
+        withContext(Dispatchers.IO) {
+            val ftp = ftpClientFactory()
+            try {
+                ftp.connect(settings.host, if (settings.port > 0) settings.port else 21)
+                if (!ftp.login(settings.username, settings.password)) return@withContext emptyList()
+                ftp.enterLocalPassiveMode()
+
+                val dir = settings.path.trimEnd('/').ifEmpty { "." }
+                val ext = ".${format.extension}"
+                ftp.listFiles(dir)
+                    .filter { it.isFile && it.name.endsWith(ext, ignoreCase = true) }
+                    .sortedByDescending { it.timestamp?.timeInMillis ?: 0L }
+                    .map { it.name.removeSuffix(ext) }
+            } catch (_: Exception) {
+                emptyList()
+            } finally {
+                runCatching { if (ftp.isConnected) { ftp.logout(); ftp.disconnect() } }
+            }
+        }
+
     private fun buildRemotePath(dir: String, file: String): String {
         val cleanDir = dir.trimEnd('/')
         return if (cleanDir.isEmpty()) file else "$cleanDir/$file"
