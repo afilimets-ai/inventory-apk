@@ -86,20 +86,23 @@ class HoneywellScannerManager(
     }
 
     override fun unregister() {
-        try {
-            barcodeReader?.removeBarcodeListener(barcodeListener)
-            barcodeReader?.release()
-            barcodeReader?.close()
-        } catch (e: Exception) {
-            Log.w(TAG, "BarcodeReader release error", e)
-        }
+        val reader = barcodeReader
         barcodeReader = null
-        try {
-            aidcManager?.close()
-        } catch (e: Exception) {
-            Log.w(TAG, "AidcManager close error", e)
+        if (reader != null) {
+            runCatching { reader.removeBarcodeListener(barcodeListener) }
+                .onFailure { Log.w(TAG, "removeBarcodeListener error", it) }
+            // release() must precede close(): release unclaims the scanner,
+            // close() disconnects from the service and sets mBarcodeReaderClosed=true.
+            // After close(), any call (including release()) throws IllegalStateException.
+            runCatching { reader.release() }
+                .onFailure { Log.w(TAG, "BarcodeReader.release error", it) }
+            runCatching { reader.close() }
+                .onFailure { Log.w(TAG, "BarcodeReader.close error", it) }
         }
+        val manager = aidcManager
         aidcManager = null
+        runCatching { manager?.close() }
+            .onFailure { Log.w(TAG, "AidcManager close error", it) }
     }
 
     override fun destroy() {
