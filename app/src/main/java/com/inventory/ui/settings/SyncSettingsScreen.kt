@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,6 +42,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.inventory.sync.SyncImportSummary
+import com.inventory.sync.SyncImportedItem
 import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncState
 
@@ -124,6 +127,11 @@ fun SyncSettingsScreen(
                 }
             }
 
+            val importSummary = (syncState as? SyncState.Success)?.importSummary
+            if (importSummary != null) {
+                ImportSummaryCard(importSummary)
+            }
+
             // Кнопки імпорту / експорту
             val isRunning = syncState is SyncState.Running
             Column(
@@ -168,6 +176,77 @@ fun SyncSettingsScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ImportSummaryCard(summary: SyncImportSummary) {
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Імпорт завершено",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "${summary.providerName} · ${summary.fileName} · ${summary.formatName}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "Рядків у файлі: ${summary.totalRows}. Товарів показано: ${summary.items.size}.",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Divider()
+            if (summary.items.isEmpty()) {
+                Text(
+                    text = "У файлі не знайдено товарів з полями barcode/name.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.height(220.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    items(summary.items) { item ->
+                        ImportedItemRow(item)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ImportedItemRow(item: SyncImportedItem) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = item.name,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp
+            )
+            Text(
+                text = item.barcode,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp
+            )
+        }
+        Text(
+            text = "${item.quantity} ${item.unit}",
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp
+        )
     }
 }
 

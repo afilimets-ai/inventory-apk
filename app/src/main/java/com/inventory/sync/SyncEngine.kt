@@ -106,7 +106,10 @@ class SyncEngine @Inject constructor(
                         val serializer = getSerializer(settings.format)
                         val rows = serializer.deserialize(importResult.data)
                         applyImport(rows)
-                        _state.value = SyncState.Success(System.currentTimeMillis())
+                        _state.value = SyncState.Success(
+                            timestamp = System.currentTimeMillis(),
+                            importSummary = rows.toImportSummary(settings, importName)
+                        )
                         return
                     }
                     is SyncImportResult.Failure -> {
@@ -150,3 +153,24 @@ private fun InventoryItem.toExportRow(): Map<String, Any?> = mapOf(
     "notes" to notes,
     "updated_at" to updatedAt
 )
+
+private fun List<Map<String, Any?>>.toImportSummary(
+    settings: SyncSettings,
+    fileName: String
+): SyncImportSummary =
+    SyncImportSummary(
+        providerName = settings.providerType.displayName,
+        fileName = "$fileName.${settings.format.extension}",
+        formatName = settings.format.displayName,
+        totalRows = size,
+        items = mapNotNull { row ->
+            val barcode = row["barcode"]?.toString()?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            val name = row["name"]?.toString()?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+            SyncImportedItem(
+                barcode = barcode,
+                name = name,
+                quantity = row["quantity"]?.toString()?.toDoubleOrNull() ?: 0.0,
+                unit = row["unit"]?.toString()?.takeIf { it.isNotBlank() } ?: "шт"
+            )
+        }
+    )

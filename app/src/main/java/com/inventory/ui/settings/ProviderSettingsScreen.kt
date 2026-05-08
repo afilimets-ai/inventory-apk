@@ -2,6 +2,8 @@ package com.inventory.ui.settings
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -146,15 +148,19 @@ private fun FormatDropdown(selected: SyncFormat, onSelect: (SyncFormat) -> Unit)
 @Composable
 private fun LocalFolderFields(s: SyncSettings, onChange: (SyncSettings) -> Unit) {
     val context = LocalContext.current
+    val storagePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) {}
     val folderPicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocumentTree()
     ) { uri: Uri? ->
         if (uri != null) {
-            // Зберігаємо persistable permission щоб доступ залишався після перезапуску
-            context.contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
             onChange(s.copy(path = uri.toString()))
         }
     }
@@ -166,9 +172,46 @@ private fun LocalFolderFields(s: SyncSettings, onChange: (SyncSettings) -> Unit)
         Text("Вибрати папку")
     }
 
+    Spacer(modifier = Modifier.height(8.dp))
+    FieldText("Або шлях до папки (/sdcard/Download)", s.path) {
+        onChange(s.copy(path = it.trim()))
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+    OutlinedButton(
+        onClick = {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val appSettings = Intent(
+                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    Uri.parse("package:${context.packageName}")
+                )
+                runCatching { context.startActivity(appSettings) }
+                    .onFailure {
+                        runCatching {
+                            context.startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+                        }
+                    }
+            } else {
+                storagePermissionLauncher.launch(
+                    arrayOf(
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth().height(56.dp)
+    ) {
+        Text("Доступ до файлів")
+    }
+
     if (s.path.isNotEmpty()) {
         Spacer(modifier = Modifier.height(8.dp))
-        val displayPath = Uri.decode(s.path).substringAfterLast(':').ifEmpty { s.path }
+        val displayPath = if (s.path.startsWith("/")) {
+            s.path
+        } else {
+            Uri.decode(s.path).substringAfterLast(':').ifEmpty { s.path }
+        }
         Text(
             text = displayPath,
             style = MaterialTheme.typography.bodySmall,

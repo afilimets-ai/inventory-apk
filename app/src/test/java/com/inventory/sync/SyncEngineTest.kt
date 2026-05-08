@@ -77,9 +77,14 @@ class SyncEngineTest {
 
     @Test
     fun `runImport transitions to Success on successful import`() = runTest {
-        val csvData = "barcode,name,quantity\n123,Widget,10\n".toByteArray()
+        val csvData = """
+            barcode,name,quantity,unit
+            4820001112223,Тестовий цукор,5,кг
+            4820003334445,Тестова кава,12,шт
+            ,Рядок без штрихкоду,7,шт
+        """.trimIndent().toByteArray()
         val settings = SyncSettings(
-            providerType = SyncProviderType.FTP,
+            providerType = SyncProviderType.LOCAL_FOLDER,
             isImportEnabled = true,
             format = SyncFormat.CSV
         )
@@ -89,12 +94,26 @@ class SyncEngineTest {
         whenever(provider.import(SyncFormat.CSV, "inventory_import"))
             .thenReturn(SyncImportResult.Success(csvData))
         whenever(settingsManager.getImportProviders()).thenReturn(listOf(settings))
-        whenever(providerFactory.create(SyncProviderType.FTP)).thenReturn(provider)
+        whenever(providerFactory.create(SyncProviderType.LOCAL_FOLDER)).thenReturn(provider)
         whenever(repository.importItems(any())).thenReturn(Unit)
 
         engine.runImport()
 
-        assertTrue(engine.state.value is SyncState.Success)
+        val state = engine.state.value as SyncState.Success
+        val summary = state.importSummary
+        assertEquals("Локальна папка", summary?.providerName)
+        assertEquals("inventory_import.csv", summary?.fileName)
+        assertEquals("CSV", summary?.formatName)
+        assertEquals(3, summary?.totalRows)
+        assertEquals(2, summary?.items?.size)
+        assertEquals("4820001112223", summary?.items?.get(0)?.barcode)
+        assertEquals("Тестовий цукор", summary?.items?.get(0)?.name)
+        assertEquals(5.0, summary?.items?.get(0)?.quantity)
+        assertEquals("кг", summary?.items?.get(0)?.unit)
+        assertEquals("4820003334445", summary?.items?.get(1)?.barcode)
+        assertEquals("Тестова кава", summary?.items?.get(1)?.name)
+        assertEquals(12.0, summary?.items?.get(1)?.quantity)
+        assertEquals("шт", summary?.items?.get(1)?.unit)
     }
 
     @Test
