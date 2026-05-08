@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -88,6 +89,9 @@ fun ScanScreen(
                         is ScanUiState.Idle -> ScanStatus.IDLE
                         is ScanUiState.ItemFound -> ScanStatus.SUCCESS
                         is ScanUiState.UnknownBarcode -> ScanStatus.ERROR
+                        is ScanUiState.LookingUpBarcode -> ScanStatus.IDLE
+                        is ScanUiState.LookupCandidate -> ScanStatus.SUCCESS
+                        is ScanUiState.LookupNotFound -> ScanStatus.ERROR
                         is ScanUiState.Success -> ScanStatus.SUCCESS
                         is ScanUiState.Error -> ScanStatus.ERROR
                     },
@@ -95,6 +99,9 @@ fun ScanScreen(
                         is ScanUiState.Idle -> "Очікування сканування"
                         is ScanUiState.ItemFound -> "Товар знайдено"
                         is ScanUiState.UnknownBarcode -> "Невідомий штрихкод"
+                        is ScanUiState.LookingUpBarcode -> "Пошук у глобальній базі"
+                        is ScanUiState.LookupCandidate -> "Знайдено у глобальній базі"
+                        is ScanUiState.LookupNotFound -> "Не знайдено"
                         is ScanUiState.Success -> "Записано"
                         is ScanUiState.Error -> "Помилка"
                     },
@@ -123,6 +130,17 @@ fun ScanScreen(
                     )
                     is ScanUiState.UnknownBarcode -> UnknownBarcodeScreen(
                         barcode = state.barcode,
+                        onLookup = viewModel::onLookupUnknownBarcode,
+                        onDismiss = viewModel::onDismiss
+                    )
+                    is ScanUiState.LookingUpBarcode -> LookingUpBarcodeScreen(barcode = state.barcode)
+                    is ScanUiState.LookupCandidate -> LookupCandidateScreen(
+                        state = state,
+                        onImport = viewModel::onImportLookupCandidate,
+                        onDismiss = viewModel::onDismiss
+                    )
+                    is ScanUiState.LookupNotFound -> LookupNotFoundScreen(
+                        state = state,
                         onDismiss = viewModel::onDismiss
                     )
                     is ScanUiState.Success -> SuccessScreen()
@@ -294,7 +312,11 @@ private fun ItemFoundScreen(
 }
 
 @Composable
-private fun UnknownBarcodeScreen(barcode: String, onDismiss: () -> Unit) {
+private fun UnknownBarcodeScreen(
+    barcode: String,
+    onLookup: () -> Unit,
+    onDismiss: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -319,7 +341,73 @@ private fun UnknownBarcodeScreen(barcode: String, onDismiss: () -> Unit) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(32.dp))
+        IndustrialButton(text = "Шукати у глобальній базі", onClick = onLookup)
+        Spacer(modifier = Modifier.height(12.dp))
+        IndustrialButton(text = "← Назад до сканування", onClick = onDismiss)
+    }
+}
+
+@Composable
+private fun LookingUpBarcodeScreen(barcode: String) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
+        Spacer(modifier = Modifier.height(20.dp))
+        Text("Шукаю товар у глобальній базі", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+private fun LookupCandidateScreen(
+    state: ScanUiState.LookupCandidate,
+    onImport: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
+        Text("Товар знайдено", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Джерело: ${state.source}", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(20.dp))
+        ScanResultCard(item = state.item)
+        Spacer(modifier = Modifier.weight(1f))
+        IndustrialSuccessButton(text = "Додати товар", onClick = onImport)
+        Spacer(modifier = Modifier.height(12.dp))
+        IndustrialOutlinedButton(text = "Скасувати", onClick = onDismiss)
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Composable
+private fun LookupNotFoundScreen(
+    state: ScanUiState.LookupNotFound,
+    onDismiss: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "НЕ ЗНАЙДЕНО",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(state.barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(state.message, style = MaterialTheme.typography.bodyLarge)
+        Spacer(modifier = Modifier.height(32.dp))
         IndustrialButton(text = "← Назад до сканування", onClick = onDismiss)
     }
 }

@@ -23,6 +23,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -95,6 +96,9 @@ fun ReceivingScreen(
                                 is ReceivingUiState.Scanning -> s.sessionLines.size
                                 is ReceivingUiState.ItemFound -> s.sessionLines.size
                                 is ReceivingUiState.UnknownBarcode -> s.sessionLines.size
+                                is ReceivingUiState.LookingUpBarcode -> s.sessionLines.size
+                                is ReceivingUiState.LookupCandidate -> s.sessionLines.size
+                                is ReceivingUiState.LookupNotFound -> s.sessionLines.size
                                 is ReceivingUiState.SessionSummary -> s.totalItems
                             }
                             if (lineCount > 0) {
@@ -136,6 +140,17 @@ fun ReceivingScreen(
                     )
                     is ReceivingUiState.UnknownBarcode -> UnknownBarcodeContent(
                         barcode = state.barcode,
+                        onLookup = viewModel::onLookupUnknownBarcode,
+                        onDismiss = viewModel::onDismissItem
+                    )
+                    is ReceivingUiState.LookingUpBarcode -> LookingUpBarcodeContent(barcode = state.barcode)
+                    is ReceivingUiState.LookupCandidate -> LookupCandidateContent(
+                        state = state,
+                        onImport = viewModel::onImportLookupCandidate,
+                        onDismiss = viewModel::onDismissItem
+                    )
+                    is ReceivingUiState.LookupNotFound -> LookupNotFoundContent(
+                        state = state,
                         onDismiss = viewModel::onDismissItem
                     )
                     is ReceivingUiState.SessionSummary -> SessionSummaryContent(
@@ -346,7 +361,11 @@ private fun ItemFoundContent(
 }
 
 @Composable
-private fun UnknownBarcodeContent(barcode: String, onDismiss: () -> Unit) {
+private fun UnknownBarcodeContent(
+    barcode: String,
+    onLookup: () -> Unit,
+    onDismiss: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -373,7 +392,79 @@ private fun UnknownBarcodeContent(barcode: String, onDismiss: () -> Unit) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(32.dp))
+        IndustrialButton(text = "Шукати у глобальній базі", onClick = onLookup)
+        Spacer(modifier = Modifier.height(12.dp))
+        IndustrialButton(text = "← Сканувати далі", onClick = onDismiss)
+    }
+}
+
+@Composable
+private fun LookingUpBarcodeContent(barcode: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CircularProgressIndicator()
+        Spacer(modifier = Modifier.height(20.dp))
+        Text("Шукаю товар у глобальній базі", style = MaterialTheme.typography.headlineSmall)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+private fun LookupCandidateContent(
+    state: ReceivingUiState.LookupCandidate,
+    onImport: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
+        Text("Товар знайдено", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Джерело: ${state.source}", style = MaterialTheme.typography.bodyMedium)
+        Spacer(modifier = Modifier.height(20.dp))
+        ScanResultCard(item = state.item)
+        Spacer(modifier = Modifier.weight(1f))
+        IndustrialSuccessButton(text = "Додати товар", onClick = onImport)
+        Spacer(modifier = Modifier.height(12.dp))
+        IndustrialOutlinedButton(text = "Скасувати", onClick = onDismiss)
+        Spacer(modifier = Modifier.height(20.dp))
+    }
+}
+
+@Composable
+private fun LookupNotFoundContent(
+    state: ReceivingUiState.LookupNotFound,
+    onDismiss: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            "НЕ ЗНАЙДЕНО",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.error
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(state.barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(state.message, style = MaterialTheme.typography.bodyLarge)
+        Spacer(modifier = Modifier.height(32.dp))
         IndustrialButton(text = "← Сканувати далі", onClick = onDismiss)
     }
 }

@@ -31,6 +31,25 @@ sealed class ReceivingUiState {
         val sessionLines: List<ReceivedLine>
     ) : ReceivingUiState()
 
+    data class LookingUpBarcode(
+        val barcode: String,
+        val sessionLines: List<ReceivedLine>
+    ) : ReceivingUiState()
+
+    data class LookupCandidate(
+        val barcode: String,
+        val item: InventoryItem,
+        val source: String,
+        val sessionLines: List<ReceivedLine>,
+        val defaultLocationId: Long? = null
+    ) : ReceivingUiState()
+
+    data class LookupNotFound(
+        val barcode: String,
+        val message: String,
+        val sessionLines: List<ReceivedLine>
+    ) : ReceivingUiState()
+
     /** Сесію завершено — підсумок */
     data class SessionSummary(
         val lines: List<ReceivedLine>,
