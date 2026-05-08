@@ -136,4 +136,37 @@ class ScanViewModelTest {
         assertEquals(ScanUiState.ItemFound(candidate.item.copy(id = 42L), 1.0), viewModel.uiState.value)
         verify(repository).insertItem(org.mockito.kotlin.any())
     }
+
+    @Test
+    fun `unknown barcode lookup failure exits loading state`() = runTest(mainDispatcherRule.scheduler) {
+        val scannerManager = mock<NewlandScannerManager>()
+        val repository = mock<InventoryRepository>()
+        val feedbackManager = mock<ScanFeedbackManager>()
+        val scanEvents = MutableSharedFlow<ScanResult>()
+        whenever(scannerManager.scanEvents).thenReturn(scanEvents)
+        whenever(repository.getItemByBarcode("404")).thenReturn(null)
+
+        val lookupProvider = object : BarcodeLookupProvider {
+            override val name = "Throwing provider"
+            override suspend fun lookup(barcode: String): BarcodeLookupResult {
+                throw IllegalStateException("network down")
+            }
+        }
+        val viewModel = ScanViewModel(
+            scannerManager = scannerManager,
+            repository = repository,
+            barcodeLookupService = BarcodeLookupService(setOf(lookupProvider)),
+            feedbackManager = feedbackManager,
+            savedStateHandle = SavedStateHandle(),
+            gson = Gson()
+        )
+
+        viewModel.processBarcode("404")
+        viewModel.onLookupUnknownBarcode()
+        runCurrent()
+
+        val state = viewModel.uiState.value as ScanUiState.LookupNotFound
+        assertEquals("404", state.barcode)
+        assertTrue(state.message.contains("Помилка пошуку"))
+    }
 }

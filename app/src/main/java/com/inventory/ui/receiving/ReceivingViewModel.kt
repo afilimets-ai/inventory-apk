@@ -12,6 +12,7 @@ import com.inventory.data.repository.InventoryRepository
 import com.inventory.feedback.ScanFeedbackManager
 import com.inventory.scanner.ScannerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -148,29 +149,38 @@ class ReceivingViewModel @Inject constructor(
             sessionLines = current.sessionLines
         )
         viewModelScope.launch {
-            when (val result = barcodeLookupService.lookup(current.barcode)) {
-                is BarcodeLookupResult.Found -> {
-                    _uiState.value = ReceivingUiState.LookupCandidate(
-                        barcode = current.barcode,
-                        item = result.product.toInventoryItem(),
-                        source = result.product.source,
-                        sessionLines = current.sessionLines
-                    )
+            try {
+                when (val result = barcodeLookupService.lookup(current.barcode)) {
+                    is BarcodeLookupResult.Found -> {
+                        _uiState.value = ReceivingUiState.LookupCandidate(
+                            barcode = current.barcode,
+                            item = result.product.toInventoryItem(),
+                            source = result.product.source,
+                            sessionLines = current.sessionLines
+                        )
+                    }
+                    is BarcodeLookupResult.NotFound -> {
+                        _uiState.value = ReceivingUiState.LookupNotFound(
+                            barcode = current.barcode,
+                            message = "Глобальні бази не містять товар з цим штрихкодом.",
+                            sessionLines = current.sessionLines
+                        )
+                    }
+                    is BarcodeLookupResult.Failure -> {
+                        _uiState.value = ReceivingUiState.LookupNotFound(
+                            barcode = current.barcode,
+                            message = result.message,
+                            sessionLines = current.sessionLines
+                        )
+                    }
                 }
-                is BarcodeLookupResult.NotFound -> {
-                    _uiState.value = ReceivingUiState.LookupNotFound(
-                        barcode = current.barcode,
-                        message = "Глобальні бази не містять товар з цим штрихкодом.",
-                        sessionLines = current.sessionLines
-                    )
-                }
-                is BarcodeLookupResult.Failure -> {
-                    _uiState.value = ReceivingUiState.LookupNotFound(
-                        barcode = current.barcode,
-                        message = result.message,
-                        sessionLines = current.sessionLines
-                    )
-                }
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                _uiState.value = ReceivingUiState.LookupNotFound(
+                    barcode = current.barcode,
+                    message = "Помилка пошуку: ${e.message ?: "невідома помилка"}",
+                    sessionLines = current.sessionLines
+                )
             }
         }
     }

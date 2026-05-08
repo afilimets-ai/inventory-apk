@@ -14,6 +14,7 @@ import com.inventory.data.repository.InventoryRepository
 import com.inventory.feedback.ScanFeedbackManager
 import com.inventory.scanner.ScannerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -124,26 +125,34 @@ class ScanViewModel @Inject constructor(
         val current = _uiState.value as? ScanUiState.UnknownBarcode ?: return
         _uiState.value = ScanUiState.LookingUpBarcode(current.barcode)
         viewModelScope.launch {
-            when (val result = barcodeLookupService.lookup(current.barcode)) {
-                is BarcodeLookupResult.Found -> {
-                    _uiState.value = ScanUiState.LookupCandidate(
-                        barcode = current.barcode,
-                        item = result.product.toInventoryItem(),
-                        source = result.product.source
-                    )
+            try {
+                when (val result = barcodeLookupService.lookup(current.barcode)) {
+                    is BarcodeLookupResult.Found -> {
+                        _uiState.value = ScanUiState.LookupCandidate(
+                            barcode = current.barcode,
+                            item = result.product.toInventoryItem(),
+                            source = result.product.source
+                        )
+                    }
+                    is BarcodeLookupResult.NotFound -> {
+                        _uiState.value = ScanUiState.LookupNotFound(
+                            barcode = current.barcode,
+                            message = "Глобальні бази не містять товар з цим штрихкодом."
+                        )
+                    }
+                    is BarcodeLookupResult.Failure -> {
+                        _uiState.value = ScanUiState.LookupNotFound(
+                            barcode = current.barcode,
+                            message = result.message
+                        )
+                    }
                 }
-                is BarcodeLookupResult.NotFound -> {
-                    _uiState.value = ScanUiState.LookupNotFound(
-                        barcode = current.barcode,
-                        message = "Глобальні бази не містять товар з цим штрихкодом."
-                    )
-                }
-                is BarcodeLookupResult.Failure -> {
-                    _uiState.value = ScanUiState.LookupNotFound(
-                        barcode = current.barcode,
-                        message = result.message
-                    )
-                }
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                _uiState.value = ScanUiState.LookupNotFound(
+                    barcode = current.barcode,
+                    message = "Помилка пошуку: ${e.message ?: "невідома помилка"}"
+                )
             }
         }
     }
