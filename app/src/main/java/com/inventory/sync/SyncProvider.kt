@@ -95,10 +95,28 @@ sealed class SyncImportResult {
     data class Failure(val message: String, val cause: Throwable? = null) : SyncImportResult()
 }
 
+data class SyncImportedItem(
+    val barcode: String,
+    val name: String,
+    val quantity: Double,
+    val unit: String
+)
+
+data class SyncImportSummary(
+    val providerName: String,
+    val fileName: String,
+    val formatName: String,
+    val totalRows: Int,
+    val items: List<SyncImportedItem>
+)
+
 /** Стан фонової синхронізації для UI */
 sealed class SyncState {
     object Idle : SyncState()
     object Running : SyncState()
-    data class Success(val timestamp: Long) : SyncState()
+    data class Success(
+        val timestamp: Long,
+        val importSummary: SyncImportSummary? = null
+    ) : SyncState()
     data class Error(val message: String) : SyncState()
 }

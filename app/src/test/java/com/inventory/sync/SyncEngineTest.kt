@@ -77,7 +77,7 @@ class SyncEngineTest {
 
     @Test
     fun `runImport transitions to Success on successful import`() = runTest {
-        val csvData = "barcode,name,quantity\n123,Widget,10\n".toByteArray()
+        val csvData = "barcode,name,quantity,unit\n123,Widget,10,шт\n456,Hammer,2,pcs\n".toByteArray()
         val settings = SyncSettings(
             providerType = SyncProviderType.FTP,
             isImportEnabled = true,
@@ -94,7 +94,16 @@ class SyncEngineTest {
 
         engine.runImport()
 
-        assertTrue(engine.state.value is SyncState.Success)
+        val state = engine.state.value as SyncState.Success
+        val summary = state.importSummary
+        assertEquals("FTP", summary?.providerName)
+        assertEquals("inventory_import.csv", summary?.fileName)
+        assertEquals("CSV", summary?.formatName)
+        assertEquals(2, summary?.totalRows)
+        assertEquals("123", summary?.items?.first()?.barcode)
+        assertEquals("Widget", summary?.items?.first()?.name)
+        assertEquals(10.0, summary?.items?.first()?.quantity)
+        assertEquals("шт", summary?.items?.first()?.unit)
     }
 
     @Test
