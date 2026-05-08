@@ -49,6 +49,28 @@ class OpenFoodFactsProviderTest {
     }
 
     @Test
+    fun `lookup does not forward authorization header to external API`() {
+        var authorization: String? = null
+        val client = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                authorization = chain.request().header("Authorization")
+                Response.Builder()
+                    .request(chain.request())
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(200)
+                    .message("OK")
+                    .body("""{"status":0}""".toResponseBody())
+                    .build()
+            }
+            .build()
+        val provider = OpenFoodFactsProvider(client)
+
+        runBlocking { provider.lookup("4820000000000") }
+
+        assertEquals(null, authorization)
+    }
+
+    @Test
     fun `lookup returns not found on missing product`() {
         val client = OkHttpClient.Builder()
             .addInterceptor(

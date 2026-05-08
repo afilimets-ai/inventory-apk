@@ -11,11 +11,12 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class OpenFoodFactsProvider @Inject constructor(
-    client: OkHttpClient
+    @Named("externalApi") client: OkHttpClient
 ) : BarcodeLookupProvider {
     override val name: String = "Open Food Facts"
 
