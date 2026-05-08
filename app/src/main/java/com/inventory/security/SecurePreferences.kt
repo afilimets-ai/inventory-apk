@@ -42,7 +42,9 @@ object SecurePreferences {
                 is Set<*> -> editor.putStringSet(key, value.filterIsInstance<String>().toSet())
             }
         }
-        editor.putBoolean(KEY_MIGRATED, true).apply()
+        if (editor.putBoolean(KEY_MIGRATED, true).commit()) {
+            legacyPrefs.edit().clear().apply()
+        }
     }
 
     private const val KEY_MIGRATED = "__legacy_migrated"
