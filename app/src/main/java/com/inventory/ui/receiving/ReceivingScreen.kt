@@ -39,6 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -176,7 +178,11 @@ private fun ScanningContent(
     onEndSession: () -> Unit
 ) {
     var manualBarcode by remember { mutableStateOf("") }
-    var showManualInput by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     Column(
         modifier = Modifier
@@ -209,7 +215,30 @@ private fun ScanningContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = manualBarcode,
+                onValueChange = { manualBarcode = it },
+                label = { Text("Штрихкод") },
+                placeholder = { Text("Просканійте штрих-код") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(onSearch = {
+                    if (manualBarcode.isNotBlank()) {
+                        onManualEntry(manualBarcode)
+                        manualBarcode = ""
+                    }
+                })
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             IndustrialButton(
                 text = "СКАНУВАТИ",
@@ -219,33 +248,6 @@ private fun ScanningContent(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            IndustrialOutlinedButton(
-                text = "Ввести штрихкод вручну",
-                onClick = { showManualInput = !showManualInput }
-            )
-
-            if (showManualInput) {
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = manualBarcode,
-                    onValueChange = { manualBarcode = it },
-                    label = { Text("Штрихкод") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Search
-                    ),
-                    keyboardActions = KeyboardActions(onSearch = {
-                        onManualEntry(manualBarcode)
-                        manualBarcode = ""
-                        showManualInput = false
-                    })
-                )
-            }
         }
 
         // Кнопка завершення сесії (якщо є записи)

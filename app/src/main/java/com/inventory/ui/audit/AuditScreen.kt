@@ -41,6 +41,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -221,7 +223,13 @@ private fun CountingContent(
     onEndSession: () -> Unit
 ) {
     var manualBarcode by remember { mutableStateOf("") }
-    var showManualInput by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    // Поле вводу штрихкоду одразу активне — користувач (або апаратний сканер)
+    // може вводити дані без додаткових натискань.
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 16.dp)
@@ -292,7 +300,27 @@ private fun CountingContent(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = manualBarcode,
+                onValueChange = { manualBarcode = it },
+                label = { Text("Штрихкод") },
+                placeholder = { Text("Просканійте штрих-код") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    if (manualBarcode.isNotBlank()) {
+                        onManualEntry(manualBarcode)
+                        manualBarcode = ""
+                    }
+                })
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             IndustrialButton(
                 text = "СКАНУВАТИ",
@@ -302,25 +330,6 @@ private fun CountingContent(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             )
-            Spacer(modifier = Modifier.height(12.dp))
-            IndustrialOutlinedButton(
-                text = "Ввести штрихкод вручну",
-                onClick = { showManualInput = !showManualInput }
-            )
-            if (showManualInput) {
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = manualBarcode,
-                    onValueChange = { manualBarcode = it },
-                    label = { Text("Штрихкод") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = {
-                        onManualEntry(manualBarcode); manualBarcode = ""; showManualInput = false
-                    })
-                )
-            }
         }
 
         if (state.lines.isNotEmpty()) {
