@@ -21,6 +21,7 @@ import com.inventory.ui.audit.AuditScreen
 import com.inventory.ui.components.SyncStatusIndicator
 import com.inventory.ui.receiving.ReceivingScreen
 import com.inventory.ui.scan.ScanScreen
+import com.inventory.ui.settings.CsvImportSettingsScreen
 import com.inventory.ui.settings.ProviderSettingsScreen
 import com.inventory.ui.settings.SyncSettingsScreen
 import com.inventory.ui.sync.SyncStatusViewModel
@@ -85,6 +86,20 @@ class MainActivity : ComponentActivity() {
                                 val typeName = backStackEntry.arguments?.getString("providerType") ?: return@composable
                                 val providerType = SyncProviderType.valueOf(typeName)
                                 ProviderSettingsScreen(
+                                    providerType = providerType,
+                                    onBack = { navController.popBackStack() },
+                                    onEditCsvMapping = { type ->
+                                        navController.navigate("csv_import_settings/${type.name}")
+                                    }
+                                )
+                            }
+                            composable(
+                                "csv_import_settings/{providerType}",
+                                arguments = listOf(navArgument("providerType") { type = NavType.StringType })
+                            ) { backStackEntry ->
+                                val typeName = backStackEntry.arguments?.getString("providerType") ?: return@composable
+                                val providerType = SyncProviderType.valueOf(typeName)
+                                CsvImportSettingsScreen(
                                     providerType = providerType,
                                     onBack = { navController.popBackStack() }
                                 )

@@ -135,7 +135,7 @@ fun AuditScreen(
                         onDismiss = viewModel::onDismissItem
                     )
                     is AuditUiState.UnknownBarcode -> UnknownBarcodeContent(
-                        barcode = state.barcode,
+                        state = state,
                         onDismiss = viewModel::onDismissItem
                     )
                     is AuditUiState.VarianceReport -> VarianceReportContent(
@@ -235,109 +235,147 @@ private fun CountingContent(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         // Інфо про локацію та прогрес
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondaryContainer)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    state.location?.name ?: "Всі локації",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-                Text(
-                    "Підраховано: ${state.scannedCount} / ${state.expectedItems.size}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-            }
-            Text(
-                "Σ ${formatQty(state.totalCounted)}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-        }
+        AuditHeaderRow(
+            locationName = state.location?.name ?: "Всі локації",
+            scannedCount = state.scannedCount,
+            expectedSize = state.expectedItems.size,
+            totalCounted = state.totalCounted,
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        // Список вже підрахованих
+        // Список вже підрахованих — завжди видимий (плейсхолдер для порожнього стану).
+        ScannedLinesList(
+            lines = state.lines,
+            modifier = Modifier.weight(1f)
+        )
+
         if (state.lines.isNotEmpty()) {
-            LazyColumn(modifier = Modifier.weight(0.4f)) {
-                items(state.lines.values.toList()) { line ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(line.item.name, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-                        Text(
-                            "${formatQty(line.countedQuantity)} / ${formatQty(line.expectedQuantity)}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = if (line.hasDiscrepancy) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    Divider(color = MaterialTheme.colorScheme.outlineVariant)
-                }
-            }
             Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        // Зона сканування
-        Column(
-            modifier = Modifier.weight(if (state.lines.isEmpty()) 1f else 0.6f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                "СКАНУЙТЕ ТОВАР",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = manualBarcode,
-                onValueChange = { manualBarcode = it },
-                label = { Text("Штрихкод") },
-                placeholder = { Text("Просканійте штрих-код") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(focusRequester),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = {
-                    if (manualBarcode.isNotBlank()) {
-                        onManualEntry(manualBarcode)
-                        manualBarcode = ""
-                    }
-                })
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            IndustrialButton(
-                text = "СКАНУВАТИ",
-                onClick = onTriggerScan,
-                edgeTarget = true,
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
-            )
-        }
-
-        if (state.lines.isNotEmpty()) {
             IndustrialOutlinedButton(
                 text = "Завершити підрахунок (${state.scannedCount} позицій)",
                 onClick = onEndSession
             )
-            Spacer(modifier = Modifier.height(12.dp))
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+        Divider(color = MaterialTheme.colorScheme.outlineVariant)
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Зона сканування — закріплена внизу.
+        OutlinedTextField(
+            value = manualBarcode,
+            onValueChange = { manualBarcode = it },
+            label = { Text("Штрихкод") },
+            placeholder = { Text("Просканійте штрих-код") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = {
+                if (manualBarcode.isNotBlank()) {
+                    onManualEntry(manualBarcode)
+                    manualBarcode = ""
+                }
+            })
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        IndustrialButton(
+            text = "СКАНУВАТИ",
+            onClick = onTriggerScan,
+            edgeTarget = true,
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        )
+    }
+}
+
+@Composable
+private fun AuditHeaderRow(
+    locationName: String,
+    scannedCount: Int,
+    expectedSize: Int,
+    totalCounted: Double,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                locationName,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+            Text(
+                "Підраховано: $scannedCount / $expectedSize",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+        Text(
+            "Σ ${formatQty(totalCounted)}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+@Composable
+private fun ScannedLinesList(
+    lines: Map<Long, com.inventory.ui.audit.CountLine>,
+    modifier: Modifier = Modifier,
+    highlightItemId: Long? = null,
+) {
+    if (lines.isEmpty()) {
+        Box(
+            modifier = modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                "Ще немає підрахованих товарів.\nСкануйте або введіть штрихкод нижче.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    } else {
+        LazyColumn(modifier = modifier.fillMaxWidth()) {
+            items(lines.values.toList()) { line ->
+                val isHighlighted = highlightItemId != null && highlightItemId == line.item.id
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            if (isHighlighted)
+                                MaterialTheme.colorScheme.primaryContainer
+                            else
+                                Color.Transparent
+                        )
+                        .padding(horizontal = 4.dp, vertical = 6.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        line.item.name,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        "${formatQty(line.countedQuantity)} / ${formatQty(line.expectedQuantity)}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (line.hasDiscrepancy) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                    )
+                }
+                Divider(color = MaterialTheme.colorScheme.outlineVariant)
+            }
         }
     }
 }
@@ -353,6 +391,14 @@ private fun ItemScannedContent(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Компактна сводка по вже підрахованому — щоб користувач не втрачав контекст.
+        if (state.lines.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            CountingSummaryRow(
+                lines = state.lines,
+                locationName = state.location?.name
+            )
+        }
         Spacer(modifier = Modifier.height(20.dp))
         ScanResultCard(item = state.item)
         Spacer(modifier = Modifier.height(20.dp))
@@ -407,17 +453,74 @@ private fun ItemScannedContent(
 }
 
 @Composable
-private fun UnknownBarcodeContent(barcode: String, onDismiss: () -> Unit) {
+private fun UnknownBarcodeContent(
+    state: AuditUiState.UnknownBarcode,
+    onDismiss: () -> Unit,
+) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
-        Text("ТОВАР НЕ ЗНАЙДЕНО", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
+        if (state.lines.isNotEmpty()) {
+            CountingSummaryRow(
+                lines = state.lines,
+                locationName = state.location?.name
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            "ТОВАР НЕ ЗНАЙДЕНО",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.error
+        )
         Spacer(modifier = Modifier.height(12.dp))
-        Text(barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
-        Spacer(modifier = Modifier.height(48.dp))
+        Text(
+            state.barcode,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold
+        )
+        Spacer(modifier = Modifier.weight(1f))
         IndustrialButton(text = "← Сканувати далі", onClick = onDismiss)
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+private fun CountingSummaryRow(
+    lines: Map<Long, CountLine>,
+    locationName: String?,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            if (!locationName.isNullOrBlank()) {
+                Text(
+                    locationName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                )
+            }
+            Text(
+                "Підраховано: ${lines.size} позицій",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+        Text(
+            "Σ ${formatQty(lines.values.sumOf { it.countedQuantity })}",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
     }
 }
 

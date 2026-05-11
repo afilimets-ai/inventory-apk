@@ -2,6 +2,9 @@ package com.inventory.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import com.inventory.sync.CsvImportConfig
 import com.inventory.sync.SyncEngine
 import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncSettings
@@ -30,7 +33,8 @@ data class SyncSettingsUiState(
 @HiltViewModel
 class SyncSettingsViewModel @Inject constructor(
     private val settingsManager: SyncSettingsManager,
-    private val syncEngine: SyncEngine
+    private val syncEngine: SyncEngine,
+    private val gson: Gson,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SyncSettingsUiState())
@@ -111,5 +115,22 @@ class SyncSettingsViewModel @Inject constructor(
 
     fun saveProviderSettings(settings: SyncSettings) {
         settingsManager.saveSettings(settings)
+    }
+
+    fun getCsvImportConfig(type: SyncProviderType): CsvImportConfig {
+        val json = settingsManager.getSettings(type).csvImportConfigJson
+        if (json.isBlank()) return CsvImportConfig.DEFAULT
+        return try {
+            gson.fromJson(json, CsvImportConfig::class.java) ?: CsvImportConfig.DEFAULT
+        } catch (e: JsonSyntaxException) {
+            CsvImportConfig.DEFAULT
+        }
+    }
+
+    fun saveCsvImportConfig(type: SyncProviderType, config: CsvImportConfig) {
+        val current = settingsManager.getSettings(type)
+        settingsManager.saveSettings(
+            current.copy(csvImportConfigJson = gson.toJson(config))
+        )
     }
 }

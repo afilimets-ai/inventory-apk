@@ -207,7 +207,8 @@ private fun ImportSummaryCard(summary: SyncImportSummary) {
             Divider()
             if (summary.items.isEmpty()) {
                 Text(
-                    text = "У файлі не знайдено товарів з полями barcode/name.",
+                    text = "У файлі не знайдено товарів з полями barcode/name. " +
+                        "Перевірте Налаштування → провайдер → «Налаштувати колонки CSV-імпорту».",
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             } else {

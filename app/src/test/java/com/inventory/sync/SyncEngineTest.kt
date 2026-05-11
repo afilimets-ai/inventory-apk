@@ -1,5 +1,6 @@
 package com.inventory.sync
 
+import com.google.gson.Gson
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.OutboxEntry
 import com.inventory.data.entity.OutboxStatus
@@ -44,6 +45,7 @@ class SyncEngineTest {
             csvSerializer = csvSerializer,
             jsonSerializer = jsonSerializer,
             excelSerializer = excelSerializer,
+            gson = Gson(),
         )
     }
 
@@ -254,6 +256,54 @@ class SyncEngineTest {
         engine.runExport()
 
         assertEquals(SyncState.Error("Export failed: boom"), engine.state.value)
+    }
+
+    @Test
+    fun `runImport uses CsvImportConfig from settings to parse semicolon-separated file`() = runTest {
+        // Файл-приклад "як у користувача": роздільник ';', заголовок інакший — без
+        // CsvImportConfig поточний парсер дав би 0 товарів (немає колонок barcode/name).
+        val csvData = """
+            код;найменування;кількість;од
+            4820001112223;Тестовий цукор;5;кг
+            4820003334445;Тестова кава;12;шт
+        """.trimIndent().toByteArray()
+
+        val config = CsvImportConfig(
+            delimiter = CsvDelimiter.SEMICOLON,
+            ignoreFirstRow = true,
+            columns = listOf(
+                CsvFieldType.BARCODE,
+                CsvFieldType.NAME,
+                CsvFieldType.QUANTITY,
+                CsvFieldType.UNIT,
+            ),
+        )
+        val settings = SyncSettings(
+            providerType = SyncProviderType.LOCAL_FOLDER,
+            isImportEnabled = true,
+            format = SyncFormat.CSV,
+            csvImportConfigJson = Gson().toJson(config),
+        )
+
+        val provider = mock<SyncProvider>()
+        whenever(provider.supportsImport).thenReturn(true)
+        whenever(provider.discoverImportFiles(any())).thenReturn(emptyList())
+        whenever(provider.import(SyncFormat.CSV, "inventory_import"))
+            .thenReturn(SyncImportResult.Success(csvData))
+        whenever(settingsManager.getImportProviders()).thenReturn(listOf(settings))
+        whenever(providerFactory.create(SyncProviderType.LOCAL_FOLDER)).thenReturn(provider)
+        whenever(repository.importItems(any())).thenReturn(Unit)
+
+        engine.runImport()
+
+        val state = engine.state.value as SyncState.Success
+        val summary = state.importSummary!!
+        assertEquals(2, summary.totalRows)
+        assertEquals(2, summary.items.size)
+        assertEquals("4820001112223", summary.items[0].barcode)
+        assertEquals("Тестовий цукор", summary.items[0].name)
+        assertEquals(5.0, summary.items[0].quantity, 0.0001)
+        assertEquals("кг", summary.items[0].unit)
     }
 
     @Test

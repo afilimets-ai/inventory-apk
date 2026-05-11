@@ -54,6 +54,7 @@ import com.inventory.sync.SyncSettings
 fun ProviderSettingsScreen(
     providerType: SyncProviderType,
     onBack: () -> Unit,
+    onEditCsvMapping: ((SyncProviderType) -> Unit)? = null,
     viewModel: SyncSettingsViewModel = hiltViewModel()
 ) {
     val initial = remember(providerType) { viewModel.getProviderSettings(providerType) }
@@ -83,6 +84,23 @@ fun ProviderSettingsScreen(
                 selected = settings.format,
                 onSelect = { settings = settings.copy(format = it) }
             )
+
+            // Налаштування CSV-імпорту: видно тільки коли вибрано CSV і
+            // надано callback на окремий екран мапінгу колонок.
+            if (settings.format == SyncFormat.CSV && onEditCsvMapping != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                OutlinedButton(
+                    onClick = {
+                        // Зберігаємо інші зміни форми перед навігацією, щоб
+                        // користувач не втратив правки в OutlinedTextField-ах.
+                        viewModel.saveProviderSettings(settings)
+                        onEditCsvMapping(providerType)
+                    },
+                    modifier = Modifier.fillMaxWidth().height(48.dp)
+                ) {
+                    Text("Налаштувати колонки CSV-імпорту")
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
             Divider()

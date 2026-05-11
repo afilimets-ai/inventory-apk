@@ -3,6 +3,8 @@ package com.inventory.sync
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.OutboxStatus
 import com.inventory.data.repository.InventoryRepository
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
 import com.inventory.sync.serializer.JsonSerializer
@@ -24,6 +26,7 @@ class SyncEngine @Inject constructor(
     private val csvSerializer: CsvSerializer,
     private val jsonSerializer: JsonSerializer,
     private val excelSerializer: ExcelSerializer,
+    private val gson: Gson,
 ) {
     private val _state = MutableStateFlow<SyncState>(SyncState.Idle)
     val state: StateFlow<SyncState> = _state
@@ -103,8 +106,7 @@ class SyncEngine @Inject constructor(
                 }
                 when (val importResult = provider.import(settings.format, importName)) {
                     is SyncImportResult.Success -> {
-                        val serializer = getSerializer(settings.format)
-                        val rows = serializer.deserialize(importResult.data)
+                        val rows = parseImportedBytes(settings, importResult.data)
                         applyImport(rows)
                         _state.value = SyncState.Success(
                             timestamp = System.currentTimeMillis(),
@@ -131,6 +133,28 @@ class SyncEngine @Inject constructor(
 
     private suspend fun applyImport(rows: List<Map<String, Any?>>) {
         repository.importItems(rows)
+    }
+
+    private fun parseImportedBytes(
+        settings: SyncSettings,
+        data: ByteArray,
+    ): List<Map<String, Any?>> {
+        if (settings.format == SyncFormat.CSV) {
+            val config = parseCsvConfig(settings.csvImportConfigJson)
+            if (config != null) {
+                return csvSerializer.deserialize(data, config)
+            }
+        }
+        return getSerializer(settings.format).deserialize(data)
+    }
+
+    private fun parseCsvConfig(json: String): CsvImportConfig? {
+        if (json.isBlank()) return null
+        return try {
+            gson.fromJson(json, CsvImportConfig::class.java)
+        } catch (e: JsonSyntaxException) {
+            null
+        }
     }
 
     private fun getSerializer(format: SyncFormat): SyncSerializer = when (format) {

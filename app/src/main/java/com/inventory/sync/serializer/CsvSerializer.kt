@@ -1,5 +1,7 @@
 package com.inventory.sync.serializer
 
+import com.inventory.sync.CsvImportConfig
+import com.inventory.sync.CsvFieldType
 import com.inventory.sync.SyncFormat
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,13 +24,45 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
         return sb.toString().toByteArray(Charsets.UTF_8)
     }
 
+    /**
+     * Стандартний deserialize — для зворотної сумісності залишаємо нинішню логіку:
+     * перший рядок = заголовки, роздільник — кома, ключі мапи беруться з заголовків.
+     * Це поведінка за замовчуванням, коли користувач не заповнив [CsvImportConfig].
+     */
     override fun deserialize(data: ByteArray): List<Map<String, Any?>> {
         val lines = data.toString(Charsets.UTF_8).lines().filter { it.isNotBlank() }
         if (lines.size < 2) return emptyList()
-        val headers = parseCsvLine(lines[0])
+        val headers = parseCsvLine(lines[0], ',')
         return lines.drop(1).map { line ->
-            val values = parseCsvLine(line)
+            val values = parseCsvLine(line, ',')
             headers.indices.associate { i -> headers[i] to values.getOrNull(i) }
+        }
+    }
+
+    /**
+     * Парсинг із кастомним конфігом: довільний роздільник, опційне ігнорування
+     * першого рядка та позиційне зіставлення колонок → семантичних полів.
+     * Колонки з типом [CsvFieldType.IGNORE] не потрапляють у вихідну мапу.
+     */
+    fun deserialize(data: ByteArray, config: CsvImportConfig): List<Map<String, Any?>> {
+        val text = data.toString(Charsets.UTF_8)
+        val rawLines = text.lines().filter { it.isNotBlank() }
+        if (rawLines.isEmpty()) return emptyList()
+        val dataLines = if (config.ignoreFirstRow) rawLines.drop(1) else rawLines
+        val delimiter = config.delimiter.char
+        val columns = config.columns
+        return dataLines.map { line ->
+            val values = parseCsvLine(line, delimiter)
+            val row = mutableMapOf<String, Any?>()
+            for ((i, field) in columns.withIndex()) {
+                if (field == CsvFieldType.IGNORE) continue
+                val key = field.key ?: continue
+                val raw = values.getOrNull(i)?.trim()
+                if (!raw.isNullOrEmpty()) {
+                    row[key] = raw
+                }
+            }
+            row
         }
     }
 
@@ -40,7 +74,7 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
         }
     }
 
-    private fun parseCsvLine(line: String): List<String> {
+    private fun parseCsvLine(line: String, delimiter: Char): List<String> {
         val result = mutableListOf<String>()
         var current = StringBuilder()
         var inQuotes = false
@@ -53,7 +87,7 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
                     i++
                 }
                 c == '"' -> inQuotes = !inQuotes
-                c == ',' && !inQuotes -> {
+                c == delimiter && !inQuotes -> {
                     result.add(current.toString())
                     current = StringBuilder()
                 }

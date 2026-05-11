@@ -39,4 +39,8 @@ data class SyncSettings(
     // Ім'я файлу (без розширення) — генерується обліковою системою користувача
     val exportFileName: String = "",
     val importFileName: String = "",
+    // Налаштування CSV-імпорту (роздільник, порядок колонок). JSON-серіалізована
+    // [CsvImportConfig] або порожній рядок — означає старий fallback за header-ами
+    // `barcode/name/quantity/unit`.
+    val csvImportConfigJson: String = "",
 ) : Serializable
