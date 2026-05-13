@@ -83,13 +83,19 @@ class ScanViewModel @Inject constructor(
     }
 
     internal suspend fun processBarcode(barcode: String) {
-        val item = repository.getItemByBarcode(barcode)
-        if (item != null) {
-            feedbackManager.onScanSuccess()
-            _uiState.value = ScanUiState.ItemFound(item = item, quantity = 1.0)
-        } else {
-            feedbackManager.onScanError()
-            _uiState.value = ScanUiState.UnknownBarcode(barcode = barcode)
+        try {
+            val item = repository.getItemByBarcode(barcode)
+            if (item != null) {
+                feedbackManager.onScanSuccess()
+                _uiState.value = ScanUiState.ItemFound(item = item, quantity = 1.0)
+            } else {
+                feedbackManager.onScanError()
+                _uiState.value = ScanUiState.UnknownBarcode(barcode = barcode)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            _uiState.value = ScanUiState.Error("Помилка обробки штрихкоду: ${e.message ?: "невідома помилка"}")
         }
     }
 

@@ -167,6 +167,6 @@ class ScanViewModelTest {
 
         val state = viewModel.uiState.value as ScanUiState.LookupNotFound
         assertEquals("404", state.barcode)
-        assertTrue(state.message.contains("Помилка пошуку"))
+        assertTrue(state.message.contains("network down"))
     }
 }

@@ -119,4 +119,19 @@ sealed class SyncState {
         val importSummary: SyncImportSummary? = null
     ) : SyncState()
     data class Error(val message: String) : SyncState()
+    data class ColumnMappingRequired(
+        val rawData: ByteArray,
+        val columnCount: Int,
+        val sampleRow: List<String>,
+        val settings: SyncSettings,
+        val importFileName: String
+    ) : SyncState() {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is ColumnMappingRequired) return false
+            return rawData.contentEquals(other.rawData) && columnCount == other.columnCount
+                    && sampleRow == other.sampleRow && importFileName == other.importFileName
+        }
+        override fun hashCode(): Int = rawData.contentHashCode()
+    }
 }

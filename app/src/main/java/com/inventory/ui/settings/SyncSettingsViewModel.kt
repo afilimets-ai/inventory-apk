@@ -106,6 +106,21 @@ class SyncSettingsViewModel @Inject constructor(
         viewModelScope.launch { syncEngine.runExport() }
     }
 
+    fun applyColumnMapping(
+        rawData: ByteArray,
+        headers: List<String>,
+        settings: SyncSettings,
+        importFileName: String
+    ) {
+        viewModelScope.launch {
+            syncEngine.applyImportWithMapping(rawData, headers, settings, importFileName)
+        }
+    }
+
+    fun cancelColumnMapping() {
+        syncEngine.cancelColumnMapping()
+    }
+
     fun getProviderSettings(type: SyncProviderType): SyncSettings =
         settingsManager.getSettings(type)
 

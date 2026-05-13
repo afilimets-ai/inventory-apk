@@ -6,6 +6,7 @@ import com.inventory.data.repository.InventoryRepository
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
 import com.inventory.sync.serializer.JsonSerializer
+import com.inventory.sync.serializer.MissingHeadersException
 import com.inventory.sync.serializer.SyncSerializer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -94,7 +95,6 @@ class SyncEngine @Inject constructor(
                 val provider = providerFactory.create(settings.providerType)
                 if (!provider.supportsImport) continue
 
-                // Якщо ім'я файлу не задане — шукаємо найновіший файл за форматом
                 val importName = if (settings.importFileName.isNotEmpty()) {
                     settings.importFileName
                 } else {
@@ -104,12 +104,22 @@ class SyncEngine @Inject constructor(
                 when (val importResult = provider.import(settings.format, importName)) {
                     is SyncImportResult.Success -> {
                         val serializer = getSerializer(settings.format)
-                        val rows = serializer.deserialize(importResult.data)
-                        applyImport(rows)
-                        _state.value = SyncState.Success(
-                            timestamp = System.currentTimeMillis(),
-                            importSummary = rows.toImportSummary(settings, importName)
-                        )
+                        try {
+                            val rows = serializer.deserialize(importResult.data)
+                            applyImport(rows)
+                            _state.value = SyncState.Success(
+                                timestamp = System.currentTimeMillis(),
+                                importSummary = rows.toImportSummary(settings, importName)
+                            )
+                        } catch (e: MissingHeadersException) {
+                            _state.value = SyncState.ColumnMappingRequired(
+                                rawData = importResult.data,
+                                columnCount = e.columnCount,
+                                sampleRow = e.sampleRow,
+                                settings = settings,
+                                importFileName = importName
+                            )
+                        }
                         return
                     }
                     is SyncImportResult.Failure -> {
@@ -127,6 +137,29 @@ class SyncEngine @Inject constructor(
         } catch (e: Exception) {
             _state.value = SyncState.Error("Import failed: ${e.message}")
         }
+    }
+
+    suspend fun applyImportWithMapping(
+        rawData: ByteArray,
+        headers: List<String>,
+        settings: SyncSettings,
+        importFileName: String
+    ) {
+        _state.value = SyncState.Running
+        try {
+            val rows = csvSerializer.deserializeWithHeaders(rawData, headers)
+            applyImport(rows)
+            _state.value = SyncState.Success(
+                timestamp = System.currentTimeMillis(),
+                importSummary = rows.toImportSummary(settings, importFileName)
+            )
+        } catch (e: Exception) {
+            _state.value = SyncState.Error("Import failed: ${e.message}")
+        }
+    }
+
+    fun cancelColumnMapping() {
+        _state.value = SyncState.Idle
     }
 
     private suspend fun applyImport(rows: List<Map<String, Any?>>) {

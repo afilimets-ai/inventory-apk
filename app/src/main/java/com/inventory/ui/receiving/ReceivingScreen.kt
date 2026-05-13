@@ -143,7 +143,10 @@ fun ReceivingScreen(
                         onLookup = viewModel::onLookupUnknownBarcode,
                         onDismiss = viewModel::onDismissItem
                     )
-                    is ReceivingUiState.LookingUpBarcode -> LookingUpBarcodeContent(barcode = state.barcode)
+                    is ReceivingUiState.LookingUpBarcode -> LookingUpBarcodeContent(
+                        barcode = state.barcode,
+                        onCancel = viewModel::onDismissItem
+                    )
                     is ReceivingUiState.LookupCandidate -> LookupCandidateContent(
                         state = state,
                         onImport = viewModel::onImportLookupCandidate,
@@ -400,7 +403,7 @@ private fun UnknownBarcodeContent(
 }
 
 @Composable
-private fun LookingUpBarcodeContent(barcode: String) {
+private fun LookingUpBarcodeContent(barcode: String, onCancel: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -410,9 +413,11 @@ private fun LookingUpBarcodeContent(barcode: String) {
     ) {
         CircularProgressIndicator()
         Spacer(modifier = Modifier.height(20.dp))
-        Text("Шукаю товар у глобальній базі", style = MaterialTheme.typography.headlineSmall)
+        Text("Пошук товару в глобальній базі…", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(8.dp))
         Text(barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(32.dp))
+        IndustrialOutlinedButton(text = "Скасувати", onClick = onCancel)
     }
 }
 

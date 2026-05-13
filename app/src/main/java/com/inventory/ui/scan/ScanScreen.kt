@@ -133,7 +133,10 @@ fun ScanScreen(
                         onLookup = viewModel::onLookupUnknownBarcode,
                         onDismiss = viewModel::onDismiss
                     )
-                    is ScanUiState.LookingUpBarcode -> LookingUpBarcodeScreen(barcode = state.barcode)
+                    is ScanUiState.LookingUpBarcode -> LookingUpBarcodeScreen(
+                        barcode = state.barcode,
+                        onCancel = viewModel::onDismiss
+                    )
                     is ScanUiState.LookupCandidate -> LookupCandidateScreen(
                         state = state,
                         onImport = viewModel::onImportLookupCandidate,
@@ -188,7 +191,7 @@ private fun IdleScreen(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Основна кнопка — 80dp (biля нижнього краю)
+        // Основна кнопка — 80dp (біля нижнього краю)
         IndustrialButton(
             text = "СКАНУВАТИ",
             onClick = onTriggerScan,
@@ -349,7 +352,7 @@ private fun UnknownBarcodeScreen(
 }
 
 @Composable
-private fun LookingUpBarcodeScreen(barcode: String) {
+private fun LookingUpBarcodeScreen(barcode: String, onCancel: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -357,9 +360,11 @@ private fun LookingUpBarcodeScreen(barcode: String) {
     ) {
         CircularProgressIndicator()
         Spacer(modifier = Modifier.height(20.dp))
-        Text("Шукаю товар у глобальній базі", style = MaterialTheme.typography.headlineSmall)
+        Text("Пошук товару в глобальній базі…", style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(8.dp))
         Text(barcode, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(32.dp))
+        IndustrialOutlinedButton(text = "Скасувати", onClick = onCancel)
     }
 }
 

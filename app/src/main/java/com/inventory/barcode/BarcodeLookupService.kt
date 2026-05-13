@@ -10,10 +10,16 @@ class BarcodeLookupService @Inject constructor(
     suspend fun lookup(barcode: String): BarcodeLookupResult {
         val errors = mutableListOf<String>()
         for (provider in providers) {
-            when (val result = provider.lookup(barcode)) {
-                is BarcodeLookupResult.Found -> return result
-                is BarcodeLookupResult.NotFound -> Unit
-                is BarcodeLookupResult.Failure -> errors.add("${provider.name}: ${result.message}")
+            try {
+                when (val result = provider.lookup(barcode)) {
+                    is BarcodeLookupResult.Found -> return result
+                    is BarcodeLookupResult.NotFound -> Unit
+                    is BarcodeLookupResult.Failure -> errors.add("${provider.name}: ${result.message}")
+                }
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                errors.add("${provider.name}: ${e.message ?: "невідома помилка"}")
             }
         }
         return if (errors.isEmpty()) {

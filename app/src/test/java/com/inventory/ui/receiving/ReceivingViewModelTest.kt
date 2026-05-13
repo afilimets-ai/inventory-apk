@@ -53,6 +53,6 @@ class ReceivingViewModelTest {
 
         val state = viewModel.uiState.value as ReceivingUiState.LookupNotFound
         assertEquals("404", state.barcode)
-        assertTrue(state.message.contains("Помилка пошуку"))
+        assertTrue(state.message.contains("network down"))
     }
 }
