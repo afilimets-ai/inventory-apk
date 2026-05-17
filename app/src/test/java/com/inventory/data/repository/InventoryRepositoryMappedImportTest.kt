@@ -118,7 +118,9 @@ class InventoryRepositoryMappedImportTest {
 
         repo.applyMappedImport(listOf(listOf("4820001", "Widget", "Продукти")), mapping, TargetFields.all)
 
-        verify(categoryDao).insert(Category(name = "Продукти"))
+        val catCaptor = argumentCaptor<Category>()
+        verify(categoryDao).insert(catCaptor.capture())
+        assertEquals("Продукти", catCaptor.firstValue.name)
         val captor = argumentCaptor<InventoryItem>()
         verify(itemDao).insert(captor.capture())
         assertEquals(5L, captor.firstValue.categoryId)
