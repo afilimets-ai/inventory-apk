@@ -29,4 +29,7 @@ interface LocationDao {
 
     @Query("DELETE FROM locations WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT * FROM locations WHERE name = :name LIMIT 1")
+    suspend fun getByName(name: String): Location?
 }
