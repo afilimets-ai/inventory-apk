@@ -1,6 +1,7 @@
 package com.inventory.sync.serializer
 
 import com.inventory.sync.SyncFormat
+import com.inventory.sync.catalogimport.ImportPreview
 import org.dhatim.fastexcel.Workbook
 import org.dhatim.fastexcel.reader.ReadableWorkbook
 import java.io.ByteArrayInputStream
@@ -61,4 +62,7 @@ class ExcelSerializer @Inject constructor() : SyncSerializer {
         }
         return result
     }
+
+    override fun parsePreview(data: ByteArray, sampleSize: Int): ImportPreview = TODO("Implemented in Task 4")
+    override fun parseRaw(data: ByteArray, treatFirstRowAsHeader: Boolean): List<List<String?>> = TODO("Implemented in Task 4")
 }

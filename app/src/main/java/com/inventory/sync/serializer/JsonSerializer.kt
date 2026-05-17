@@ -3,6 +3,7 @@ package com.inventory.sync.serializer
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.inventory.sync.SyncFormat
+import com.inventory.sync.catalogimport.ImportPreview
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,4 +19,7 @@ class JsonSerializer @Inject constructor(private val gson: Gson) : SyncSerialize
         val type = object : TypeToken<List<Map<String, Any?>>>() {}.type
         return gson.fromJson(data.toString(Charsets.UTF_8), type) ?: emptyList()
     }
+
+    override fun parsePreview(data: ByteArray, sampleSize: Int): ImportPreview = TODO("Implemented in Task 4")
+    override fun parseRaw(data: ByteArray, treatFirstRowAsHeader: Boolean): List<List<String?>> = TODO("Implemented in Task 4")
 }
