@@ -14,7 +14,14 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.kotlin.*
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
+import org.mockito.kotlin.argumentCaptor
 
 class InventoryRepositoryMappedImportTest {
 
@@ -29,11 +36,9 @@ class InventoryRepositoryMappedImportTest {
     @Before fun setUp() {
         db = mock(); categoryDao = mock(); locationDao = mock()
         itemDao = mock(); operationDao = mock(); outboxDao = mock()
-        // Make Room withTransaction pass-through in tests
-        whenever(db.withTransaction<Any>(any())).thenAnswer { inv ->
-            runBlocking { (inv.getArgument<suspend () -> Any>(0))() }
+        repo = object : InventoryRepositoryImpl(db, categoryDao, locationDao, itemDao, operationDao, outboxDao) {
+            override suspend fun <R> runInTransaction(block: suspend () -> R): R = block()
         }
-        repo = InventoryRepositoryImpl(db, categoryDao, locationDao, itemDao, operationDao, outboxDao)
     }
 
     @Test

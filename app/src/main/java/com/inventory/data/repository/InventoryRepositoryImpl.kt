@@ -19,8 +19,9 @@ import com.inventory.sync.catalogimport.ImportReport
 import com.inventory.sync.catalogimport.TargetField
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import androidx.annotation.VisibleForTesting
 
-class InventoryRepositoryImpl @Inject constructor(
+open class InventoryRepositoryImpl @Inject constructor(
     private val db: InventoryDatabase,
     private val categoryDao: CategoryDao,
     private val locationDao: LocationDao,
@@ -70,7 +71,11 @@ class InventoryRepositoryImpl @Inject constructor(
     override suspend fun updateOutboxStatus(id: Long, status: String) = outboxEntryDao.updateStatus(id, status)
     override suspend fun markOutboxFailed(id: Long, errorMessage: String) = outboxEntryDao.markFailed(id, errorMessage)
     override suspend fun deleteSyncedOutbox() = outboxEntryDao.deleteSynced()
-    override suspend fun importItems(rows: List<Map<String, Any?>>) = db.withTransaction {
+    @VisibleForTesting
+    internal open suspend fun <R> runInTransaction(block: suspend () -> R): R =
+        db.withTransaction(block)
+
+    override suspend fun importItems(rows: List<Map<String, Any?>>) = runInTransaction {
         for (row in rows) {
             val barcode = row["barcode"]?.toString() ?: continue
             val name = row["name"]?.toString() ?: continue
@@ -96,7 +101,7 @@ class InventoryRepositoryImpl @Inject constructor(
         rawRows: List<List<String?>>,
         mapping: ColumnMapping,
         targetFields: List<TargetField>
-    ): ImportReport = db.withTransaction {
+    ): ImportReport = runInTransaction {
         var inserted = 0; var updated = 0; var skipped = 0
         val skipReasons = mutableListOf<String>()
         val gson = Gson()
@@ -178,7 +183,7 @@ class InventoryRepositoryImpl @Inject constructor(
     override suspend fun recordOperationWithOutbox(
         operation: InventoryOperation,
         outboxEntry: OutboxEntry
-    ): Long = db.withTransaction {
+    ): Long = runInTransaction {
         operation.itemId?.let { itemId ->
             val current = inventoryItemDao.getById(itemId)
             if (current != null) {
