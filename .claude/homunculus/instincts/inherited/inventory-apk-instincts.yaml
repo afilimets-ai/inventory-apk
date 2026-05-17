@@ -1,0 +1,539 @@
+# Instincts generated from https://github.com/afilimets-ai/inventory-apk
+# Generated: 2026-05-17T17:58:08.809Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: inventory-apk-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: feat, fix, docs
+
+## Evidence
+
+- 10 commits analyzed
+- Detected conventional commit pattern
+- Examples: docs: add column-mapping import design spec and implementation plan, feat: add catalogimport data models (TargetField, ColumnMapping, ImportPreview, ImportReport)
+
+---
+id: inventory-apk-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Commit Length
+
+## Action
+
+Write moderate-length commit messages (~75 characters)
+
+## Evidence
+
+- Average commit message length: 75 chars
+- Based on 10 commits
+
+---
+id: inventory-apk-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Naming Files
+
+## Action
+
+Use PascalCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: PascalCase
+
+---
+id: inventory-apk-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: inventory-apk-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: inventory-apk-test-naming
+trigger: "when creating a test file"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Test Naming
+
+## Action
+
+Name test files using the pattern: *.test.ts
+
+## Evidence
+
+- File pattern: *.test.ts
+- Consistent across test files
+
+---
+id: inventory-apk-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~21x per month
+- Files: **/*.test.*
+
+---
+id: inventory-apk-workflow-feature-implementation-with-tdd
+trigger: "when doing feature implementation with tdd"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Workflow Feature Implementation With Tdd
+
+## Action
+
+Follow the feature-implementation-with-tdd workflow:
+1. Create or update implementation files in app/src/main/java/...
+2. Create or update corresponding test files in app/src/test/java/...
+3. Iterate between implementation and tests until feature is complete
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: app/src/main/java/com/inventory/sync/catalogimport/*.kt, app/src/main/java/com/inventory/sync/serializer/*.kt, app/src/test/java/com/inventory/sync/catalogimport/*Test.kt
+
+---
+id: inventory-apk-workflow-repository-logic-change-with-test-adjustment
+trigger: "when doing repository logic change with test adjustment"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Workflow Repository Logic Change With Test Adjustment
+
+## Action
+
+Follow the repository-logic-change-with-test-adjustment workflow:
+1. Update repository implementation files in app/src/main/java/com/inventory/data/repository/
+2. Update or add corresponding test files in app/src/test/java/com/inventory/data/repository/
+3. Make test-specific adjustments (e.g., override methods, fix test signatures, use argument captors)
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: app/src/main/java/com/inventory/data/repository/*.kt, app/src/test/java/com/inventory/data/repository/*Test.kt
+
+---
+id: inventory-apk-workflow-serializer-extension-with-tests
+trigger: "when doing serializer extension with tests"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Workflow Serializer Extension With Tests
+
+## Action
+
+Follow the serializer-extension-with-tests workflow:
+1. Update or create serializer implementation files in app/src/main/java/com/inventory/sync/serializer/
+2. Update or create corresponding test files in app/src/test/java/com/inventory/sync/serializer/
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: app/src/main/java/com/inventory/sync/serializer/*.kt, app/src/test/java/com/inventory/sync/serializer/*Test.kt
+
+---
+id: inventory-apk-workflow-test-fix-for-compatibility-or-mocking
+trigger: "when doing test fix for compatibility or mocking"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Workflow Test Fix For Compatibility Or Mocking
+
+## Action
+
+Follow the test-fix-for-compatibility-or-mocking workflow:
+1. Identify test compatibility or mocking issue
+2. Update test files to fix signatures, use argument captors, or override methods as needed
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: app/src/test/java/com/inventory/data/repository/*Test.kt
+
+---
+id: inventory-apk-instinct-file-naming
+trigger: "When creating or renaming a file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct File Naming
+
+## Action
+
+Use PascalCase for file names
+
+## Evidence
+
+- Pattern in app/src/main/java/com/inventory/sync/catalogimport/ColumnMapping.kt
+
+---
+id: inventory-apk-instinct-function-naming
+trigger: "When defining a function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Function Naming
+
+## Action
+
+Use camelCase for function names
+
+## Evidence
+
+- Pattern in app/src/main/java/com/inventory/sync/catalogimport/ColumnMappingHeuristic.kt
+
+---
+id: inventory-apk-instinct-class-naming
+trigger: "When defining a class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Class Naming
+
+## Action
+
+Use PascalCase for class names
+
+## Evidence
+
+- Pattern in app/src/main/java/com/inventory/sync/catalogimport/ImportPreview.kt
+
+---
+id: inventory-apk-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Constant Naming
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for constant names
+
+## Evidence
+
+- Pattern in Kotlin codebase
+
+---
+id: inventory-apk-instinct-import-style
+trigger: "When importing modules or files"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Import Style
+
+## Action
+
+Use relative imports
+
+## Evidence
+
+- Pattern in Kotlin files
+
+---
+id: inventory-apk-instinct-export-style
+trigger: "When exporting classes or functions"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Export Style
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in Kotlin files
+
+---
+id: inventory-apk-instinct-test-file-pattern
+trigger: "When creating a test file"
+confidence: 0.9
+domain: testing
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Test File Pattern
+
+## Action
+
+Name test files with *Test.kt suffix and place in app/src/test/java/...
+
+## Evidence
+
+- Pattern in app/src/test/java/com/inventory/sync/catalogimport/ColumnMappingHeuristicTest.kt
+
+---
+id: inventory-apk-instinct-unit-test-type
+trigger: "When writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Unit Test Type
+
+## Action
+
+Write unit tests for new or changed logic
+
+## Evidence
+
+- Pattern in app/src/test/java/com/inventory/sync/catalogimport/*Test.kt
+
+---
+id: inventory-apk-instinct-test-implementation-sync
+trigger: "When updating implementation files"
+confidence: 0.9
+domain: testing
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Test Implementation Sync
+
+## Action
+
+Update or add corresponding test files to match implementation changes
+
+## Evidence
+
+- Seen in workflow repository-logic-change-with-test-adjustment
+- Pattern in app/src/test/java/com/inventory/data/repository/*Test.kt
+
+---
+id: inventory-apk-instinct-git-commit-format
+trigger: "When writing a commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Git Commit Format
+
+## Action
+
+Use conventional commit prefixes: feat, fix, docs
+
+## Evidence
+
+- Seen in commit 'feat: add catalogimport data models'
+- Seen in commit 'fix: make withTransaction testable via overridable runInTransaction'
+
+---
+id: inventory-apk-instinct-git-commit-length
+trigger: "When writing a commit message"
+confidence: 0.8
+domain: git
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Git Commit Length
+
+## Action
+
+Keep commit messages concise (average ~75 characters)
+
+## Evidence
+
+- Pattern in commit history
+
+---
+id: inventory-apk-instinct-feature-tdd
+trigger: "When adding a new feature or module with robust test coverage"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Feature Tdd
+
+## Action
+
+Create or update implementation files, then create or update corresponding test files, iterating until complete (TDD style)
+
+## Evidence
+
+- Workflow: feature-implementation-with-tdd
+- Pattern in app/src/main/java/com/inventory/sync/catalogimport/*.kt
+- Pattern in app/src/test/java/com/inventory/sync/catalogimport/*Test.kt
+
+---
+id: inventory-apk-instinct-repository-logic-test-adjustment
+trigger: "When changing repository logic"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Repository Logic Test Adjustment
+
+## Action
+
+Immediately update or add corresponding test files and make test-specific adjustments (e.g., override methods, fix signatures)
+
+## Evidence
+
+- Workflow: repository-logic-change-with-test-adjustment
+- Pattern in app/src/main/java/com/inventory/data/repository/*.kt
+- Pattern in app/src/test/java/com/inventory/data/repository/*Test.kt
+
+---
+id: inventory-apk-instinct-serializer-extension-tests
+trigger: "When adding or improving data import/export formats"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Serializer Extension Tests
+
+## Action
+
+Update or create serializer implementation files and corresponding test files
+
+## Evidence
+
+- Workflow: serializer-extension-with-tests
+- Pattern in app/src/main/java/com/inventory/sync/serializer/*.kt
+- Pattern in app/src/test/java/com/inventory/sync/serializer/*Test.kt
+
+---
+id: inventory-apk-instinct-test-fix-compat-mocking
+trigger: "When encountering test compatibility or mocking issues"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: afilimets-ai/inventory-apk
+---
+
+# Inventory Apk Instinct Test Fix Compat Mocking
+
+## Action
+
+Update test files to fix signatures, use argument captors, or override methods as needed
+
+## Evidence
+
+- Workflow: test-fix-for-compatibility-or-mocking
+- Seen in commit 'fix: ensure test methods return Unit for JUnit 4 compatibility'
+
