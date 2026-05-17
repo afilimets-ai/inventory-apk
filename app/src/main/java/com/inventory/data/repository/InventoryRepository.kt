@@ -5,6 +5,9 @@ import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
 import com.inventory.data.entity.OutboxEntry
+import com.inventory.sync.catalogimport.ColumnMapping
+import com.inventory.sync.catalogimport.ImportReport
+import com.inventory.sync.catalogimport.TargetField
 import kotlinx.coroutines.flow.Flow
 
 interface InventoryRepository {
@@ -50,6 +53,12 @@ interface InventoryRepository {
     suspend fun markOutboxFailed(id: Long, errorMessage: String)
     suspend fun deleteSyncedOutbox()
     suspend fun importItems(rows: List<Map<String, Any?>>)
+
+    suspend fun applyMappedImport(
+        rawRows: List<List<String?>>,
+        mapping: ColumnMapping,
+        targetFields: List<TargetField>
+    ): ImportReport
 
     // ACID транзакція: операція + outbox entry одночасно
     suspend fun recordOperationWithOutbox(

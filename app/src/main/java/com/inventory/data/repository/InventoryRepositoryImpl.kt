@@ -1,6 +1,7 @@
 package com.inventory.data.repository
 
 import androidx.room.withTransaction
+import com.google.gson.Gson
 import com.inventory.data.db.InventoryDatabase
 import com.inventory.data.db.dao.CategoryDao
 import com.inventory.data.db.dao.InventoryItemDao
@@ -13,6 +14,9 @@ import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
 import com.inventory.data.entity.OperationType
 import com.inventory.data.entity.OutboxEntry
+import com.inventory.sync.catalogimport.ColumnMapping
+import com.inventory.sync.catalogimport.ImportReport
+import com.inventory.sync.catalogimport.TargetField
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -86,6 +90,89 @@ class InventoryRepositoryImpl @Inject constructor(
                 )
             }
         }
+    }
+
+    override suspend fun applyMappedImport(
+        rawRows: List<List<String?>>,
+        mapping: ColumnMapping,
+        targetFields: List<TargetField>
+    ): ImportReport = db.withTransaction {
+        var inserted = 0; var updated = 0; var skipped = 0
+        val skipReasons = mutableListOf<String>()
+        val gson = Gson()
+        val categoryCache = mutableMapOf<String, Long?>()
+        val locationCache = mutableMapOf<String, Long?>()
+
+        fun cellFor(row: List<String?>, fieldId: String): String? =
+            mapping.mapping.entries.firstOrNull { it.value == fieldId }?.key
+                ?.let { row.getOrNull(it) }?.takeIf { it.isNotBlank() }
+
+        for ((idx, row) in rawRows.withIndex()) {
+            val barcode = cellFor(row, "barcode")
+            if (barcode == null) { skipped++; skipReasons += "row $idx: empty barcode"; continue }
+            val name = cellFor(row, "name")
+            if (name == null) { skipped++; skipReasons += "row $idx: empty name"; continue }
+
+            val categoryId: Long? = cellFor(row, "category")?.let { catName ->
+                categoryCache.getOrPut(catName) {
+                    categoryDao.getByName(catName)?.id ?: categoryDao.insert(Category(name = catName))
+                }
+            }
+            val locationId: Long? = cellFor(row, "location")?.let { locName ->
+                locationCache.getOrPut(locName) {
+                    locationDao.getByName(locName)?.id ?: locationDao.insert(Location(name = locName))
+                }
+            }
+
+            val existing = inventoryItemDao.getByBarcode(barcode)
+            val itemId: Long
+            if (existing != null) {
+                inventoryItemDao.update(existing.copy(
+                    name        = name,
+                    description = cellFor(row, "description") ?: existing.description,
+                    unit        = cellFor(row, "unit") ?: existing.unit,
+                    notes       = cellFor(row, "notes") ?: existing.notes,
+                    minQuantity = cellFor(row, "min_quantity")?.toDoubleOrNull() ?: existing.minQuantity,
+                    categoryId  = categoryId ?: existing.categoryId,
+                    locationId  = locationId ?: existing.locationId,
+                    updatedAt   = System.currentTimeMillis()
+                ))
+                itemId = existing.id
+                updated++
+            } else {
+                itemId = inventoryItemDao.insert(InventoryItem(
+                    barcode     = barcode,
+                    name        = name,
+                    description = cellFor(row, "description") ?: "",
+                    unit        = cellFor(row, "unit") ?: "шт",
+                    notes       = cellFor(row, "notes") ?: "",
+                    minQuantity = cellFor(row, "min_quantity")?.toDoubleOrNull() ?: 0.0,
+                    categoryId  = categoryId,
+                    locationId  = locationId,
+                    quantity    = 0.0
+                ))
+                inserted++
+            }
+
+            val qty = cellFor(row, "quantity")?.toDoubleOrNull()
+            if (qty != null) {
+                inventoryItemDao.updateQuantity(itemId, qty)
+                val op = InventoryOperation(
+                    itemId = itemId, barcode = barcode,
+                    operationType = OperationType.AUDIT.name, quantity = qty
+                )
+                inventoryOperationDao.insert(op)
+                outboxEntryDao.insert(OutboxEntry(
+                    operationType = OperationType.AUDIT.name,
+                    payload = gson.toJson(mapOf(
+                        "barcode" to barcode,
+                        "quantity" to qty,
+                        "operationType" to "AUDIT"
+                    ))
+                ))
+            }
+        }
+        ImportReport(inserted, updated, skipped, skipReasons)
     }
 
     override suspend fun recordOperationWithOutbox(
