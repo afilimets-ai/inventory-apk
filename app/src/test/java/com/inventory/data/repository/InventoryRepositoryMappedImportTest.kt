@@ -42,7 +42,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `inserts new item with quantity=0 when barcode not found`() = runBlocking {
+    fun `inserts new item with quantity=0 when barcode not found`(): Unit = runBlocking {
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name", 2 to "quantity", 3 to "unit"))
         whenever(itemDao.getByBarcode("4820001")).thenReturn(null)
         whenever(itemDao.insert(any())).thenReturn(42L)
@@ -64,7 +64,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `generates AUDIT operation when quantity is mapped and parseable`() = runBlocking {
+    fun `generates AUDIT operation when quantity is mapped and parseable`(): Unit = runBlocking {
         val existing = InventoryItem(id = 7L, barcode = "4820001", name = "Widget", quantity = 0.0)
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name", 2 to "quantity"))
         whenever(itemDao.getByBarcode("4820001")).thenReturn(existing)
@@ -82,7 +82,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `skips row when barcode is null`() = runBlocking {
+    fun `skips row when barcode is null`(): Unit = runBlocking {
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name"))
         val report = repo.applyMappedImport(listOf(listOf(null, "Widget")), mapping, TargetFields.all)
         assertEquals(1, report.skippedCount)
@@ -90,7 +90,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `skips row when name is null`() = runBlocking {
+    fun `skips row when name is null`(): Unit = runBlocking {
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name"))
         val report = repo.applyMappedImport(listOf(listOf("4820001", null)), mapping, TargetFields.all)
         assertEquals(1, report.skippedCount)
@@ -98,7 +98,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `does not generate AUDIT when quantity is not parseable`() = runBlocking {
+    fun `does not generate AUDIT when quantity is not parseable`(): Unit = runBlocking {
         val existing = InventoryItem(id = 7L, barcode = "4820001", name = "Widget", quantity = 3.0)
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name", 2 to "quantity"))
         whenever(itemDao.getByBarcode("4820001")).thenReturn(existing)
@@ -109,7 +109,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `lookup-or-create category by name`() = runBlocking {
+    fun `lookup-or-create category by name`(): Unit = runBlocking {
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name", 2 to "category"))
         whenever(itemDao.getByBarcode("4820001")).thenReturn(null)
         whenever(categoryDao.getByName("Продукти")).thenReturn(null)
@@ -125,7 +125,7 @@ class InventoryRepositoryMappedImportTest {
     }
 
     @Test
-    fun `reuses cached category id for duplicate names`() = runBlocking {
+    fun `reuses cached category id for duplicate names`(): Unit = runBlocking {
         val mapping = ColumnMapping(false, mapOf(0 to "barcode", 1 to "name", 2 to "category"))
         whenever(itemDao.getByBarcode(any())).thenReturn(null)
         whenever(categoryDao.getByName("Продукти")).thenReturn(null)
