@@ -37,7 +37,7 @@ class InventoryRepositoryMappedImportTest {
         db = mock(); categoryDao = mock(); locationDao = mock()
         itemDao = mock(); operationDao = mock(); outboxDao = mock()
         repo = object : InventoryRepositoryImpl(db, categoryDao, locationDao, itemDao, operationDao, outboxDao) {
-            override suspend fun <R> runInTransaction(block: suspend () -> R): R = block()
+            protected override suspend fun <R> runInTransaction(block: suspend () -> R): R = block()
         }
     }
 

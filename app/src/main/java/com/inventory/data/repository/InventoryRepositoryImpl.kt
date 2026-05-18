@@ -72,7 +72,7 @@ open class InventoryRepositoryImpl @Inject constructor(
     override suspend fun markOutboxFailed(id: Long, errorMessage: String) = outboxEntryDao.markFailed(id, errorMessage)
     override suspend fun deleteSyncedOutbox() = outboxEntryDao.deleteSynced()
     @VisibleForTesting
-    internal open suspend fun <R> runInTransaction(block: suspend () -> R): R =
+    protected open suspend fun <R> runInTransaction(block: suspend () -> R): R =
         db.withTransaction(block)
 
     override suspend fun importItems(rows: List<Map<String, Any?>>) = runInTransaction {
