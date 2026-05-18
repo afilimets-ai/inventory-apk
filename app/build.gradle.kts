@@ -77,6 +77,15 @@ android {
             }
         }
     }
+
+    sourceSets {
+        getByName("debug") {
+            java.exclude("**/byRounds/**")
+        }
+        getByName("debugAndroidTest") {
+            java.exclude("**/byRounds/**")
+        }
+    }
 }
 
 dependencies {
