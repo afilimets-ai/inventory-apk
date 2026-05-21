@@ -1,5 +1,6 @@
 package com.inventory.sync
 
+import com.inventory.sync.catalogimport.ColumnMapping
 import java.io.Serializable
 
 /**
@@ -39,4 +40,5 @@ data class SyncSettings(
     // Ім'я файлу (без розширення) — генерується обліковою системою користувача
     val exportFileName: String = "",
     val importFileName: String = "",
+    val savedImportMapping: ColumnMapping? = null,
 ) : Serializable

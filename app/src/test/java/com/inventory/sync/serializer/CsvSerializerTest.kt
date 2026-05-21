@@ -89,6 +89,17 @@ class CsvSerializerTest {
     }
 
     @Test
+    fun `deserialize strips UTF-8 BOM from first header`() {
+        val csv = "\uFEFFbarcode,name,quantity\n123,Widget,10\n"
+        val result = serializer.deserialize(csv.toByteArray(Charsets.UTF_8))
+
+        assertEquals(1, result.size)
+        assertEquals("123", result[0]["barcode"])
+        assertEquals("Widget", result[0]["name"])
+        assertEquals("10", result[0]["quantity"])
+    }
+
+    @Test
     fun `deserialize row with fewer columns fills missing fields with null`() {
         val csv = "barcode,name,quantity\n123,Widget\n"
         val result = serializer.deserialize(csv.toByteArray())

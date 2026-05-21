@@ -37,6 +37,21 @@ class LocalFolderProviderTest {
     }
 
     @Test
+    fun `import accepts file name with extension`() = runTest {
+        val dir = tempFolder.newFolder("sync")
+        dir.resolve("custom_catalog.csv").writeText("barcode,name\n123,Widget\n")
+        val provider = providerFor(dir.absolutePath)
+
+        val result = provider.import(SyncFormat.CSV, "custom_catalog.csv")
+
+        assertTrue(result is SyncImportResult.Success)
+        assertEquals(
+            "barcode,name\n123,Widget\n",
+            (result as SyncImportResult.Success).data.toString(Charsets.UTF_8)
+        )
+    }
+
+    @Test
     fun `export writes file to direct folder path`() = runTest {
         val dir = tempFolder.newFolder("sync")
         val provider = providerFor(dir.absolutePath)
@@ -57,6 +72,18 @@ class LocalFolderProviderTest {
         val provider = providerFor(dir.absolutePath)
 
         assertEquals(listOf("newer", "older"), provider.discoverImportFiles(SyncFormat.CSV))
+    }
+
+    @Test
+    fun `discover import files ignores hidden and trashed csv files`() = runTest {
+        val dir = tempFolder.newFolder("sync")
+        val visible = dir.resolve("catalog.csv").apply { writeText("barcode,name\n1,A\n") }
+        val trashed = dir.resolve(".trashed-1-catalog.csv").apply { writeText("barcode,name\n2,B\n") }
+        visible.setLastModified(1_000)
+        trashed.setLastModified(2_000)
+        val provider = providerFor(dir.absolutePath)
+
+        assertEquals(listOf("catalog"), provider.discoverImportFiles(SyncFormat.CSV))
     }
 
     @Test

@@ -1,6 +1,8 @@
 package com.inventory.sync
 
 import com.inventory.data.entity.OutboxEntry
+import com.inventory.sync.catalogimport.ColumnMapping
+import com.inventory.sync.catalogimport.ImportPreview
 
 /**
  * Типи провайдерів синхронізації.
@@ -110,6 +112,13 @@ data class SyncImportSummary(
     val items: List<SyncImportedItem>
 )
 
+data class PendingImportMapping(
+    val settings: SyncSettings,
+    val fileName: String,
+    val preview: ImportPreview,
+    val suggestedMapping: ColumnMapping
+)
+
 /** Стан фонової синхронізації для UI */
 sealed class SyncState {
     object Idle : SyncState()
@@ -118,5 +127,6 @@ sealed class SyncState {
         val timestamp: Long,
         val importSummary: SyncImportSummary? = null
     ) : SyncState()
+    data class PendingMapping(val pending: PendingImportMapping) : SyncState()
     data class Error(val message: String) : SyncState()
 }

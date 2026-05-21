@@ -26,12 +26,12 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
     }
 
     override fun deserialize(data: ByteArray): List<Map<String, Any?>> {
-        val lines = data.toString(Charsets.UTF_8).lines().filter { it.isNotBlank() }
+        val lines = decodeWithFallback(data).lines().filter { it.isNotBlank() }
         if (lines.size < 2) return emptyList()
-        val headers = parseCsvLine(lines[0])
+        val headers = parseCsvLine(lines[0]).map { it.normalizeHeader() }
         return lines.drop(1).map { line ->
             val values = parseCsvLine(line)
-            headers.indices.associate { i -> headers[i] to values.getOrNull(i) }
+            headers.indices.associate { i -> headers[i] to values.getOrNull(i)?.trimCell() }
         }
     }
 
@@ -48,17 +48,25 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
         val text = decodeWithFallback(data)
         val lines = text.lines().filter { it.isNotBlank() }
         if (lines.isEmpty()) return ImportPreview(emptyList(), emptyList(), true, 0)
-        val headerRow = parseCsvLine(lines[0])
+        val headerRow = parseCsvLine(lines[0]).map { it.normalizeHeader() }
         val dataLines = lines.drop(1)
-        val sampleRows = dataLines.take(sampleSize).map { line ->
-            parseCsvLine(line).map { v -> v.takeIf { it.isNotEmpty() } }
+        val initialSampleRows = dataLines.take(sampleSize).map { line ->
+            parseCsvLine(line).map { v -> v.trimCell().takeIf { it.isNotEmpty() } }
         }
-        val rowsForHeuristic = listOf(headerRow.map { it.takeIf { v -> v.isNotEmpty() } }) + sampleRows
+        val rowsForHeuristic = listOf(headerRow.map { it.takeIf { v -> v.isNotEmpty() } }) + initialSampleRows
+        val hasHeader = ColumnMappingHeuristic.detectHasHeader(rowsForHeuristic)
+        val sampleRows = if (hasHeader) {
+            initialSampleRows
+        } else {
+            lines.take(sampleSize).map { line ->
+                parseCsvLine(line).map { v -> v.trimCell().takeIf { it.isNotEmpty() } }
+            }
+        }
         return ImportPreview(
             headerRow = headerRow,
             sampleRows = sampleRows,
-            detectedHasHeader = ColumnMappingHeuristic.detectHasHeader(rowsForHeuristic),
-            totalRowsEstimate = dataLines.size
+            detectedHasHeader = hasHeader,
+            totalRowsEstimate = if (hasHeader) dataLines.size else lines.size
         )
     }
 
@@ -70,10 +78,14 @@ class CsvSerializer @Inject constructor() : SyncSerializer {
         return dataLines.map { line ->
             val cells = parseCsvLine(line)
             List(maxOf(columnCount, cells.size)) { i ->
-                cells.getOrNull(i)?.takeIf { it.isNotEmpty() }
+                cells.getOrNull(i)?.trimCell()?.takeIf { it.isNotEmpty() }
             }
         }
     }
+
+    private fun String.normalizeHeader(): String = trimCell()
+
+    private fun String.trimCell(): String = trim().removePrefix("\uFEFF")
 
     private fun decodeWithFallback(data: ByteArray): String {
         val utf8 = data.toString(Charsets.UTF_8)

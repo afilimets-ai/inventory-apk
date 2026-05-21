@@ -40,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -177,6 +178,14 @@ private fun ScanningContent(
 ) {
     var manualBarcode by remember { mutableStateOf("") }
     var showManualInput by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    fun submitManualBarcode() {
+        onManualEntry(manualBarcode)
+        manualBarcode = ""
+        showManualInput = false
+        focusManager.clearFocus(force = true)
+    }
 
     Column(
         modifier = Modifier
@@ -213,7 +222,10 @@ private fun ScanningContent(
 
             IndustrialButton(
                 text = "СКАНУВАТИ",
-                onClick = onTriggerScan,
+                onClick = {
+                    focusManager.clearFocus(force = true)
+                    onTriggerScan()
+                },
                 edgeTarget = true,
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
@@ -224,7 +236,14 @@ private fun ScanningContent(
 
             IndustrialOutlinedButton(
                 text = "Ввести штрихкод вручну",
-                onClick = { showManualInput = !showManualInput }
+                onClick = {
+                    showManualInput = !showManualInput
+                    if (showManualInput) {
+                        manualBarcode = ""
+                    } else {
+                        focusManager.clearFocus(force = true)
+                    }
+                }
             )
 
             if (showManualInput) {
@@ -239,11 +258,7 @@ private fun ScanningContent(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Search
                     ),
-                    keyboardActions = KeyboardActions(onSearch = {
-                        onManualEntry(manualBarcode)
-                        manualBarcode = ""
-                        showManualInput = false
-                    })
+                    keyboardActions = KeyboardActions(onSearch = { submitManualBarcode() })
                 )
             }
         }

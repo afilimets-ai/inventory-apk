@@ -7,6 +7,7 @@ import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncSettings
 import com.inventory.sync.SyncSettingsManager
 import com.inventory.sync.SyncState
+import com.inventory.sync.catalogimport.ColumnMapping
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,8 @@ data class ProviderRowState(
 data class SyncSettingsUiState(
     val rows: List<ProviderRowState> = SyncProviderType.entries.map {
         ProviderRowState(it, false, false)
-    }
+    },
+    val pendingMapping: Map<Int, String?> = emptyMap()
 )
 
 @HiltViewModel
@@ -100,6 +102,24 @@ class SyncSettingsViewModel @Inject constructor(
 
     fun runImport() {
         viewModelScope.launch { syncEngine.runImport() }
+    }
+
+    fun setPendingColumnMapping(columnIndex: Int, fieldId: String?) {
+        _uiState.update { state ->
+            state.copy(pendingMapping = state.pendingMapping + (columnIndex to fieldId))
+        }
+    }
+
+    fun resetPendingColumnMapping(mapping: Map<Int, String?>) {
+        _uiState.update { it.copy(pendingMapping = mapping) }
+    }
+
+    fun applyPendingImport(treatFirstRowAsHeader: Boolean) {
+        val mapping = ColumnMapping(
+            treatFirstRowAsHeader = treatFirstRowAsHeader,
+            mapping = uiState.value.pendingMapping
+        )
+        viewModelScope.launch { syncEngine.applyPendingImport(mapping, saveMapping = true) }
     }
 
     fun runExport() {

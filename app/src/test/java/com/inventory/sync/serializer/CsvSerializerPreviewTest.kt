@@ -21,6 +21,15 @@ class CsvSerializerPreviewTest {
     }
 
     @Test
+    fun `parsePreview strips UTF-8 BOM from first header`() {
+        val csv = "\uFEFFbarcode,name,quantity\n123,Widget,5\n"
+        val preview = serializer.parsePreview(csv.toByteArray(Charsets.UTF_8))
+
+        assertEquals(listOf("barcode", "name", "quantity"), preview.headerRow)
+        assertEquals(listOf("123", "Widget", "5"), preview.sampleRows[0])
+    }
+
+    @Test
     fun `parsePreview respects sampleSize limit`() {
         val data = (1..20).joinToString("\n") { "$it,Item$it,$it" }
         val csv = "barcode,name,qty\n$data\n"
@@ -70,6 +79,14 @@ class CsvSerializerPreviewTest {
         val csv = "4820001,Widget,5\n4820002,Gadget,10\n"
         val rows = serializer.parseRaw(csv.toByteArray(), treatFirstRowAsHeader = false)
         assertEquals(2, rows.size)
+        assertEquals("4820001", rows[0][0])
+    }
+
+    @Test
+    fun `parseRaw strips UTF-8 BOM from first data cell`() {
+        val csv = "\uFEFF4820001,Widget,5\n"
+        val rows = serializer.parseRaw(csv.toByteArray(Charsets.UTF_8), treatFirstRowAsHeader = false)
+
         assertEquals("4820001", rows[0][0])
     }
 
