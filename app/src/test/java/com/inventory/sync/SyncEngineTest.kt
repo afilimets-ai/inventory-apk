@@ -7,6 +7,7 @@ import com.inventory.data.repository.InventoryRepository
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
 import com.inventory.sync.serializer.JsonSerializer
+import com.inventory.sync.catalogimport.ColumnMapping
 import org.junit.Assert.assertTrue
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -114,6 +115,63 @@ class SyncEngineTest {
         assertEquals("Тестова кава", summary?.items?.get(1)?.name)
         assertEquals(12.0, summary?.items?.get(1)?.quantity)
         assertEquals("шт", summary?.items?.get(1)?.unit)
+    }
+
+    @Test
+    fun `runImport waits for user mapping when required headers are missing`() = runTest {
+        val csvData = "4820001112223,Test sugar import,5,kg\n".toByteArray()
+        val settings = SyncSettings(
+            providerType = SyncProviderType.LOCAL_FOLDER,
+            isImportEnabled = true,
+            format = SyncFormat.CSV
+        )
+        val provider = mock<SyncProvider>()
+        whenever(provider.supportsImport).thenReturn(true)
+        whenever(provider.discoverImportFiles(any())).thenReturn(listOf("custom_catalog"))
+        whenever(provider.import(SyncFormat.CSV, "custom_catalog"))
+            .thenReturn(SyncImportResult.Success(csvData))
+        whenever(settingsManager.getImportProviders()).thenReturn(listOf(settings))
+        whenever(providerFactory.create(SyncProviderType.LOCAL_FOLDER)).thenReturn(provider)
+
+        engine.runImport()
+
+        val state = engine.state.value as SyncState.PendingMapping
+        assertEquals("custom_catalog", state.pending.fileName)
+        assertEquals(1, state.pending.preview.totalRowsEstimate)
+        assertEquals("barcode", state.pending.suggestedMapping.mapping[0])
+        assertEquals("name", state.pending.suggestedMapping.mapping[1])
+        assertEquals("quantity", state.pending.suggestedMapping.mapping[2])
+        verify(repository, org.mockito.kotlin.never()).importItems(any())
+    }
+
+    @Test
+    fun `applyPendingImport saves mapping and imports arbitrary file`() = runTest {
+        val csvData = "4820001112223,Test sugar import,5,kg\n".toByteArray()
+        val settings = SyncSettings(
+            providerType = SyncProviderType.LOCAL_FOLDER,
+            isImportEnabled = true,
+            format = SyncFormat.CSV
+        )
+        val provider = mock<SyncProvider>()
+        whenever(provider.supportsImport).thenReturn(true)
+        whenever(provider.discoverImportFiles(any())).thenReturn(listOf("custom_catalog"))
+        whenever(provider.import(SyncFormat.CSV, "custom_catalog"))
+            .thenReturn(SyncImportResult.Success(csvData))
+        whenever(settingsManager.getImportProviders()).thenReturn(listOf(settings))
+        whenever(providerFactory.create(SyncProviderType.LOCAL_FOLDER)).thenReturn(provider)
+
+        engine.runImport()
+        val mapping = ColumnMapping(
+            treatFirstRowAsHeader = false,
+            mapping = mapOf(0 to "barcode", 1 to "name", 2 to "quantity", 3 to "unit")
+        )
+        engine.applyPendingImport(mapping)
+
+        verify(repository).applyMappedImport(any(), org.mockito.kotlin.eq(mapping), any())
+        verify(settingsManager).saveSettings(settings.copy(savedImportMapping = mapping))
+        val state = engine.state.value as SyncState.Success
+        assertEquals("custom_catalog.csv", state.importSummary?.fileName)
+        assertEquals(1, state.importSummary?.items?.size)
     }
 
     @Test

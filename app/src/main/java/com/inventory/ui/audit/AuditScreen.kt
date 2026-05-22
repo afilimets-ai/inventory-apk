@@ -42,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -222,6 +223,14 @@ private fun CountingContent(
 ) {
     var manualBarcode by remember { mutableStateOf("") }
     var showManualInput by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+
+    fun submitManualBarcode() {
+        onManualEntry(manualBarcode)
+        manualBarcode = ""
+        showManualInput = false
+        focusManager.clearFocus(force = true)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 16.dp)
@@ -296,7 +305,10 @@ private fun CountingContent(
 
             IndustrialButton(
                 text = "СКАНУВАТИ",
-                onClick = onTriggerScan,
+                onClick = {
+                    focusManager.clearFocus(force = true)
+                    onTriggerScan()
+                },
                 edgeTarget = true,
                 colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
@@ -305,7 +317,14 @@ private fun CountingContent(
             Spacer(modifier = Modifier.height(12.dp))
             IndustrialOutlinedButton(
                 text = "Ввести штрихкод вручну",
-                onClick = { showManualInput = !showManualInput }
+                onClick = {
+                    showManualInput = !showManualInput
+                    if (showManualInput) {
+                        manualBarcode = ""
+                    } else {
+                        focusManager.clearFocus(force = true)
+                    }
+                }
             )
             if (showManualInput) {
                 Spacer(modifier = Modifier.height(12.dp))
@@ -316,9 +335,7 @@ private fun CountingContent(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = {
-                        onManualEntry(manualBarcode); manualBarcode = ""; showManualInput = false
-                    })
+                    keyboardActions = KeyboardActions(onSearch = { submitManualBarcode() })
                 )
             }
         }

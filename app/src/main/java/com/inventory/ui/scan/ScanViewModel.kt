@@ -86,7 +86,7 @@ class ScanViewModel @Inject constructor(
         val item = repository.getItemByBarcode(barcode)
         if (item != null) {
             feedbackManager.onScanSuccess()
-            _uiState.value = ScanUiState.ItemFound(item = item, quantity = 1.0)
+            recordFoundItem(item = item, quantity = 1.0)
         } else {
             feedbackManager.onScanError()
             _uiState.value = ScanUiState.UnknownBarcode(barcode = barcode)
@@ -103,22 +103,30 @@ class ScanViewModel @Inject constructor(
     fun onConfirm() {
         val current = _uiState.value as? ScanUiState.ItemFound ?: return
         viewModelScope.launch {
-            val operation = InventoryOperation(
-                itemId = current.item.id,
-                barcode = current.item.barcode,
-                operationType = currentOperationType.name,
-                quantity = current.quantity
-            )
-            val outboxEntry = OutboxEntry(
-                operationType = currentOperationType.name,
-                payload = buildPayload(current.item.id, current.item.barcode, current.quantity, currentOperationType)
-            )
             // ACID транзакція: залишок + операція + outbox entry
-            repository.recordOperationWithOutbox(operation, outboxEntry)
-            _uiState.value = ScanUiState.Success
-            delay(200)
-            _uiState.value = ScanUiState.Idle
+            recordOperation(current.item, current.quantity)
         }
+    }
+
+    private suspend fun recordFoundItem(item: InventoryItem, quantity: Double) {
+        recordOperation(item, quantity)
+    }
+
+    private suspend fun recordOperation(item: InventoryItem, quantity: Double) {
+        val operation = InventoryOperation(
+            itemId = item.id,
+            barcode = item.barcode,
+            operationType = currentOperationType.name,
+            quantity = quantity
+        )
+        val outboxEntry = OutboxEntry(
+            operationType = currentOperationType.name,
+            payload = buildPayload(item.id, item.barcode, quantity, currentOperationType)
+        )
+        repository.recordOperationWithOutbox(operation, outboxEntry)
+        _uiState.value = ScanUiState.Success
+        delay(200)
+        _uiState.value = ScanUiState.Idle
     }
 
     fun onLookupUnknownBarcode() {

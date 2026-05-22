@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
@@ -46,6 +47,8 @@ import com.inventory.sync.SyncImportSummary
 import com.inventory.sync.SyncImportedItem
 import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncState
+import com.inventory.sync.catalogimport.ImportPreview
+import com.inventory.sync.catalogimport.TargetFields
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +66,13 @@ fun SyncSettingsScreen(
             is SyncState.Success -> snackbarHostState.showSnackbar("Синхронізацію завершено")
             is SyncState.Error -> snackbarHostState.showSnackbar("Помилка: ${state.message}")
             else -> {}
+        }
+    }
+
+    LaunchedEffect(syncState) {
+        val pending = (syncState as? SyncState.PendingMapping)?.pending
+        if (pending != null) {
+            viewModel.resetPendingColumnMapping(pending.suggestedMapping.mapping)
         }
     }
 
@@ -131,6 +141,20 @@ fun SyncSettingsScreen(
             if (importSummary != null) {
                 ImportSummaryCard(importSummary)
             }
+            val pendingMapping = (syncState as? SyncState.PendingMapping)?.pending
+            if (pendingMapping != null) {
+                ImportMappingCard(
+                    fileName = pendingMapping.fileName,
+                    preview = pendingMapping.preview,
+                    mapping = uiState.pendingMapping,
+                    onMappingChange = viewModel::setPendingColumnMapping,
+                    onApply = {
+                        viewModel.applyPendingImport(
+                            treatFirstRowAsHeader = pendingMapping.preview.detectedHasHeader
+                        )
+                    }
+                )
+            }
 
             // Кнопки імпорту / експорту
             val isRunning = syncState is SyncState.Running
@@ -177,6 +201,77 @@ fun SyncSettingsScreen(
             }
         }
     }
+}
+
+@Composable
+private fun ImportMappingCard(
+    fileName: String,
+    preview: ImportPreview,
+    mapping: Map<Int, String?>,
+    onMappingChange: (Int, String?) -> Unit,
+    onApply: () -> Unit
+) {
+    val requiredSelected = mapping.values.contains("barcode") && mapping.values.contains("name")
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Потрібно зіставити колонки",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = fileName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            LazyColumn(
+                modifier = Modifier.height(260.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(preview.headerRow) { index, header ->
+                    val selected = mapping[index]
+                    Column {
+                        Text(
+                            text = "Колонка ${index + 1}: ${header ?: preview.sampleRows.firstOrNull()?.getOrNull(index).orEmpty()}",
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = selected?.let { TargetFields.byId(it)?.displayName ?: it } ?: "Не імпортувати",
+                                modifier = Modifier.weight(1f),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontSize = 13.sp
+                            )
+                            OutlinedButton(onClick = { onMappingChange(index, nextFieldId(selected)) }) {
+                                Text("Обрати")
+                            }
+                        }
+                    }
+                }
+            }
+            Button(
+                onClick = onApply,
+                enabled = requiredSelected,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Зберегти та імпортувати")
+            }
+        }
+    }
+}
+
+private fun nextFieldId(current: String?): String? {
+    val ids = listOf<String?>(null) + TargetFields.all.map { it.id }
+    val currentIndex = ids.indexOf(current).takeIf { it >= 0 } ?: 0
+    return ids[(currentIndex + 1) % ids.size]
 }
 
 @Composable

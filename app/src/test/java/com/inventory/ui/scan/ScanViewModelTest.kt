@@ -15,6 +15,7 @@ import com.inventory.test.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -33,7 +34,7 @@ class ScanViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun `manual barcode transitions to item found`() = runTest(mainDispatcherRule.scheduler) {
+    fun `manual barcode records found item without confirmation`() = runTest(mainDispatcherRule.scheduler) {
         val scannerManager = mock<NewlandScannerManager>()
         val repository = mock<InventoryRepository>()
         val feedbackManager = mock<ScanFeedbackManager>()
@@ -53,12 +54,15 @@ class ScanViewModelTest {
 
         viewModel.processBarcode("123")
 
-        assertEquals(ScanUiState.ItemFound(item, 1.0), viewModel.uiState.value)
+        val outboxCaptor = argumentCaptor<com.inventory.data.entity.OutboxEntry>()
+        verify(repository).recordOperationWithOutbox(org.mockito.kotlin.any(), outboxCaptor.capture())
+        assertEquals(ScanUiState.Idle, viewModel.uiState.value)
+        assertTrue(outboxCaptor.firstValue.payload.contains("\"barcode\":\"123\""))
         verify(feedbackManager).onScanSuccess()
     }
 
     @Test
-    fun `confirm records operation and returns to idle after success delay`() = runTest(mainDispatcherRule.scheduler) {
+    fun `found scan shows success while operation is being recorded`() = runTest(mainDispatcherRule.scheduler) {
         val scannerManager = mock<NewlandScannerManager>()
         val repository = mock<InventoryRepository>()
         val feedbackManager = mock<ScanFeedbackManager>()
@@ -76,8 +80,7 @@ class ScanViewModelTest {
             gson = Gson()
         )
 
-        viewModel.processBarcode("123")
-        viewModel.onConfirm()
+        val job = launch { viewModel.processBarcode("123") }
         runCurrent()
 
         val outboxCaptor = argumentCaptor<com.inventory.data.entity.OutboxEntry>()
@@ -89,6 +92,7 @@ class ScanViewModelTest {
         runCurrent()
 
         assertEquals(ScanUiState.Idle, viewModel.uiState.value)
+        job.cancel()
     }
 
     @Test

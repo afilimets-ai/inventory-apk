@@ -3,6 +3,10 @@ package com.inventory.sync
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.OutboxStatus
 import com.inventory.data.repository.InventoryRepository
+import com.inventory.sync.catalogimport.ColumnMapping
+import com.inventory.sync.catalogimport.ColumnMappingHeuristic
+import com.inventory.sync.catalogimport.ImportPreview
+import com.inventory.sync.catalogimport.TargetFields
 import com.inventory.sync.serializer.CsvSerializer
 import com.inventory.sync.serializer.ExcelSerializer
 import com.inventory.sync.serializer.JsonSerializer
@@ -104,11 +108,34 @@ class SyncEngine @Inject constructor(
                 when (val importResult = provider.import(settings.format, importName)) {
                     is SyncImportResult.Success -> {
                         val serializer = getSerializer(settings.format)
-                        val rows = serializer.deserialize(importResult.data)
-                        applyImport(rows)
+                        val preview = serializer.parsePreview(importResult.data)
+                        val suggestedMapping = preview.suggestMapping()
+                        val savedMapping = settings.savedImportMapping?.takeIf { it.hasRequiredFields() }
+                        val canImportDirectly = savedMapping == null && preview.detectedHasHeader && suggestedMapping.hasRequiredFields()
+                        if (savedMapping == null && !canImportDirectly) {
+                            _state.value = SyncState.PendingMapping(
+                                PendingImportMapping(
+                                    settings = settings,
+                                    fileName = importName,
+                                    preview = preview,
+                                    suggestedMapping = suggestedMapping
+                                )
+                            )
+                            return
+                        }
+
+                        val importSummary = if (savedMapping != null) {
+                            val rawRows = serializer.parseRaw(importResult.data, savedMapping.treatFirstRowAsHeader)
+                            repository.applyMappedImport(rawRows, savedMapping, TargetFields.all)
+                            rawRows.toImportSummary(settings, importName, savedMapping)
+                        } else {
+                            val rows = serializer.deserialize(importResult.data)
+                            applyImport(rows)
+                            rows.toImportSummary(settings, importName)
+                        }
                         _state.value = SyncState.Success(
                             timestamp = System.currentTimeMillis(),
-                            importSummary = rows.toImportSummary(settings, importName)
+                            importSummary = importSummary
                         )
                         return
                     }
@@ -123,6 +150,35 @@ class SyncEngine @Inject constructor(
 
             if (_state.value == SyncState.Running) {
                 _state.value = SyncState.Idle
+            }
+        } catch (e: Exception) {
+            _state.value = SyncState.Error("Import failed: ${e.message}")
+        }
+    }
+
+    suspend fun applyPendingImport(mapping: ColumnMapping, saveMapping: Boolean = true) {
+        val pending = (_state.value as? SyncState.PendingMapping)?.pending ?: return
+        _state.value = SyncState.Running
+        try {
+            val provider = providerFactory.create(pending.settings.providerType)
+            when (val importResult = provider.import(pending.settings.format, pending.fileName)) {
+                is SyncImportResult.Success -> {
+                    val serializer = getSerializer(pending.settings.format)
+                    val rawRows = serializer.parseRaw(importResult.data, mapping.treatFirstRowAsHeader)
+                    repository.applyMappedImport(rawRows, mapping, TargetFields.all)
+                    if (saveMapping) {
+                        settingsManager.saveSettings(pending.settings.copy(savedImportMapping = mapping))
+                    }
+                    _state.value = SyncState.Success(
+                        timestamp = System.currentTimeMillis(),
+                        importSummary = rawRows.toImportSummary(pending.settings, pending.fileName, mapping)
+                    )
+                }
+                is SyncImportResult.Failure -> {
+                    _state.value = SyncState.Error(
+                        "[${pending.settings.providerType.displayName}] ${importResult.message}"
+                    )
+                }
             }
         } catch (e: Exception) {
             _state.value = SyncState.Error("Import failed: ${e.message}")
@@ -160,7 +216,7 @@ private fun List<Map<String, Any?>>.toImportSummary(
 ): SyncImportSummary =
     SyncImportSummary(
         providerName = settings.providerType.displayName,
-        fileName = "$fileName.${settings.format.extension}",
+        fileName = fileName.withFormatExtension(settings.format),
         formatName = settings.format.displayName,
         totalRows = size,
         items = mapNotNull { row ->
@@ -174,3 +230,55 @@ private fun List<Map<String, Any?>>.toImportSummary(
             )
         }
     )
+
+private fun ImportPreview.suggestMapping(): ColumnMapping =
+    ColumnMapping(
+        treatFirstRowAsHeader = detectedHasHeader,
+        mapping = if (detectedHasHeader) {
+            ColumnMappingHeuristic.fuzzySuggestMapping(headerRow, TargetFields.all)
+        } else {
+            headerRow.indices.associateWith { index ->
+                when (index) {
+                    0 -> "barcode"
+                    1 -> "name"
+                    2 -> "quantity"
+                    3 -> "unit"
+                    else -> null
+                }
+            }
+        }
+    )
+
+private fun ColumnMapping.hasRequiredFields(): Boolean =
+    mapping.values.contains("barcode") && mapping.values.contains("name")
+
+private fun List<List<String?>>.toImportSummary(
+    settings: SyncSettings,
+    fileName: String,
+    mapping: ColumnMapping
+): SyncImportSummary =
+    SyncImportSummary(
+        providerName = settings.providerType.displayName,
+        fileName = fileName.withFormatExtension(settings.format),
+        formatName = settings.format.displayName,
+        totalRows = size,
+        items = mapNotNull { row ->
+            val barcode = row.cellFor(mapping, "barcode") ?: return@mapNotNull null
+            val name = row.cellFor(mapping, "name") ?: return@mapNotNull null
+            SyncImportedItem(
+                barcode = barcode,
+                name = name,
+                quantity = row.cellFor(mapping, "quantity")?.toDoubleOrNull() ?: 0.0,
+                unit = row.cellFor(mapping, "unit") ?: "шт"
+            )
+        }
+    )
+
+private fun List<String?>.cellFor(mapping: ColumnMapping, fieldId: String): String? =
+    mapping.mapping.entries.firstOrNull { it.value == fieldId }?.key
+        ?.let { getOrNull(it) }?.takeIf { it.isNotBlank() }
+
+private fun String.withFormatExtension(format: SyncFormat): String {
+    val ext = ".${format.extension}"
+    return if (endsWith(ext, ignoreCase = true)) this else "$this$ext"
+}

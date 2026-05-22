@@ -31,7 +31,7 @@ class LocalFolderProvider(
         }
 
         return try {
-            val fullName = "$fileName.${format.extension}"
+            val fullName = fileName.withFormatExtension(format)
             if (settings.path.isFilePath()) {
                 val dir = settings.path.toDirectory()
                     ?: return SyncResult.Failure("Папка недоступна або не існує: ${settings.path}")
@@ -63,7 +63,7 @@ class LocalFolderProvider(
         }
 
         return try {
-            val fullName = "$fileName.${format.extension}"
+            val fullName = fileName.withFormatExtension(format)
             if (settings.path.isFilePath()) {
                 val dir = settings.path.toDirectory()
                     ?: return SyncImportResult.Failure("Папка недоступна або не існує: ${settings.path}")
@@ -94,14 +94,14 @@ class LocalFolderProvider(
             if (settings.path.isFilePath()) {
                 val dir = settings.path.toDirectory() ?: return emptyList()
                 dir.listFiles()
-                    ?.filter { it.isFile && it.name.endsWith(ext, ignoreCase = true) }
+                    ?.filter { it.isFile && it.name.isImportCandidate(ext) }
                     ?.sortedByDescending { it.lastModified() }
                     ?.map { it.name.removeExtension(ext) }
                     ?: emptyList()
             } else {
                 val dir = settings.path.toDocumentDirectory() ?: return emptyList()
                 dir.listFiles()
-                    .filter { it.isFile && (it.name ?: "").endsWith(ext, ignoreCase = true) }
+                    .filter { it.isFile && (it.name ?: "").isImportCandidate(ext) }
                     .sortedByDescending { it.lastModified() }
                     .mapNotNull { it.name?.removeExtension(ext) }
             }
@@ -117,7 +117,7 @@ class LocalFolderProvider(
     }
 
     private fun String.isFilePath(): Boolean =
-        startsWith("/") || startsWith("file://")
+        startsWith("/") || startsWith("file://") || File(this).isAbsolute
 
     private fun String.toDirectory(): File? {
         val rawPath = if (startsWith("file://")) {
@@ -140,4 +140,12 @@ class LocalFolderProvider(
 
     private fun String.removeExtension(extension: String): String =
         if (endsWith(extension, ignoreCase = true)) dropLast(extension.length) else this
+
+    private fun String.withFormatExtension(format: SyncFormat): String {
+        val ext = ".${format.extension}"
+        return if (endsWith(ext, ignoreCase = true)) this else "$this$ext"
+    }
+
+    private fun String.isImportCandidate(extension: String): Boolean =
+        endsWith(extension, ignoreCase = true) && !startsWith(".") && !startsWith("~")
 }
