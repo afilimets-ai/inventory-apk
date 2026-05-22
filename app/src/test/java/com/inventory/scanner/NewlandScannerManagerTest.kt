@@ -91,6 +91,21 @@ class NewlandScannerManagerTest {
     }
 
     @Test
+    fun `onKeyDown consumes F6 key up without triggering scan`() {
+        val context = mock<Context>()
+        val manager = NewlandScannerManager(context)
+        val event = mock<KeyEvent>()
+        whenever(event.action).thenReturn(KeyEvent.ACTION_UP)
+
+        mockAndroidLog().use {
+            val handled = manager.onKeyDown(KeyEvent.KEYCODE_F6, event)
+
+            assertTrue(handled)
+        }
+        verify(context, never()).sendBroadcast(org.mockito.kotlin.any())
+    }
+
+    @Test
     fun `onKeyDown ignores non scanner key`() {
         val context = mock<Context>()
         val manager = NewlandScannerManager(context)

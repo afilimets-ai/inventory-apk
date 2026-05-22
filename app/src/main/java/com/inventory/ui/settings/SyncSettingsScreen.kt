@@ -2,6 +2,7 @@ package com.inventory.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,7 +39,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -250,9 +255,10 @@ private fun ImportMappingCard(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp
                             )
-                            OutlinedButton(onClick = { onMappingChange(index, nextFieldId(selected)) }) {
-                                Text("Обрати")
-                            }
+                            ColumnMappingDropdown(
+                                selectedFieldId = selected,
+                                onSelected = { fieldId -> onMappingChange(index, fieldId) }
+                            )
                         }
                     }
                 }
@@ -268,10 +274,42 @@ private fun ImportMappingCard(
     }
 }
 
-private fun nextFieldId(current: String?): String? {
-    val ids = listOf<String?>(null) + TargetFields.all.map { it.id }
-    val currentIndex = ids.indexOf(current).takeIf { it >= 0 } ?: 0
-    return ids[(currentIndex + 1) % ids.size]
+@Composable
+private fun ColumnMappingDropdown(
+    selectedFieldId: String?,
+    onSelected: (String?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedText = selectedFieldId
+        ?.let { TargetFields.byId(it)?.displayName ?: it }
+        ?: "Не імпортувати"
+
+    Box {
+        OutlinedButton(onClick = { expanded = true }) {
+            Text(selectedText)
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Не імпортувати") },
+                onClick = {
+                    expanded = false
+                    onSelected(null)
+                }
+            )
+            TargetFields.all.forEach { field ->
+                DropdownMenuItem(
+                    text = { Text(field.displayName) },
+                    onClick = {
+                        expanded = false
+                        onSelected(field.id)
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Composable

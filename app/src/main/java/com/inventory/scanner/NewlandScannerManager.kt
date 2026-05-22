@@ -185,9 +185,11 @@ class NewlandScannerManager(
      * @return true if the key event was handled (F6 key pressed), false otherwise
      */
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_F6 && event.action == KeyEvent.ACTION_DOWN) {
-            Log.d(TAG, "Hardware scan button (F6) pressed")
-            triggerScan()
+        if (keyCode == KeyEvent.KEYCODE_F6) {
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                Log.d(TAG, "Hardware scan button (F6) pressed")
+                triggerScan()
+            }
             return true
         }
         return false
