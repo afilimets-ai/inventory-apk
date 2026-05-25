@@ -66,7 +66,9 @@ fun ScanStatusBar(
         if (onSyncSettingsClick != null) {
             IconButton(
                 onClick = onSyncSettingsClick,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .noScannerKeyFocus()
+                    .size(40.dp)
             ) {
                 Text(text = "⇅", style = MaterialTheme.typography.titleMedium)
             }
@@ -74,7 +76,9 @@ fun ScanStatusBar(
         if (onThemeToggle != null) {
             IconButton(
                 onClick = onThemeToggle,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier
+                    .noScannerKeyFocus()
+                    .size(40.dp)
             ) {
                 Text(
                     text = when (themeMode) {

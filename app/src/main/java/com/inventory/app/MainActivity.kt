@@ -1,10 +1,12 @@
 package com.inventory.app
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,6 +20,7 @@ import androidx.navigation.navArgument
 import com.inventory.scanner.ScannerManager
 import com.inventory.sync.SyncProviderType
 import com.inventory.ui.audit.AuditScreen
+import com.inventory.ui.catalog.CatalogSearchScreen
 import com.inventory.ui.components.SyncStatusIndicator
 import com.inventory.ui.receiving.ReceivingScreen
 import com.inventory.ui.scan.ScanScreen
@@ -40,11 +43,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val themeMode by themePreferenceManager.themeMode.collectAsState()
             IndustrialTheme(themeMode = themeMode) {
-                Surface {
+                Surface(modifier = Modifier.fillMaxSize()) {
                     val navController = rememberNavController()
                     val syncStatusViewModel: SyncStatusViewModel = hiltViewModel()
                     val syncStatus by syncStatusViewModel.syncStatus.collectAsState()
-                    Column {
+                    Column(modifier = Modifier.fillMaxSize()) {
                         SyncStatusIndicator(state = syncStatus)
                         NavHost(
                             navController = navController,
@@ -57,7 +60,13 @@ class MainActivity : ComponentActivity() {
                                     onThemeToggle = { themePreferenceManager.cycleTheme() },
                                     onSyncSettingsClick = { navController.navigate("sync_settings") },
                                     onReceivingClick = { navController.navigate("receiving") },
-                                    onAuditClick = { navController.navigate("audit") }
+                                    onAuditClick = { navController.navigate("audit") },
+                                    onCatalogClick = { navController.navigate("catalog") }
+                                )
+                            }
+                            composable("catalog") {
+                                CatalogSearchScreen(
+                                    onBack = { navController.popBackStack() }
                                 )
                             }
                             composable("receiving") {
@@ -75,6 +84,12 @@ class MainActivity : ComponentActivity() {
                                     onBack = { navController.popBackStack() },
                                     onProviderSettingsClick = { type ->
                                         navController.navigate("provider_settings/${type.name}")
+                                    },
+                                    onSyncSuccess = {
+                                        navController.navigate("scan") {
+                                            popUpTo("scan") { inclusive = false }
+                                            launchSingleTop = true
+                                        }
                                     }
                                 )
                             }
@@ -104,6 +119,12 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         scannerManager.unregister()
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (scannerManager.onKeyEvent(event)) return true
+        return super.dispatchKeyEvent(event)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {

@@ -53,6 +53,7 @@ import com.inventory.ui.components.IndustrialButton
 import com.inventory.ui.components.IndustrialOutlinedButton
 import com.inventory.ui.components.IndustrialQuantityButton
 import com.inventory.ui.components.IndustrialSuccessButton
+import com.inventory.ui.components.QuantityInput
 import com.inventory.ui.components.ScanResultCard
 import kotlinx.coroutines.delay
 
@@ -139,6 +140,7 @@ fun AuditScreen(
                     )
                     is AuditUiState.VarianceReport -> VarianceReportContent(
                         state = state,
+                        onFinalizeAudit = viewModel::onFinalizeAudit,
                         onNewSession = viewModel::onNewSession,
                         onBack = onBack
                     )
@@ -406,6 +408,13 @@ private fun ItemScannedContent(
             IndustrialQuantityButton(label = "+", onClick = { onAdjust(state.currentCount + 1) })
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+        QuantityInput(
+            quantity = state.currentCount,
+            unit = state.item.unit,
+            onQuantityChange = onAdjust
+        )
+
         Spacer(modifier = Modifier.weight(1f))
         IndustrialSuccessButton(text = "✓  ПІДТВЕРДИТИ", onClick = onConfirm)
         Spacer(modifier = Modifier.height(12.dp))
@@ -432,12 +441,16 @@ private fun UnknownBarcodeContent(barcode: String, onDismiss: () -> Unit) {
 @Composable
 private fun VarianceReportContent(
     state: AuditUiState.VarianceReport,
+    onFinalizeAudit: () -> Unit,
     onNewSession: () -> Unit,
     onBack: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
+        val hasDocumentDiscrepancies = state.discrepancies.isNotEmpty() ||
+            state.missingItems.any { it.quantity != 0.0 }
+
         Text(
             "ЗВІТ ІНВЕНТАРИЗАЦІЇ",
             style = MaterialTheme.typography.headlineMedium,
@@ -525,6 +538,41 @@ private fun VarianceReportContent(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+        when {
+            state.createdDocumentIds.isNotEmpty() -> {
+                Text(
+                    "Документи створено: ${state.createdDocumentIds.joinToString()}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            state.finalizeError != null -> {
+                Text(
+                    state.finalizeError,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                IndustrialSuccessButton(text = "Спробувати ще раз", onClick = onFinalizeAudit)
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            hasDocumentDiscrepancies -> {
+                IndustrialSuccessButton(text = "Створити документи", onClick = onFinalizeAudit)
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+            else -> {
+                Text(
+                    "Розбіжностей немає",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+        }
         IndustrialSuccessButton(text = "Нова інвентаризація", onClick = onNewSession)
         Spacer(modifier = Modifier.height(12.dp))
         IndustrialOutlinedButton(text = "На головну", onClick = onBack)

@@ -1,6 +1,7 @@
 package com.inventory.data.repository
 
 import com.inventory.data.entity.Category
+import com.inventory.data.entity.InventoryItemBarcode
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.entity.InventoryOperation
 import com.inventory.data.entity.Location
@@ -9,6 +10,36 @@ import com.inventory.sync.catalogimport.ColumnMapping
 import com.inventory.sync.catalogimport.ImportReport
 import com.inventory.sync.catalogimport.TargetField
 import kotlinx.coroutines.flow.Flow
+
+data class InventoryBarcodeMatch(
+    val item: InventoryItem,
+    val scannedBarcode: String,
+    val unit: String,
+    val coefficient: Double,
+    val isPrimary: Boolean
+) {
+    val quantity: Double get() = coefficient
+}
+
+data class StockDiscrepancy(
+    val itemId: Long?,
+    val barcode: String,
+    val sku: String,
+    val name: String,
+    val expectedQuantity: Double,
+    val actualQuantity: Double,
+    val unit: String,
+    val reason: String = ""
+) {
+    val variance: Double get() = actualQuantity - expectedQuantity
+}
+
+data class CreatedStockAdjustmentDocuments(
+    val receiptDocumentId: Long? = null,
+    val writeOffDocumentId: Long? = null
+) {
+    val documentIds: List<Long> get() = listOfNotNull(receiptDocumentId, writeOffDocumentId)
+}
 
 interface InventoryRepository {
     // Categories
@@ -29,6 +60,8 @@ interface InventoryRepository {
     fun getItems(): Flow<List<InventoryItem>>
     suspend fun getItemById(id: Long): InventoryItem?
     suspend fun getItemByBarcode(barcode: String): InventoryItem?
+    suspend fun getItemBySku(sku: String): InventoryItem?
+    suspend fun resolveBarcode(barcode: String): InventoryBarcodeMatch?
     fun getItemsByCategory(categoryId: Long): Flow<List<InventoryItem>>
     fun getItemsByLocation(locationId: Long): Flow<List<InventoryItem>>
     fun getLowStockItems(): Flow<List<InventoryItem>>
@@ -37,6 +70,8 @@ interface InventoryRepository {
     suspend fun updateItem(item: InventoryItem)
     suspend fun deleteItem(item: InventoryItem)
     suspend fun updateItemQuantity(id: Long, quantity: Double)
+    suspend fun getAdditionalBarcodes(itemId: Long): List<InventoryItemBarcode>
+    suspend fun replaceAdditionalBarcodes(itemId: Long, barcodes: List<InventoryItemBarcode>)
 
     // Operations
     fun getRecentOperations(limit: Int = 20): Flow<List<InventoryOperation>>
@@ -65,4 +100,9 @@ interface InventoryRepository {
         operation: InventoryOperation,
         outboxEntry: OutboxEntry
     ): Long
+
+    suspend fun createStockAdjustmentDocuments(
+        discrepancies: List<StockDiscrepancy>,
+        sourceNote: String = ""
+    ): CreatedStockAdjustmentDocuments
 }

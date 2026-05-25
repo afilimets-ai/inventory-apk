@@ -2,12 +2,16 @@ package com.inventory.data.repository
 
 import com.inventory.data.db.InventoryDatabase
 import com.inventory.data.db.dao.CategoryDao
+import com.inventory.data.db.dao.InventoryItemBarcodeDao
 import com.inventory.data.db.dao.InventoryItemDao
 import com.inventory.data.db.dao.InventoryOperationDao
 import com.inventory.data.db.dao.LocationDao
 import com.inventory.data.db.dao.OutboxEntryDao
+import com.inventory.data.db.dao.StockAdjustmentDocumentDao
 import com.inventory.data.entity.Category
 import com.inventory.data.entity.InventoryItem
+import com.inventory.data.entity.InventoryItemBarcode
+import com.inventory.data.entity.StockAdjustmentDocument
 import com.inventory.sync.catalogimport.ColumnMapping
 import com.inventory.sync.catalogimport.TargetFields
 import kotlinx.coroutines.runBlocking
@@ -29,14 +33,25 @@ class InventoryRepositoryMappedImportTest {
     private lateinit var categoryDao: CategoryDao
     private lateinit var locationDao: LocationDao
     private lateinit var itemDao: InventoryItemDao
+    private lateinit var itemBarcodeDao: InventoryItemBarcodeDao
     private lateinit var operationDao: InventoryOperationDao
     private lateinit var outboxDao: OutboxEntryDao
+    private lateinit var stockAdjustmentDao: StockAdjustmentDocumentDao
     private lateinit var repo: InventoryRepositoryImpl
 
     @Before fun setUp() {
         db = mock(); categoryDao = mock(); locationDao = mock()
-        itemDao = mock(); operationDao = mock(); outboxDao = mock()
-        repo = object : InventoryRepositoryImpl(db, categoryDao, locationDao, itemDao, operationDao, outboxDao) {
+        itemDao = mock(); itemBarcodeDao = mock(); operationDao = mock(); outboxDao = mock(); stockAdjustmentDao = mock()
+        repo = object : InventoryRepositoryImpl(
+            db,
+            categoryDao,
+            locationDao,
+            itemDao,
+            itemBarcodeDao,
+            operationDao,
+            outboxDao,
+            stockAdjustmentDao
+        ) {
             protected override suspend fun <R> runInTransaction(block: suspend () -> R): R = block()
         }
     }
@@ -143,5 +158,81 @@ class InventoryRepositoryMappedImportTest {
         )
 
         verify(categoryDao, times(1)).insert(any())
+    }
+
+    @Test
+    fun `mapped import stores sku group package flags and additional barcodes`(): Unit = runBlocking {
+        val mapping = ColumnMapping(
+            false,
+            mapOf(
+                0 to "barcode",
+                1 to "sku",
+                2 to "name",
+                3 to "group",
+                4 to "additional_barcodes",
+                5 to "is_weighted",
+                6 to "is_package",
+                7 to "package_unit",
+                8 to "package_coefficient"
+            )
+        )
+        whenever(itemDao.getByBarcode("4820001")).thenReturn(null)
+        whenever(itemDao.insert(any())).thenReturn(10L)
+
+        repo.applyMappedImport(
+            listOf(listOf("4820001", "SKU-1", "Widget", "Snacks", "4820002;4820003", "так", "1", "box", "12")),
+            mapping,
+            TargetFields.all
+        )
+
+        val itemCaptor = argumentCaptor<InventoryItem>()
+        verify(itemDao).insert(itemCaptor.capture())
+        assertEquals("SKU-1", itemCaptor.firstValue.sku)
+        assertEquals("Snacks", itemCaptor.firstValue.groupName)
+        assertTrue(itemCaptor.firstValue.isWeighted)
+        assertTrue(itemCaptor.firstValue.isPackage)
+        assertEquals("box", itemCaptor.firstValue.packageUnit)
+        assertEquals(12.0, itemCaptor.firstValue.packageCoefficient, 0.0)
+
+        val barcodeCaptor = argumentCaptor<InventoryItemBarcode>()
+        verify(itemBarcodeDao, times(2)).upsert(barcodeCaptor.capture())
+        assertEquals(listOf("4820002", "4820003"), barcodeCaptor.allValues.map { it.barcode })
+        assertEquals(12.0, barcodeCaptor.firstValue.coefficient, 0.0)
+    }
+
+    @Test
+    fun `resolveBarcode returns additional barcode coefficient`() = runBlocking {
+        val item = InventoryItem(id = 10L, barcode = "UNIT", name = "Widget", unit = "шт")
+        whenever(itemDao.getByBarcode("BOX")).thenReturn(item)
+        whenever(itemBarcodeDao.getByBarcode("BOX")).thenReturn(
+            InventoryItemBarcode(itemId = 10L, barcode = "BOX", unit = "box", coefficient = 12.0)
+        )
+
+        val result = repo.resolveBarcode("BOX")
+
+        assertEquals(item, result?.item)
+        assertEquals("BOX", result?.scannedBarcode)
+        assertEquals("box", result?.unit)
+        assertEquals(12.0, result?.coefficient ?: 0.0, 0.0)
+    }
+
+    @Test
+    fun `creates receipt and write off documents from audit discrepancies`(): Unit = runBlocking {
+        whenever(stockAdjustmentDao.insertDocument(any())).thenReturn(101L, 102L)
+        whenever(stockAdjustmentDao.insertLines(any())).thenReturn(listOf(1L))
+        whenever(outboxDao.insert(any())).thenReturn(201L, 202L)
+
+        val result = repo.createStockAdjustmentDocuments(
+            listOf(
+                StockDiscrepancy(1L, "A", "SKU-A", "A item", expectedQuantity = 2.0, actualQuantity = 5.0, unit = "шт"),
+                StockDiscrepancy(2L, "B", "SKU-B", "B item", expectedQuantity = 7.0, actualQuantity = 3.0, unit = "шт")
+            ),
+            sourceNote = "audit:test"
+        )
+
+        assertEquals(101L, result.receiptDocumentId)
+        assertEquals(102L, result.writeOffDocumentId)
+        verify(stockAdjustmentDao, times(2)).insertDocument(any<StockAdjustmentDocument>())
+        verify(outboxDao, times(2)).insert(any())
     }
 }

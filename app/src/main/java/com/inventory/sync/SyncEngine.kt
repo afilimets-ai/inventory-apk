@@ -32,6 +32,12 @@ class SyncEngine @Inject constructor(
     private val _state = MutableStateFlow<SyncState>(SyncState.Idle)
     val state: StateFlow<SyncState> = _state
 
+    fun clearCompletedState() {
+        if (_state.value is SyncState.Success) {
+            _state.value = SyncState.Idle
+        }
+    }
+
     /** Запустити повний цикл: експорт через всі активні export-провайдери */
     suspend fun runExport() {
         val exportProviders = settingsManager.getExportProviders()
@@ -199,10 +205,16 @@ class SyncEngine @Inject constructor(
 private fun InventoryItem.toExportRow(): Map<String, Any?> = mapOf(
     "id" to id,
     "barcode" to barcode,
+    "sku" to sku,
     "name" to name,
+    "group" to groupName,
     "description" to description,
     "quantity" to quantity,
     "unit" to unit,
+    "is_weighted" to isWeighted,
+    "is_package" to isPackage,
+    "package_unit" to packageUnit,
+    "package_coefficient" to packageCoefficient,
     "min_quantity" to minQuantity,
     "category_id" to categoryId,
     "location_id" to locationId,

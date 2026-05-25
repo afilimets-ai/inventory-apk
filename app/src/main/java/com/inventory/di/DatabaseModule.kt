@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import com.inventory.data.db.InventoryDatabase
 import com.inventory.data.db.dao.CategoryDao
+import com.inventory.data.db.dao.InventoryItemBarcodeDao
 import com.inventory.data.db.dao.InventoryItemDao
 import com.inventory.data.db.dao.InventoryOperationDao
 import com.inventory.data.db.dao.LocationDao
 import com.inventory.data.db.dao.OutboxEntryDao
+import com.inventory.data.db.dao.StockAdjustmentDocumentDao
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.data.repository.InventoryRepositoryImpl
 import dagger.Binds
@@ -30,7 +32,11 @@ object DatabaseModule {
             InventoryDatabase::class.java,
             InventoryDatabase.DATABASE_NAME
         )
-            .addMigrations(InventoryDatabase.MIGRATION_1_2, InventoryDatabase.MIGRATION_2_3)
+            .addMigrations(
+                InventoryDatabase.MIGRATION_1_2,
+                InventoryDatabase.MIGRATION_2_3,
+                InventoryDatabase.MIGRATION_3_4
+            )
             .build()
     }
 
@@ -44,10 +50,17 @@ object DatabaseModule {
     fun provideInventoryItemDao(db: InventoryDatabase): InventoryItemDao = db.inventoryItemDao()
 
     @Provides
+    fun provideInventoryItemBarcodeDao(db: InventoryDatabase): InventoryItemBarcodeDao = db.inventoryItemBarcodeDao()
+
+    @Provides
     fun provideInventoryOperationDao(db: InventoryDatabase): InventoryOperationDao = db.inventoryOperationDao()
 
     @Provides
     fun provideOutboxEntryDao(db: InventoryDatabase): OutboxEntryDao = db.outboxEntryDao()
+
+    @Provides
+    fun provideStockAdjustmentDocumentDao(db: InventoryDatabase): StockAdjustmentDocumentDao =
+        db.stockAdjustmentDocumentDao()
 }
 
 @Module

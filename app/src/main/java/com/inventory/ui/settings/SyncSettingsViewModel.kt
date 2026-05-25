@@ -104,6 +104,10 @@ class SyncSettingsViewModel @Inject constructor(
         viewModelScope.launch { syncEngine.runImport() }
     }
 
+    fun clearCompletedSyncState() {
+        syncEngine.clearCompletedState()
+    }
+
     fun setPendingColumnMapping(columnIndex: Int, fieldId: String?) {
         _uiState.update { state ->
             state.copy(pendingMapping = state.pendingMapping + (columnIndex to fieldId))

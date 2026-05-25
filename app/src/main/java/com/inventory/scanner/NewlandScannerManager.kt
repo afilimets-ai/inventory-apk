@@ -113,8 +113,8 @@ class NewlandScannerManager(
             }
 
             handleScanPayload(
-                barcode = intent.getStringExtra(EXTRA_BARCODE_DATA),
-                barcodeType = intent.getStringExtra(EXTRA_BARCODE_TYPE)
+                barcode = intent.scannerExtraAsString(EXTRA_BARCODE_DATA),
+                barcodeType = intent.scannerExtraAsString(EXTRA_BARCODE_TYPE)
             )
         }
     }
@@ -185,12 +185,59 @@ class NewlandScannerManager(
      * @return true if the key event was handled (F6 key pressed), false otherwise
      */
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_F6 && event.action == KeyEvent.ACTION_DOWN) {
-            Log.d(TAG, "Hardware scan button (F6) pressed")
-            triggerScan()
-            return true
+        return handleScannerKey(keyCode, event)
+    }
+
+    override fun onKeyEvent(event: KeyEvent): Boolean {
+        return handleScannerKey(event.keyCode, event)
+    }
+
+    private fun handleScannerKey(keyCode: Int, event: KeyEvent): Boolean {
+        if (!isScannerActivationKey(keyCode)) {
+            return false
         }
-        return false
+
+        if (
+            event.action == KeyEvent.ACTION_DOWN &&
+            event.repeatCount == 0 &&
+            shouldTriggerProgrammaticScan(keyCode)
+        ) {
+            Log.d(TAG, "Hardware scanner key pressed: keyCode=$keyCode")
+            triggerScan()
+        } else {
+            Log.d(TAG, "Hardware scanner key consumed: keyCode=$keyCode action=${event.action}")
+        }
+
+        return true
+    }
+
+    private fun isScannerActivationKey(keyCode: Int): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_F6,
+            KeyEvent.KEYCODE_F9,
+            KeyEvent.KEYCODE_F10,
+            KeyEvent.KEYCODE_F11,
+            KeyEvent.KEYCODE_F12,
+            KeyEvent.KEYCODE_BUTTON_L1,
+            KeyEvent.KEYCODE_BUTTON_R1,
+            KeyEvent.KEYCODE_CAMERA,
+            KeyEvent.KEYCODE_FOCUS,
+            KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_NUMPAD_ENTER,
+            KeyEvent.KEYCODE_DPAD_CENTER -> true
+            else -> false
+        }
+    }
+
+    private fun shouldTriggerProgrammaticScan(keyCode: Int): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_NUMPAD_ENTER,
+            KeyEvent.KEYCODE_DPAD_CENTER,
+            KeyEvent.KEYCODE_CAMERA,
+            KeyEvent.KEYCODE_FOCUS -> false
+            else -> true
+        }
     }
 
     /**
@@ -258,5 +305,20 @@ class NewlandScannerManager(
                 return true
             }
         }
+    }
+
+    private fun Intent.scannerExtraAsString(key: String): String? {
+        return scannerExtraToString(extras?.get(key))
+    }
+}
+
+internal fun scannerExtraToString(value: Any?): String? {
+    return when (value) {
+        null -> null
+        is String -> value
+        is CharSequence -> value.toString()
+        is ByteArray -> value.toString(Charsets.UTF_8)
+        is CharArray -> value.concatToString()
+        else -> value.toString()
     }
 }

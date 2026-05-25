@@ -47,6 +47,16 @@ fun ScanResultCard(item: InventoryItem, modifier: Modifier = Modifier) {
             // Штрихкод
             LabelValueRow(label = "Штрихкод", value = item.barcode)
 
+            if (item.sku.isNotBlank()) {
+                Spacer(modifier = Modifier.height(6.dp))
+                LabelValueRow(label = "SKU", value = item.sku)
+            }
+
+            if (item.groupName.isNotBlank()) {
+                Spacer(modifier = Modifier.height(6.dp))
+                LabelValueRow(label = "Група", value = item.groupName)
+            }
+
             Spacer(modifier = Modifier.height(6.dp))
 
             // Поточна кількість — виділяємо великим шрифтом
@@ -72,6 +82,23 @@ fun ScanResultCard(item: InventoryItem, modifier: Modifier = Modifier) {
                     text = item.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            if (item.isWeighted || item.isPackage) {
+                Spacer(modifier = Modifier.height(10.dp))
+                val flags = buildList {
+                    if (item.isWeighted) add("Ваговий")
+                    if (item.isPackage) {
+                        val unit = item.packageUnit.ifBlank { item.unit }
+                        add("Упаковка: ${formatQty(item.packageCoefficient)} $unit")
+                    }
+                }
+                Text(
+                    text = flags.joinToString(" • "),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }

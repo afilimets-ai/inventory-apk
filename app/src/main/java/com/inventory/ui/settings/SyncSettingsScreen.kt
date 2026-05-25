@@ -20,12 +20,16 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -36,7 +40,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -49,12 +55,14 @@ import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncState
 import com.inventory.sync.catalogimport.ImportPreview
 import com.inventory.sync.catalogimport.TargetFields
+import com.inventory.ui.components.noScannerKeyFocus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SyncSettingsScreen(
     onBack: () -> Unit,
     onProviderSettingsClick: (SyncProviderType) -> Unit,
+    onSyncSuccess: () -> Unit = {},
     viewModel: SyncSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -63,7 +71,10 @@ fun SyncSettingsScreen(
 
     LaunchedEffect(syncState) {
         when (val state = syncState) {
-            is SyncState.Success -> snackbarHostState.showSnackbar("Синхронізацію завершено")
+            is SyncState.Success -> {
+                viewModel.clearCompletedSyncState()
+                onSyncSuccess()
+            }
             is SyncState.Error -> snackbarHostState.showSnackbar("Помилка: ${state.message}")
             else -> {}
         }
@@ -168,6 +179,7 @@ fun SyncSettingsScreen(
                     onClick = { viewModel.runImport() },
                     enabled = !isRunning && uiState.rows.any { it.importEnabled },
                     modifier = Modifier
+                        .noScannerKeyFocus()
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
@@ -186,6 +198,7 @@ fun SyncSettingsScreen(
                     onClick = { viewModel.runExport() },
                     enabled = !isRunning && uiState.rows.any { it.exportEnabled },
                     modifier = Modifier
+                        .noScannerKeyFocus()
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
@@ -250,9 +263,11 @@ private fun ImportMappingCard(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp
                             )
-                            OutlinedButton(onClick = { onMappingChange(index, nextFieldId(selected)) }) {
-                                Text("Обрати")
-                            }
+                            ColumnMappingDropdown(
+                                selected = selected,
+                                onSelect = { onMappingChange(index, it) },
+                                modifier = Modifier.weight(1f)
+                            )
                         }
                     }
                 }
@@ -260,7 +275,9 @@ private fun ImportMappingCard(
             Button(
                 onClick = onApply,
                 enabled = requiredSelected,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .noScannerKeyFocus()
             ) {
                 Text("Зберегти та імпортувати")
             }
@@ -268,10 +285,53 @@ private fun ImportMappingCard(
     }
 }
 
-private fun nextFieldId(current: String?): String? {
-    val ids = listOf<String?>(null) + TargetFields.all.map { it.id }
-    val currentIndex = ids.indexOf(current).takeIf { it >= 0 } ?: 0
-    return ids[(currentIndex + 1) % ids.size]
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ColumnMappingDropdown(
+    selected: String?,
+    onSelect: (String?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedLabel = selected?.let { TargetFields.byId(it)?.displayName ?: it } ?: "Не імпортувати"
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selectedLabel,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Поле імпорту") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("Не імпортувати") },
+                onClick = {
+                    onSelect(null)
+                    expanded = false
+                }
+            )
+            TargetFields.all.forEach { field ->
+                DropdownMenuItem(
+                    text = { Text(field.displayName) },
+                    onClick = {
+                        onSelect(field.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -370,6 +430,7 @@ private fun ProviderRow(
             selected = row.importEnabled,
             onClick = onImportSelect,
             modifier = Modifier
+                .noScannerKeyFocus()
                 .width(56.dp)
                 .size(48.dp)
         )
@@ -379,6 +440,7 @@ private fun ProviderRow(
             selected = row.exportEnabled,
             onClick = onExportSelect,
             modifier = Modifier
+                .noScannerKeyFocus()
                 .width(56.dp)
                 .size(48.dp)
         )
@@ -386,7 +448,9 @@ private fun ProviderRow(
         // Кнопка налаштувань провайдера
         IconButton(
             onClick = onSettingsClick,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier
+                .noScannerKeyFocus()
+                .size(40.dp)
         ) {
             Icon(
                 Icons.Default.Settings,

@@ -2,6 +2,12 @@ package com.inventory.ui.scan
 
 import com.inventory.data.entity.InventoryItem
 
+data class LastScannedItem(
+    val item: InventoryItem,
+    val quantity: Double,
+    val scannedBarcode: String
+)
+
 sealed class ScanUiState {
     object Idle : ScanUiState()
     data class ItemFound(val item: InventoryItem, val quantity: Double = 1.0) : ScanUiState()

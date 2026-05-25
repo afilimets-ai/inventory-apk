@@ -74,9 +74,22 @@ class ColumnMappingHeuristicTest {
     }
 
     @Test
-    fun `fuzzySuggestMapping no match returns null`() {
+    fun `fuzzySuggestMapping maps Ukrainian SKU and quantity aliases`() {
         val result = ColumnMappingHeuristic.fuzzySuggestMapping(listOf("артикул", "залишок"), TargetFields.all)
-        assertNull(result[0])
+        assertEquals("sku", result[0])
         assertNull(result[1])
+    }
+
+    @Test
+    fun `fuzzySuggestMapping maps group additional barcode and package columns`() {
+        val result = ColumnMappingHeuristic.fuzzySuggestMapping(
+            listOf("група", "додаткові штрихкоди", "ваговий", "коефіцієнт упаковки"),
+            TargetFields.all
+        )
+
+        assertEquals("group", result[0])
+        assertEquals("additional_barcodes", result[1])
+        assertEquals("is_weighted", result[2])
+        assertEquals("package_coefficient", result[3])
     }
 }

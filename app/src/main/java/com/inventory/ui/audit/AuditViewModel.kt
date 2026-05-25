@@ -8,6 +8,7 @@ import com.inventory.data.entity.Location
 import com.inventory.data.entity.OperationType
 import com.inventory.data.entity.OutboxEntry
 import com.inventory.data.repository.InventoryRepository
+import com.inventory.data.repository.StockDiscrepancy
 import com.inventory.feedback.ScanFeedbackManager
 import com.inventory.scanner.ScannerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,17 +82,19 @@ class AuditViewModel @Inject constructor(
         if (current !is AuditUiState.Counting) return
 
         viewModelScope.launch {
-            val item = repository.getItemByBarcode(barcode)
-            if (item != null) {
+            val match = repository.resolveBarcode(barcode)
+            if (match != null) {
                 feedbackManager.onScanSuccess()
+                val item = expectedItems.firstOrNull { it.id == match.item.id } ?: match.item
                 val existing = countLines[item.id]
-                val currentCount = (existing?.countedQuantity ?: 0.0) + 1.0
+                val currentCount = (existing?.countedQuantity ?: 0.0) + match.quantity
                 _uiState.value = AuditUiState.ItemScanned(
                     item = item,
                     currentCount = currentCount,
                     expectedQuantity = item.quantity,
                     location = selectedLocation,
-                    lines = countLines.toMap()
+                    lines = countLines.toMap(),
+                    scannedBarcode = match.scannedBarcode
                 )
             } else {
                 feedbackManager.onScanError()
@@ -122,13 +125,13 @@ class AuditViewModel @Inject constructor(
             // Записуємо операцію AUDIT через outbox
             val operation = InventoryOperation(
                 itemId = current.item.id,
-                barcode = current.item.barcode,
+                barcode = current.scannedBarcode,
                 operationType = OperationType.AUDIT.name,
                 quantity = current.currentCount
             )
             val outboxEntry = OutboxEntry(
                 operationType = OperationType.AUDIT.name,
-                payload = buildPayload(current.item.id, current.item.barcode, current.currentCount)
+                payload = buildPayload(current.item, current.scannedBarcode, current.currentCount)
             )
             repository.recordOperationWithOutbox(operation, outboxEntry)
 
@@ -163,6 +166,28 @@ class AuditViewModel @Inject constructor(
         )
     }
 
+    fun onFinalizeAudit() {
+        val current = _uiState.value as? AuditUiState.VarianceReport ?: return
+        if (current.isFinalized) return
+        viewModelScope.launch {
+            try {
+                val discrepancies = current.toStockDiscrepancies()
+                val result = repository.createStockAdjustmentDocuments(
+                    discrepancies = discrepancies,
+                    sourceNote = "audit:${current.location?.name ?: "all"}:${System.currentTimeMillis()}"
+                )
+                _uiState.value = current.copy(
+                    createdDocumentIds = result.documentIds,
+                    finalizeError = null
+                )
+            } catch (e: Exception) {
+                _uiState.value = current.copy(
+                    finalizeError = e.message ?: "Не вдалося створити документи"
+                )
+            }
+        }
+    }
+
     fun onNewSession() {
         countLines.clear()
         selectedLocation = null
@@ -174,6 +199,34 @@ class AuditViewModel @Inject constructor(
         scannerManager.triggerScan()
     }
 
-    private fun buildPayload(itemId: Long, barcode: String, quantity: Double): String =
-        """{"itemId":$itemId,"barcode":"$barcode","quantity":$quantity,"operationType":"AUDIT","timestamp":${System.currentTimeMillis()}}"""
+    private fun AuditUiState.VarianceReport.toStockDiscrepancies(): List<StockDiscrepancy> {
+        val counted = lines.filter { it.hasDiscrepancy }.map { line ->
+            StockDiscrepancy(
+                itemId = line.item.id,
+                barcode = line.item.barcode,
+                sku = line.item.sku,
+                name = line.item.name,
+                expectedQuantity = line.expectedQuantity,
+                actualQuantity = line.countedQuantity,
+                unit = line.item.unit,
+                reason = if (line.variance > 0.0) "audit_surplus" else "audit_shortage"
+            )
+        }
+        val missing = missingItems.filter { it.quantity != 0.0 }.map { item ->
+            StockDiscrepancy(
+                itemId = item.id,
+                barcode = item.barcode,
+                sku = item.sku,
+                name = item.name,
+                expectedQuantity = item.quantity,
+                actualQuantity = 0.0,
+                unit = item.unit,
+                reason = "audit_missing"
+            )
+        }
+        return counted + missing
+    }
+
+    private fun buildPayload(item: InventoryItem, scannedBarcode: String, quantity: Double): String =
+        """{"itemId":${item.id},"barcode":"$scannedBarcode","itemBarcode":"${item.barcode}","sku":"${item.sku}","quantity":$quantity,"unit":"${item.unit}","operationType":"AUDIT","timestamp":${System.currentTimeMillis()}}"""
 }
