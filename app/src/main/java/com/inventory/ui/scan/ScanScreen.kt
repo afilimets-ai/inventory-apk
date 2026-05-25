@@ -185,6 +185,7 @@ private fun IdleScreen(
     var manualBarcode by remember { mutableStateOf("") }
     var showManualInput by remember { mutableStateOf(false) }
     var showScannedItems by remember { mutableStateOf(false) }
+    val scannedSummaries = remember(scannedItems) { aggregateScannedItems(scannedItems) }
     val focusManager = LocalFocusManager.current
 
     fun submitManualBarcode() {
@@ -274,9 +275,9 @@ private fun IdleScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         IndustrialOutlinedButton(
-            text = "Відскановані товари (${scannedItems.size})",
+            text = "Відскановані товари (${scannedSummaries.size})",
             onClick = { showScannedItems = true },
-            enabled = scannedItems.isNotEmpty()
+            enabled = scannedSummaries.isNotEmpty()
         )
 
         if (showManualInput) {
@@ -310,7 +311,7 @@ private fun IdleScreen(
 
         if (showScannedItems) {
             ScannedItemsDialog(
-                items = scannedItems,
+                items = scannedSummaries,
                 onDismiss = { showScannedItems = false }
             )
         }
@@ -319,7 +320,7 @@ private fun IdleScreen(
 
 @Composable
 private fun ScannedItemsDialog(
-    items: List<LastScannedItem>,
+    items: List<ScannedItemSummary>,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
@@ -327,10 +328,10 @@ private fun ScannedItemsDialog(
         title = { Text("Відскановані товари") },
         text = {
             LazyColumn(modifier = Modifier.height(360.dp)) {
-                itemsIndexed(items) { index, scanned ->
+                itemsIndexed(items, key = { _, scanned -> scanned.key }) { index, scanned ->
                     ScannedItemRow(index + 1, scanned)
                     if (index < items.lastIndex) {
-                        Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                     }
                 }
             }
@@ -344,7 +345,7 @@ private fun ScannedItemsDialog(
 }
 
 @Composable
-private fun ScannedItemRow(index: Int, scanned: LastScannedItem) {
+private fun ScannedItemRow(index: Int, scanned: ScannedItemSummary) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -357,22 +358,45 @@ private fun ScannedItemRow(index: Int, scanned: LastScannedItem) {
         )
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = scanned.item.name,
+                text = "${scanned.name} - ${scanned.barcode}",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.SemiBold
             )
-            Text(
-                text = scanned.scannedBarcode,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
         }
         Text(
-            text = "${formatQty(scanned.quantity)} ${scanned.item.unit}",
+            text = "${formatQty(scanned.quantity)} ${scanned.unit}",
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.SemiBold
         )
     }
+}
+
+private data class ScannedItemSummary(
+    val key: String,
+    val name: String,
+    val barcode: String,
+    val unit: String,
+    val quantity: Double
+)
+
+private fun aggregateScannedItems(items: List<LastScannedItem>): List<ScannedItemSummary> {
+    val summaries = LinkedHashMap<String, ScannedItemSummary>()
+    items.forEach { scanned ->
+        val key = "${scanned.item.id}|${scanned.scannedBarcode}|${scanned.item.unit}"
+        val existing = summaries[key]
+        summaries[key] = if (existing == null) {
+            ScannedItemSummary(
+                key = key,
+                name = scanned.item.name,
+                barcode = scanned.scannedBarcode,
+                unit = scanned.item.unit,
+                quantity = scanned.quantity
+            )
+        } else {
+            existing.copy(quantity = existing.quantity + scanned.quantity)
+        }
+    }
+    return summaries.values.toList()
 }
 
 @Composable

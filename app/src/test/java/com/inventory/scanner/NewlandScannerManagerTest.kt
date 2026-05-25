@@ -16,7 +16,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.MockedStatic
 import org.mockito.Mockito.mockStatic
-import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -79,7 +79,6 @@ class NewlandScannerManagerTest {
         val context = mock<Context>()
         val manager = NewlandScannerManager(context)
         val event = mock<KeyEvent>()
-        val intentCaptor = argumentCaptor<android.content.Intent>()
         whenever(event.action).thenReturn(KeyEvent.ACTION_DOWN)
 
         mockAndroidLog().use {
@@ -87,7 +86,7 @@ class NewlandScannerManagerTest {
 
             assertTrue(handled)
         }
-        verify(context).sendBroadcast(intentCaptor.capture())
+        verify(context, atLeastOnce()).sendBroadcast(org.mockito.kotlin.any())
     }
 
     @Test

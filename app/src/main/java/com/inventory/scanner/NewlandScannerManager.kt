@@ -44,10 +44,20 @@ class NewlandScannerManager(
         // Newland MT90 scanner broadcast actions
         private const val ACTION_SCANNER_RESULT = "nlscan.action.SCANNER_RESULT"
         private const val ACTION_SCANNER_TRIG = "nlscan.action.SCANNER_TRIG"
+        private const val ACTION_BAR_SCANCFG = "ACTION_BAR_SCANCFG"
 
         // Intent extra keys for scan data (based on Newland MT90 SDK)
         private const val EXTRA_BARCODE_DATA = "SCAN_BARCODE1"
         private const val EXTRA_BARCODE_TYPE = "SCAN_BARCODE_TYPE"
+        private const val EXTRA_SCAN_POWER = "EXTRA_SCAN_POWER"
+        private const val EXTRA_SCAN_MODE = "EXTRA_SCAN_MODE"
+        private const val EXTRA_TRIG_MODE = "EXTRA_TRIG_MODE"
+        private const val EXTRA_SCAN_AUTOENT = "EXTRA_SCAN_AUTOENT"
+
+        private const val SCAN_POWER_ON = 1
+        private const val SCAN_MODE_BROADCAST = 3
+        private const val TRIG_MODE_NORMAL = 0
+        private const val AUTO_ENTER_OFF = 0
 
         // Debounce protection: ignore scans within 300ms of the previous scan
         private const val DEBOUNCE_DELAY_MS = 300L
@@ -136,6 +146,7 @@ class NewlandScannerManager(
         val filter = IntentFilter(ACTION_SCANNER_RESULT)
         ContextCompat.registerReceiver(context, scanReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
         isRegistered = true
+        configureScannerForBroadcastOutput()
         Log.d(TAG, "Scanner receiver registered")
     }
 
@@ -260,9 +271,25 @@ class NewlandScannerManager(
      * this method, otherwise scan results will not be received.
      */
     override fun triggerScan() {
+        configureScannerForBroadcastOutput()
         val intent = Intent(ACTION_SCANNER_TRIG)
         context.sendBroadcast(intent)
         Log.d(TAG, "Scan trigger broadcast sent")
+    }
+
+    private fun configureScannerForBroadcastOutput() {
+        try {
+            sendScanConfig(EXTRA_SCAN_POWER, SCAN_POWER_ON)
+            sendScanConfig(EXTRA_SCAN_MODE, SCAN_MODE_BROADCAST)
+            sendScanConfig(EXTRA_TRIG_MODE, TRIG_MODE_NORMAL)
+            sendScanConfig(EXTRA_SCAN_AUTOENT, AUTO_ENTER_OFF)
+        } catch (e: Exception) {
+            Log.w(TAG, "Unable to configure Newland scanner output mode", e)
+        }
+    }
+
+    private fun sendScanConfig(key: String, value: Int) {
+        context.sendBroadcast(Intent(ACTION_BAR_SCANCFG).putExtra(key, value))
     }
 
     internal fun handleScanPayload(

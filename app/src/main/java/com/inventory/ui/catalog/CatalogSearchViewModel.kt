@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.inventory.data.entity.InventoryItem
 import com.inventory.data.repository.InventoryRepository
+import com.inventory.scanner.ScannerManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CatalogSearchUiState(
@@ -22,10 +24,19 @@ data class CatalogSearchUiState(
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CatalogSearchViewModel @Inject constructor(
-    private val repository: InventoryRepository
+    private val repository: InventoryRepository,
+    private val scannerManager: ScannerManager
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
+
+    init {
+        viewModelScope.launch {
+            scannerManager.scanEvents.collect { scanResult ->
+                query.value = scanResult.barcode
+            }
+        }
+    }
 
     val uiState: StateFlow<CatalogSearchUiState> = query
         .flatMapLatest { value ->
