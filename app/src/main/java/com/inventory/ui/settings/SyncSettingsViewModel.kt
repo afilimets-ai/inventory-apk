@@ -110,7 +110,12 @@ class SyncSettingsViewModel @Inject constructor(
 
     fun setPendingColumnMapping(columnIndex: Int, fieldId: String?) {
         _uiState.update { state ->
-            state.copy(pendingMapping = state.pendingMapping + (columnIndex to fieldId))
+            state.copy(
+                pendingMapping = state.pendingMapping.withUniqueColumnMapping(
+                    columnIndex = columnIndex,
+                    fieldId = fieldId
+                )
+            )
         }
     }
 
@@ -136,4 +141,18 @@ class SyncSettingsViewModel @Inject constructor(
     fun saveProviderSettings(settings: SyncSettings) {
         settingsManager.saveSettings(settings)
     }
+}
+
+internal fun Map<Int, String?>.withUniqueColumnMapping(
+    columnIndex: Int,
+    fieldId: String?
+): Map<Int, String?> {
+    val mapping = toMutableMap()
+    if (fieldId != null) {
+        mapping.entries
+            .filter { it.key != columnIndex && it.value == fieldId }
+            .forEach { mapping[it.key] = null }
+    }
+    mapping[columnIndex] = fieldId
+    return mapping
 }

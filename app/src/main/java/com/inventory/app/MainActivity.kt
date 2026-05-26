@@ -131,4 +131,9 @@ class MainActivity : ComponentActivity() {
         if (scannerManager.onKeyDown(keyCode, event)) return true
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        if (scannerManager.onKeyDown(keyCode, event)) return true
+        return super.onKeyUp(keyCode, event)
+    }
 }
