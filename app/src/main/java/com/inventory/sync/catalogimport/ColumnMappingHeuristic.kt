@@ -2,6 +2,41 @@ package com.inventory.sync.catalogimport
 
 object ColumnMappingHeuristic {
 
+    private val aliases = mapOf(
+        "артикул" to "sku",
+        "sku" to "sku",
+        "внутрішнійкод" to "sku",
+        "кодтовару" to "sku",
+        "кодноменклатури" to "sku",
+        "група" to "group",
+        "товарнагрупа" to "group",
+        "номенклатурнагрупа" to "group",
+        "group" to "group",
+        "productgroup" to "group",
+        "додатковіштрихкоди" to "additional_barcodes",
+        "додатковийштрихкод" to "additional_barcodes",
+        "іншіштрихкоди" to "additional_barcodes",
+        "barcodes" to "additional_barcodes",
+        "additionalbarcode" to "additional_barcodes",
+        "additionalbarcodes" to "additional_barcodes",
+        "alternatebarcode" to "additional_barcodes",
+        "alternatebarcodes" to "additional_barcodes",
+        "ваговий" to "is_weighted",
+        "ваговийтовар" to "is_weighted",
+        "weighted" to "is_weighted",
+        "isweighted" to "is_weighted",
+        "упаковка" to "is_package",
+        "пакування" to "is_package",
+        "ispackage" to "is_package",
+        "package" to "is_package",
+        "одиницяупаковки" to "package_unit",
+        "packageunit" to "package_unit",
+        "коефіцієнтупаковки" to "package_coefficient",
+        "коефупаковки" to "package_coefficient",
+        "packagecoefficient" to "package_coefficient",
+        "packcoefficient" to "package_coefficient"
+    )
+
     /** Row 0 is treated as data (NOT a header) if at least 50 percent of its cells parse as numbers. */
     fun detectHasHeader(rows: List<List<String?>>): Boolean {
         val row0 = rows.firstOrNull() ?: return true
@@ -20,6 +55,9 @@ object ColumnMappingHeuristic {
 
     private fun bestMatch(header: String, targets: List<TargetField>): String? {
         val norm = normalize(header)
+        aliases[norm]?.let { targetId ->
+            if (targets.any { it.id == targetId }) return targetId
+        }
         // 1. Exact match (id OR displayName) after normalization
         targets.firstOrNull { normalize(it.id) == norm || normalize(it.displayName) == norm }
             ?.let { return it.id }
@@ -36,7 +74,7 @@ object ColumnMappingHeuristic {
         return null
     }
 
-    private fun normalize(s: String): String = s.lowercase().filter { it.isLetter() }
+    private fun normalize(s: String): String = s.lowercase().filter { it.isLetterOrDigit() }
 
     private fun levenshtein(a: String, b: String): Int {
         val dp = Array(a.length + 1) { IntArray(b.length + 1) }

@@ -44,10 +44,20 @@ class NewlandScannerManager(
         // Newland MT90 scanner broadcast actions
         private const val ACTION_SCANNER_RESULT = "nlscan.action.SCANNER_RESULT"
         private const val ACTION_SCANNER_TRIG = "nlscan.action.SCANNER_TRIG"
+        private const val ACTION_BAR_SCANCFG = "ACTION_BAR_SCANCFG"
 
         // Intent extra keys for scan data (based on Newland MT90 SDK)
         private const val EXTRA_BARCODE_DATA = "SCAN_BARCODE1"
         private const val EXTRA_BARCODE_TYPE = "SCAN_BARCODE_TYPE"
+        private const val EXTRA_SCAN_POWER = "EXTRA_SCAN_POWER"
+        private const val EXTRA_SCAN_MODE = "EXTRA_SCAN_MODE"
+        private const val EXTRA_TRIG_MODE = "EXTRA_TRIG_MODE"
+        private const val EXTRA_SCAN_AUTOENT = "EXTRA_SCAN_AUTOENT"
+
+        private const val SCAN_POWER_ON = 1
+        private const val SCAN_MODE_BROADCAST = 3
+        private const val TRIG_MODE_NORMAL = 0
+        private const val AUTO_ENTER_OFF = 0
 
         // Debounce protection: ignore scans within 300ms of the previous scan
         private const val DEBOUNCE_DELAY_MS = 300L
@@ -113,8 +123,8 @@ class NewlandScannerManager(
             }
 
             handleScanPayload(
-                barcode = intent.getStringExtra(EXTRA_BARCODE_DATA),
-                barcodeType = intent.getStringExtra(EXTRA_BARCODE_TYPE)
+                barcode = intent.scannerExtraAsString(EXTRA_BARCODE_DATA),
+                barcodeType = intent.scannerExtraAsString(EXTRA_BARCODE_TYPE)
             )
         }
     }
@@ -136,6 +146,7 @@ class NewlandScannerManager(
         val filter = IntentFilter(ACTION_SCANNER_RESULT)
         ContextCompat.registerReceiver(context, scanReceiver, filter, ContextCompat.RECEIVER_EXPORTED)
         isRegistered = true
+        configureScannerForBroadcastOutput()
         Log.d(TAG, "Scanner receiver registered")
     }
 
@@ -185,14 +196,59 @@ class NewlandScannerManager(
      * @return true if the key event was handled (F6 key pressed), false otherwise
      */
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_F6) {
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                Log.d(TAG, "Hardware scan button (F6) pressed")
-                triggerScan()
-            }
-            return true
+        return handleScannerKey(keyCode, event)
+    }
+
+    override fun onKeyEvent(event: KeyEvent): Boolean {
+        return handleScannerKey(event.keyCode, event)
+    }
+
+    private fun handleScannerKey(keyCode: Int, event: KeyEvent): Boolean {
+        if (!isScannerActivationKey(keyCode)) {
+            return false
         }
-        return false
+
+        if (
+            event.action == KeyEvent.ACTION_DOWN &&
+            event.repeatCount == 0 &&
+            shouldTriggerProgrammaticScan(keyCode)
+        ) {
+            Log.d(TAG, "Hardware scanner key pressed: keyCode=$keyCode")
+            triggerScan()
+        } else {
+            Log.d(TAG, "Hardware scanner key consumed: keyCode=$keyCode action=${event.action}")
+        }
+
+        return true
+    }
+
+    private fun isScannerActivationKey(keyCode: Int): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_F6,
+            KeyEvent.KEYCODE_F9,
+            KeyEvent.KEYCODE_F10,
+            KeyEvent.KEYCODE_F11,
+            KeyEvent.KEYCODE_F12,
+            KeyEvent.KEYCODE_BUTTON_L1,
+            KeyEvent.KEYCODE_BUTTON_R1,
+            KeyEvent.KEYCODE_CAMERA,
+            KeyEvent.KEYCODE_FOCUS,
+            KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_NUMPAD_ENTER,
+            KeyEvent.KEYCODE_DPAD_CENTER -> true
+            else -> false
+        }
+    }
+
+    private fun shouldTriggerProgrammaticScan(keyCode: Int): Boolean {
+        return when (keyCode) {
+            KeyEvent.KEYCODE_ENTER,
+            KeyEvent.KEYCODE_NUMPAD_ENTER,
+            KeyEvent.KEYCODE_DPAD_CENTER,
+            KeyEvent.KEYCODE_CAMERA,
+            KeyEvent.KEYCODE_FOCUS -> false
+            else -> true
+        }
     }
 
     /**
@@ -215,9 +271,25 @@ class NewlandScannerManager(
      * this method, otherwise scan results will not be received.
      */
     override fun triggerScan() {
+        configureScannerForBroadcastOutput()
         val intent = Intent(ACTION_SCANNER_TRIG)
         context.sendBroadcast(intent)
         Log.d(TAG, "Scan trigger broadcast sent")
+    }
+
+    private fun configureScannerForBroadcastOutput() {
+        try {
+            sendScanConfig(EXTRA_SCAN_POWER, SCAN_POWER_ON)
+            sendScanConfig(EXTRA_SCAN_MODE, SCAN_MODE_BROADCAST)
+            sendScanConfig(EXTRA_TRIG_MODE, TRIG_MODE_NORMAL)
+            sendScanConfig(EXTRA_SCAN_AUTOENT, AUTO_ENTER_OFF)
+        } catch (e: Exception) {
+            Log.w(TAG, "Unable to configure Newland scanner output mode", e)
+        }
+    }
+
+    private fun sendScanConfig(key: String, value: Int) {
+        context.sendBroadcast(Intent(ACTION_BAR_SCANCFG).putExtra(key, value))
     }
 
     internal fun handleScanPayload(
@@ -260,5 +332,20 @@ class NewlandScannerManager(
                 return true
             }
         }
+    }
+
+    private fun Intent.scannerExtraAsString(key: String): String? {
+        return scannerExtraToString(extras?.get(key))
+    }
+}
+
+internal fun scannerExtraToString(value: Any?): String? {
+    return when (value) {
+        null -> null
+        is String -> value
+        is CharSequence -> value.toString()
+        is ByteArray -> value.toString(Charsets.UTF_8)
+        is CharArray -> value.concatToString()
+        else -> value.toString()
     }
 }

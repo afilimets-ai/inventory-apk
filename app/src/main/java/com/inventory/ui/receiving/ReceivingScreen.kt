@@ -51,6 +51,7 @@ import com.inventory.ui.components.IndustrialButton
 import com.inventory.ui.components.IndustrialOutlinedButton
 import com.inventory.ui.components.IndustrialQuantityButton
 import com.inventory.ui.components.IndustrialSuccessButton
+import com.inventory.ui.components.QuantityInput
 import com.inventory.ui.components.ScanResultCard
 import kotlinx.coroutines.delay
 
@@ -355,6 +356,13 @@ private fun ItemFoundContent(
                 onClick = { onQuantityChange(state.quantity + 1) }
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        QuantityInput(
+            quantity = state.quantity,
+            unit = state.item.unit,
+            onQuantityChange = onQuantityChange
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 

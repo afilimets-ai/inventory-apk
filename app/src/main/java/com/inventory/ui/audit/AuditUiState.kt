@@ -37,7 +37,8 @@ sealed class AuditUiState {
         val currentCount: Double,
         val expectedQuantity: Double,
         val location: Location?,
-        val lines: Map<Long, CountLine>
+        val lines: Map<Long, CountLine>,
+        val scannedBarcode: String = item.barcode
     ) : AuditUiState()
 
     /** Невідомий штрихкод */
@@ -53,8 +54,11 @@ sealed class AuditUiState {
         val lines: List<CountLine>,
         val missingItems: List<InventoryItem>,
         val totalExpected: Double,
-        val totalCounted: Double
+        val totalCounted: Double,
+        val createdDocumentIds: List<Long> = emptyList(),
+        val finalizeError: String? = null
     ) : AuditUiState() {
         val discrepancies: List<CountLine> get() = lines.filter { it.hasDiscrepancy }
+        val isFinalized: Boolean get() = createdDocumentIds.isNotEmpty()
     }
 }

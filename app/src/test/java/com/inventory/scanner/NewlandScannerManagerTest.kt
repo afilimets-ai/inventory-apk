@@ -16,7 +16,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.MockedStatic
 import org.mockito.Mockito.mockStatic
-import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -79,7 +79,6 @@ class NewlandScannerManagerTest {
         val context = mock<Context>()
         val manager = NewlandScannerManager(context)
         val event = mock<KeyEvent>()
-        val intentCaptor = argumentCaptor<android.content.Intent>()
         whenever(event.action).thenReturn(KeyEvent.ACTION_DOWN)
 
         mockAndroidLog().use {
@@ -87,7 +86,39 @@ class NewlandScannerManagerTest {
 
             assertTrue(handled)
         }
-        verify(context).sendBroadcast(intentCaptor.capture())
+        verify(context, atLeastOnce()).sendBroadcast(org.mockito.kotlin.any())
+    }
+
+    @Test
+    fun `onKeyEvent consumes enter scanner key without sending trigger broadcast`() {
+        val context = mock<Context>()
+        val manager = NewlandScannerManager(context)
+        val event = mock<KeyEvent>()
+        whenever(event.keyCode).thenReturn(KeyEvent.KEYCODE_ENTER)
+        whenever(event.action).thenReturn(KeyEvent.ACTION_DOWN)
+
+        mockAndroidLog().use {
+            val handled = manager.onKeyEvent(event)
+
+            assertTrue(handled)
+        }
+        verify(context, never()).sendBroadcast(org.mockito.kotlin.any())
+    }
+
+    @Test
+    fun `onKeyEvent consumes scanner key up without sending trigger broadcast`() {
+        val context = mock<Context>()
+        val manager = NewlandScannerManager(context)
+        val event = mock<KeyEvent>()
+        whenever(event.keyCode).thenReturn(KeyEvent.KEYCODE_F6)
+        whenever(event.action).thenReturn(KeyEvent.ACTION_UP)
+
+        mockAndroidLog().use {
+            val handled = manager.onKeyEvent(event)
+
+            assertTrue(handled)
+        }
+        verify(context, never()).sendBroadcast(org.mockito.kotlin.any())
     }
 
     @Test
@@ -112,9 +143,16 @@ class NewlandScannerManagerTest {
         val event = mock<KeyEvent>()
         whenever(event.action).thenReturn(KeyEvent.ACTION_DOWN)
 
-        val handled = manager.onKeyDown(KeyEvent.KEYCODE_ENTER, event)
+        val handled = manager.onKeyDown(KeyEvent.KEYCODE_A, event)
 
         assertFalse(handled)
+    }
+
+    @Test
+    fun `scannerExtraToString converts Newland non string extras`() {
+        assertEquals("1", scannerExtraToString(1))
+        assertEquals("CODE128", scannerExtraToString("CODE128".toByteArray()))
+        assertEquals(null, scannerExtraToString(null))
     }
 
     private fun mockAndroidLog(): MockedStatic<Log> {

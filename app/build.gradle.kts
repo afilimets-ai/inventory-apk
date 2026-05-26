@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
@@ -54,13 +53,15 @@ android {
         }
     }
 
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
     }
 
     packaging {
@@ -72,11 +73,12 @@ android {
     testOptions {
         unitTests {
             isReturnDefaultValues = true
-            all {
-                it.jvmArgs("-XX:+EnableDynamicAgentLoading")
-            }
         }
     }
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("-XX:+EnableDynamicAgentLoading")
 }
 
 dependencies {

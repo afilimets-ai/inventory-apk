@@ -48,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.inventory.sync.SyncFormat
 import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncSettings
+import com.inventory.ui.components.noScannerKeyFocus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +65,10 @@ fun ProviderSettingsScreen(
             TopAppBar(
                 title = { Text(providerType.displayName, fontSize = 20.sp) },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier.noScannerKeyFocus()
+                    ) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
                     }
                 }
@@ -110,6 +114,7 @@ fun ProviderSettingsScreen(
                     onBack()
                 },
                 modifier = Modifier
+                    .noScannerKeyFocus()
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
@@ -167,7 +172,10 @@ private fun LocalFolderFields(s: SyncSettings, onChange: (SyncSettings) -> Unit)
 
     OutlinedButton(
         onClick = { folderPicker.launch(null) },
-        modifier = Modifier.fillMaxWidth().height(56.dp)
+        modifier = Modifier
+            .noScannerKeyFocus()
+            .fillMaxWidth()
+            .height(56.dp)
     ) {
         Text("Вибрати папку")
     }
@@ -200,7 +208,10 @@ private fun LocalFolderFields(s: SyncSettings, onChange: (SyncSettings) -> Unit)
                 )
             }
         },
-        modifier = Modifier.fillMaxWidth().height(56.dp)
+        modifier = Modifier
+            .noScannerKeyFocus()
+            .fillMaxWidth()
+            .height(56.dp)
     ) {
         Text("Доступ до файлів")
     }

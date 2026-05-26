@@ -22,7 +22,8 @@ sealed class ReceivingUiState {
         val item: InventoryItem,
         val quantity: Double = 1.0,
         val sessionLines: List<ReceivedLine>,
-        val defaultLocationId: Long? = null
+        val defaultLocationId: Long? = null,
+        val scannedBarcode: String = item.barcode
     ) : ReceivingUiState()
 
     /** Невідомий штрихкод */

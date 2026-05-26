@@ -21,14 +21,16 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -54,12 +56,14 @@ import com.inventory.sync.SyncProviderType
 import com.inventory.sync.SyncState
 import com.inventory.sync.catalogimport.ImportPreview
 import com.inventory.sync.catalogimport.TargetFields
+import com.inventory.ui.components.noScannerKeyFocus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SyncSettingsScreen(
     onBack: () -> Unit,
     onProviderSettingsClick: (SyncProviderType) -> Unit,
+    onSyncSuccess: () -> Unit = {},
     viewModel: SyncSettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -68,7 +72,10 @@ fun SyncSettingsScreen(
 
     LaunchedEffect(syncState) {
         when (val state = syncState) {
-            is SyncState.Success -> snackbarHostState.showSnackbar("Синхронізацію завершено")
+            is SyncState.Success -> {
+                viewModel.clearCompletedSyncState()
+                onSyncSuccess()
+            }
             is SyncState.Error -> snackbarHostState.showSnackbar("Помилка: ${state.message}")
             else -> {}
         }
@@ -173,6 +180,7 @@ fun SyncSettingsScreen(
                     onClick = { viewModel.runImport() },
                     enabled = !isRunning && uiState.rows.any { it.importEnabled },
                     modifier = Modifier
+                        .noScannerKeyFocus()
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
@@ -191,6 +199,7 @@ fun SyncSettingsScreen(
                     onClick = { viewModel.runExport() },
                     enabled = !isRunning && uiState.rows.any { it.exportEnabled },
                     modifier = Modifier
+                        .noScannerKeyFocus()
                         .fillMaxWidth()
                         .height(48.dp)
                 ) {
@@ -256,8 +265,9 @@ private fun ImportMappingCard(
                                 fontSize = 13.sp
                             )
                             ColumnMappingDropdown(
-                                selectedFieldId = selected,
-                                onSelected = { fieldId -> onMappingChange(index, fieldId) }
+                                selected = selected,
+                                onSelect = { onMappingChange(index, it) },
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
@@ -266,7 +276,9 @@ private fun ImportMappingCard(
             Button(
                 onClick = onApply,
                 enabled = requiredSelected,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .noScannerKeyFocus()
             ) {
                 Text("Зберегти та імпортувати")
             }
@@ -274,37 +286,48 @@ private fun ImportMappingCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ColumnMappingDropdown(
-    selectedFieldId: String?,
-    onSelected: (String?) -> Unit
+    selected: String?,
+    onSelect: (String?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val selectedText = selectedFieldId
-        ?.let { TargetFields.byId(it)?.displayName ?: it }
-        ?: "Не імпортувати"
+    val selectedLabel = selected?.let { TargetFields.byId(it)?.displayName ?: it } ?: "Не імпортувати"
 
-    Box {
-        OutlinedButton(onClick = { expanded = true }) {
-            Text(selectedText)
-        }
-        DropdownMenu(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selectedLabel,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Поле імпорту") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor()
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
             DropdownMenuItem(
                 text = { Text("Не імпортувати") },
                 onClick = {
+                    onSelect(null)
                     expanded = false
-                    onSelected(null)
                 }
             )
             TargetFields.all.forEach { field ->
                 DropdownMenuItem(
                     text = { Text(field.displayName) },
                     onClick = {
+                        onSelect(field.id)
                         expanded = false
-                        onSelected(field.id)
                     }
                 )
             }
@@ -408,6 +431,7 @@ private fun ProviderRow(
             selected = row.importEnabled,
             onClick = onImportSelect,
             modifier = Modifier
+                .noScannerKeyFocus()
                 .width(56.dp)
                 .size(48.dp)
         )
@@ -417,6 +441,7 @@ private fun ProviderRow(
             selected = row.exportEnabled,
             onClick = onExportSelect,
             modifier = Modifier
+                .noScannerKeyFocus()
                 .width(56.dp)
                 .size(48.dp)
         )
@@ -424,7 +449,9 @@ private fun ProviderRow(
         // Кнопка налаштувань провайдера
         IconButton(
             onClick = onSettingsClick,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier
+                .noScannerKeyFocus()
+                .size(40.dp)
         ) {
             Icon(
                 Icons.Default.Settings,

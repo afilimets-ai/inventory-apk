@@ -26,6 +26,14 @@ interface ScannerManager {
      */
     fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean
 
+    /**
+     * Early Activity-level key interception. This consumes scanner keys before Compose
+     * can treat them as Enter/Center clicks on a focused button.
+     */
+    fun onKeyEvent(event: KeyEvent): Boolean {
+        return event.action == KeyEvent.ACTION_DOWN && onKeyDown(event.keyCode, event)
+    }
+
     /** Програмно ініціює сканування. */
     fun triggerScan()
 }

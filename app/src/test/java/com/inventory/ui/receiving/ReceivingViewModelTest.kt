@@ -32,7 +32,7 @@ class ReceivingViewModelTest {
         val feedbackManager = mock<ScanFeedbackManager>()
         val scanEvents = MutableSharedFlow<ScanResult>()
         whenever(scannerManager.scanEvents).thenReturn(scanEvents)
-        whenever(repository.getItemByBarcode("404")).thenReturn(null)
+        whenever(repository.resolveBarcode("404")).thenReturn(null)
         val lookupProvider = object : BarcodeLookupProvider {
             override val name = "Throwing provider"
             override suspend fun lookup(barcode: String): BarcodeLookupResult {

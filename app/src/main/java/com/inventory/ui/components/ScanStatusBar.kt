@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -68,8 +67,8 @@ fun ScanStatusBar(
             IconButton(
                 onClick = onSyncSettingsClick,
                 modifier = Modifier
+                    .noScannerKeyFocus()
                     .size(40.dp)
-                    .focusProperties { canFocus = false }
             ) {
                 Text(text = "⇅", style = MaterialTheme.typography.titleMedium)
             }
@@ -78,8 +77,8 @@ fun ScanStatusBar(
             IconButton(
                 onClick = onThemeToggle,
                 modifier = Modifier
+                    .noScannerKeyFocus()
                     .size(40.dp)
-                    .focusProperties { canFocus = false }
             ) {
                 Text(
                     text = when (themeMode) {

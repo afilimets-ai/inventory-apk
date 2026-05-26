@@ -56,14 +56,15 @@ class ReceivingViewModel @Inject constructor(
         if (current !is ReceivingUiState.Scanning) return
 
         viewModelScope.launch {
-            val item = repository.getItemByBarcode(barcode)
-            if (item != null) {
+            val match = repository.resolveBarcode(barcode)
+            if (match != null) {
                 feedbackManager.onScanSuccess()
                 _uiState.value = ReceivingUiState.ItemFound(
-                    item = item,
-                    quantity = 1.0,
+                    item = match.item,
+                    quantity = match.quantity,
                     sessionLines = sessionLines.toList(),
-                    defaultLocationId = current.defaultLocationId
+                    defaultLocationId = current.defaultLocationId,
+                    scannedBarcode = match.scannedBarcode
                 )
             } else {
                 feedbackManager.onScanError()
@@ -87,13 +88,13 @@ class ReceivingViewModel @Inject constructor(
         viewModelScope.launch {
             val operation = InventoryOperation(
                 itemId = current.item.id,
-                barcode = current.item.barcode,
+                barcode = current.scannedBarcode,
                 operationType = OperationType.RECEIVE.name,
                 quantity = current.quantity
             )
             val outboxEntry = OutboxEntry(
                 operationType = OperationType.RECEIVE.name,
-                payload = buildPayload(current.item.id, current.item.barcode, current.quantity)
+                payload = buildPayload(current.item, current.scannedBarcode, current.quantity)
             )
             repository.recordOperationWithOutbox(operation, outboxEntry)
 
@@ -210,6 +211,6 @@ class ReceivingViewModel @Inject constructor(
             notes = "Джерело: $source"
         )
 
-    private fun buildPayload(itemId: Long, barcode: String, quantity: Double): String =
-        """{"itemId":$itemId,"barcode":"$barcode","quantity":$quantity,"operationType":"RECEIVE","timestamp":${System.currentTimeMillis()}}"""
+    private fun buildPayload(item: InventoryItem, scannedBarcode: String, quantity: Double): String =
+        """{"itemId":${item.id},"barcode":"$scannedBarcode","itemBarcode":"${item.barcode}","sku":"${item.sku}","quantity":$quantity,"unit":"${item.unit}","operationType":"RECEIVE","timestamp":${System.currentTimeMillis()}}"""
 }

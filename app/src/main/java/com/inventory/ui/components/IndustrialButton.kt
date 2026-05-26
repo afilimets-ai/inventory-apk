@@ -34,6 +34,7 @@ fun IndustrialButton(
     Button(
         onClick = onClick,
         modifier = modifier
+            .noScannerKeyFocus()
             .fillMaxWidth()
             .height(if (edgeTarget) BUTTON_HEIGHT_EDGE else BUTTON_HEIGHT_DEFAULT),
         colors = colors,
@@ -70,11 +71,16 @@ fun IndustrialSuccessButton(
 fun IndustrialOutlinedButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     OutlinedButton(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth().height(BUTTON_HEIGHT_DEFAULT)
+        modifier = modifier
+            .noScannerKeyFocus()
+            .fillMaxWidth()
+            .height(BUTTON_HEIGHT_DEFAULT),
+        enabled = enabled
     ) {
         Text(text = text, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
     }
@@ -88,7 +94,9 @@ fun IndustrialQuantityButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.size(72.dp),
+        modifier = modifier
+            .noScannerKeyFocus()
+            .size(72.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary
         )

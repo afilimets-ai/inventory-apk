@@ -6,12 +6,15 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-enum class OperationType { RECEIVE, AUDIT, TRANSFER, SHIPMENT, STOCK_ADJUSTMENT_RECEIPT, STOCK_ADJUSTMENT_WRITE_OFF }
-enum class SyncStatus { PENDING, SYNCED, FAILED }
-
 @Entity(
-    tableName = "inventory_operations",
+    tableName = "stock_adjustment_lines",
     foreignKeys = [
+        ForeignKey(
+            entity = StockAdjustmentDocument::class,
+            parentColumns = ["id"],
+            childColumns = ["document_id"],
+            onDelete = ForeignKey.CASCADE
+        ),
         ForeignKey(
             entity = InventoryItem::class,
             parentColumns = ["id"],
@@ -20,14 +23,17 @@ enum class SyncStatus { PENDING, SYNCED, FAILED }
         )
     ],
     indices = [
+        Index(value = ["document_id"]),
         Index(value = ["item_id"]),
-        Index(value = ["barcode"]),
-        Index(value = ["sync_status"])
+        Index(value = ["barcode"])
     ]
 )
-data class InventoryOperation(
+data class StockAdjustmentLine(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+
+    @ColumnInfo(name = "document_id")
+    val documentId: Long,
 
     @ColumnInfo(name = "item_id")
     val itemId: Long? = null,
@@ -35,17 +41,20 @@ data class InventoryOperation(
     @ColumnInfo(name = "barcode")
     val barcode: String,
 
-    @ColumnInfo(name = "operation_type")
-    val operationType: String = OperationType.RECEIVE.name,
+    @ColumnInfo(name = "sku")
+    val sku: String = "",
+
+    @ColumnInfo(name = "name")
+    val name: String,
 
     @ColumnInfo(name = "quantity")
     val quantity: Double,
 
-    @ColumnInfo(name = "notes")
-    val notes: String = "",
+    @ColumnInfo(name = "unit")
+    val unit: String,
 
-    @ColumnInfo(name = "sync_status")
-    val syncStatus: String = SyncStatus.PENDING.name,
+    @ColumnInfo(name = "reason")
+    val reason: String = "",
 
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis()

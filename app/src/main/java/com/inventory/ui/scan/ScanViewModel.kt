@@ -38,6 +38,10 @@ class ScanViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<ScanUiState>(ScanUiState.Idle)
     val uiState: StateFlow<ScanUiState> = _uiState.asStateFlow()
+    private val _lastScannedItem = MutableStateFlow<LastScannedItem?>(null)
+    val lastScannedItem: StateFlow<LastScannedItem?> = _lastScannedItem.asStateFlow()
+    private val _scannedItems = MutableStateFlow<List<LastScannedItem>>(emptyList())
+    val scannedItems: StateFlow<List<LastScannedItem>> = _scannedItems.asStateFlow()
     private val pendingBarcodes = MutableSharedFlow<String>(
         replay = 0,
         extraBufferCapacity = 64,
@@ -83,10 +87,14 @@ class ScanViewModel @Inject constructor(
     }
 
     internal suspend fun processBarcode(barcode: String) {
-        val item = repository.getItemByBarcode(barcode)
-        if (item != null) {
+        val match = repository.resolveBarcode(barcode)
+        if (match != null) {
             feedbackManager.onScanSuccess()
-            recordFoundItem(item = item, quantity = 1.0)
+            recordFoundItem(
+                item = match.item,
+                quantity = match.quantity,
+                scannedBarcode = match.scannedBarcode
+            )
         } else {
             feedbackManager.onScanError()
             _uiState.value = ScanUiState.UnknownBarcode(barcode = barcode)
@@ -104,26 +112,29 @@ class ScanViewModel @Inject constructor(
         val current = _uiState.value as? ScanUiState.ItemFound ?: return
         viewModelScope.launch {
             // ACID транзакція: залишок + операція + outbox entry
-            recordOperation(current.item, current.quantity)
+            recordOperation(current.item, current.quantity, current.item.barcode)
         }
     }
 
-    private suspend fun recordFoundItem(item: InventoryItem, quantity: Double) {
-        recordOperation(item, quantity)
+    private suspend fun recordFoundItem(item: InventoryItem, quantity: Double, scannedBarcode: String) {
+        recordOperation(item, quantity, scannedBarcode)
     }
 
-    private suspend fun recordOperation(item: InventoryItem, quantity: Double) {
+    private suspend fun recordOperation(item: InventoryItem, quantity: Double, scannedBarcode: String) {
         val operation = InventoryOperation(
             itemId = item.id,
-            barcode = item.barcode,
+            barcode = scannedBarcode,
             operationType = currentOperationType.name,
             quantity = quantity
         )
         val outboxEntry = OutboxEntry(
             operationType = currentOperationType.name,
-            payload = buildPayload(item.id, item.barcode, quantity, currentOperationType)
+            payload = buildPayload(item, scannedBarcode, quantity, currentOperationType)
         )
         repository.recordOperationWithOutbox(operation, outboxEntry)
+        val scannedItem = LastScannedItem(item, quantity, scannedBarcode)
+        _lastScannedItem.value = scannedItem
+        _scannedItems.value = listOf(scannedItem) + _scannedItems.value
         _uiState.value = ScanUiState.Success
         delay(200)
         _uiState.value = ScanUiState.Idle
@@ -174,15 +185,18 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun buildPayload(
-        itemId: Long,
-        barcode: String,
+        item: InventoryItem,
+        scannedBarcode: String,
         quantity: Double,
         operationType: OperationType
     ): String = gson.toJson(
         mapOf(
-            "itemId" to itemId,
-            "barcode" to barcode,
+            "itemId" to item.id,
+            "barcode" to scannedBarcode,
+            "itemBarcode" to item.barcode,
+            "sku" to item.sku,
             "quantity" to quantity,
+            "unit" to item.unit,
             "operationType" to operationType.name,
             "timestamp" to System.currentTimeMillis()
         )

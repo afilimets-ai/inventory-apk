@@ -7,6 +7,7 @@ import com.inventory.barcode.BarcodeLookupProvider
 import com.inventory.barcode.BarcodeLookupResult
 import com.inventory.barcode.BarcodeLookupService
 import com.inventory.data.entity.InventoryItem
+import com.inventory.data.repository.InventoryBarcodeMatch
 import com.inventory.data.repository.InventoryRepository
 import com.inventory.feedback.ScanFeedbackManager
 import com.inventory.scanner.NewlandScannerManager
@@ -41,7 +42,9 @@ class ScanViewModelTest {
         val scanEvents = MutableSharedFlow<ScanResult>()
         val item = InventoryItem(id = 1L, barcode = "123", name = "Widget", quantity = 3.0)
         whenever(scannerManager.scanEvents).thenReturn(scanEvents)
-        whenever(repository.getItemByBarcode("123")).thenReturn(item)
+        whenever(repository.resolveBarcode("123")).thenReturn(
+            InventoryBarcodeMatch(item, "123", item.unit, 1.0, isPrimary = true)
+        )
 
         val viewModel = ScanViewModel(
             scannerManager = scannerManager,
@@ -58,6 +61,8 @@ class ScanViewModelTest {
         verify(repository).recordOperationWithOutbox(org.mockito.kotlin.any(), outboxCaptor.capture())
         assertEquals(ScanUiState.Idle, viewModel.uiState.value)
         assertTrue(outboxCaptor.firstValue.payload.contains("\"barcode\":\"123\""))
+        assertEquals(1, viewModel.scannedItems.value.size)
+        assertEquals("123", viewModel.scannedItems.value.first().scannedBarcode)
         verify(feedbackManager).onScanSuccess()
     }
 
@@ -69,7 +74,9 @@ class ScanViewModelTest {
         val scanEvents = MutableSharedFlow<ScanResult>()
         val item = InventoryItem(id = 5L, barcode = "123", name = "Widget", quantity = 3.0)
         whenever(scannerManager.scanEvents).thenReturn(scanEvents)
-        whenever(repository.getItemByBarcode("123")).thenReturn(item)
+        whenever(repository.resolveBarcode("123")).thenReturn(
+            InventoryBarcodeMatch(item, "123", item.unit, 1.0, isPrimary = true)
+        )
 
         val viewModel = ScanViewModel(
             scannerManager = scannerManager,
@@ -102,7 +109,7 @@ class ScanViewModelTest {
         val feedbackManager = mock<ScanFeedbackManager>()
         val scanEvents = MutableSharedFlow<ScanResult>()
         whenever(scannerManager.scanEvents).thenReturn(scanEvents)
-        whenever(repository.getItemByBarcode("4820000000000")).thenReturn(null)
+        whenever(repository.resolveBarcode("4820000000000")).thenReturn(null)
         whenever(repository.insertItem(org.mockito.kotlin.any())).thenReturn(42L)
 
         val lookupProvider = object : BarcodeLookupProvider {
@@ -148,7 +155,7 @@ class ScanViewModelTest {
         val feedbackManager = mock<ScanFeedbackManager>()
         val scanEvents = MutableSharedFlow<ScanResult>()
         whenever(scannerManager.scanEvents).thenReturn(scanEvents)
-        whenever(repository.getItemByBarcode("404")).thenReturn(null)
+        whenever(repository.resolveBarcode("404")).thenReturn(null)
 
         val lookupProvider = object : BarcodeLookupProvider {
             override val name = "Throwing provider"

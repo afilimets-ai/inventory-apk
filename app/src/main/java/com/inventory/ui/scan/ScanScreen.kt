@@ -12,15 +12,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -42,6 +48,7 @@ import com.inventory.ui.components.IndustrialButton
 import com.inventory.ui.components.IndustrialOutlinedButton
 import com.inventory.ui.components.IndustrialQuantityButton
 import com.inventory.ui.components.IndustrialSuccessButton
+import com.inventory.ui.components.QuantityInput
 import com.inventory.ui.components.ScanResultCard
 import com.inventory.ui.components.ScanStatus
 import com.inventory.ui.components.ScanStatusBar
@@ -55,9 +62,12 @@ fun ScanScreen(
     onThemeToggle: () -> Unit = {},
     onSyncSettingsClick: () -> Unit = {},
     onReceivingClick: () -> Unit = {},
-    onAuditClick: () -> Unit = {}
+    onAuditClick: () -> Unit = {},
+    onCatalogClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val lastScannedItem by viewModel.lastScannedItem.collectAsState()
+    val scannedItems by viewModel.scannedItems.collectAsState()
 
     var flashColor by remember { mutableStateOf(Color.Transparent) }
     val animatedFlash by animateColorAsState(
@@ -121,7 +131,10 @@ fun ScanScreen(
                         onTriggerScan = viewModel::triggerScan,
                         onManualEntry = viewModel::onManualBarcodeEntered,
                         onReceivingClick = onReceivingClick,
-                        onAuditClick = onAuditClick
+                        onAuditClick = onAuditClick,
+                        onCatalogClick = onCatalogClick,
+                        lastScannedItem = lastScannedItem,
+                        scannedItems = scannedItems
                     )
                     is ScanUiState.ItemFound -> ItemFoundScreen(
                         state = state,
@@ -164,10 +177,15 @@ private fun IdleScreen(
     onTriggerScan: () -> Unit,
     onManualEntry: (String) -> Unit,
     onReceivingClick: () -> Unit = {},
-    onAuditClick: () -> Unit = {}
+    onAuditClick: () -> Unit = {},
+    onCatalogClick: () -> Unit = {},
+    lastScannedItem: LastScannedItem? = null,
+    scannedItems: List<LastScannedItem> = emptyList()
 ) {
     var manualBarcode by remember { mutableStateOf("") }
     var showManualInput by remember { mutableStateOf(false) }
+    var showScannedItems by remember { mutableStateOf(false) }
+    val scannedSummaries = remember(scannedItems) { aggregateScannedItems(scannedItems) }
     val focusManager = LocalFocusManager.current
 
     fun submitManualBarcode() {
@@ -178,7 +196,10 @@ private fun IdleScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp, vertical = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -233,6 +254,13 @@ private fun IdleScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         IndustrialOutlinedButton(
+            text = "Довідник товарів",
+            onClick = onCatalogClick
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        IndustrialOutlinedButton(
             text = "Ввести штрихкод вручну",
             onClick = {
                 showManualInput = !showManualInput
@@ -242,6 +270,14 @@ private fun IdleScreen(
                     focusManager.clearFocus(force = true)
                 }
             }
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        IndustrialOutlinedButton(
+            text = "Відскановані товари (${scannedSummaries.size})",
+            onClick = { showScannedItems = true },
+            enabled = scannedSummaries.isNotEmpty()
         )
 
         if (showManualInput) {
@@ -260,7 +296,107 @@ private fun IdleScreen(
                 keyboardActions = KeyboardActions(onSearch = { submitManualBarcode() })
             )
         }
+
+        if (lastScannedItem != null) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                "Останній скан: ${formatQty(lastScannedItem.quantity)} ${lastScannedItem.item.unit}",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            ScanResultCard(item = lastScannedItem.item)
+        }
+
+        if (showScannedItems) {
+            ScannedItemsDialog(
+                items = scannedSummaries,
+                onDismiss = { showScannedItems = false }
+            )
+        }
     }
+}
+
+@Composable
+private fun ScannedItemsDialog(
+    items: List<ScannedItemSummary>,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Відскановані товари") },
+        text = {
+            LazyColumn(modifier = Modifier.height(360.dp)) {
+                itemsIndexed(items, key = { _, scanned -> scanned.key }) { index, scanned ->
+                    ScannedItemRow(index + 1, scanned)
+                    if (index < items.lastIndex) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Закрити")
+            }
+        }
+    )
+}
+
+@Composable
+private fun ScannedItemRow(index: Int, scanned: ScannedItemSummary) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "$index.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(32.dp)
+        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "${scanned.name} - ${scanned.barcode}",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+        Text(
+            text = "${formatQty(scanned.quantity)} ${scanned.unit}",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
+}
+
+private data class ScannedItemSummary(
+    val key: String,
+    val name: String,
+    val barcode: String,
+    val unit: String,
+    val quantity: Double
+)
+
+private fun aggregateScannedItems(items: List<LastScannedItem>): List<ScannedItemSummary> {
+    val summaries = LinkedHashMap<String, ScannedItemSummary>()
+    items.forEach { scanned ->
+        val key = "${scanned.item.id}|${scanned.scannedBarcode}|${scanned.item.unit}"
+        val existing = summaries[key]
+        summaries[key] = if (existing == null) {
+            ScannedItemSummary(
+                key = key,
+                name = scanned.item.name,
+                barcode = scanned.scannedBarcode,
+                unit = scanned.item.unit,
+                quantity = scanned.quantity
+            )
+        } else {
+            existing.copy(quantity = existing.quantity + scanned.quantity)
+        }
+    }
+    return summaries.values.toList()
 }
 
 @Composable
@@ -316,6 +452,13 @@ private fun ItemFoundScreen(
                 onClick = { onQuantityChange(state.quantity + 1) }
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        QuantityInput(
+            quantity = state.quantity,
+            unit = state.item.unit,
+            onQuantityChange = onQuantityChange
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
